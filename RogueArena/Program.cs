@@ -1,23 +1,22 @@
-﻿using System;
-using SadConsole;
+﻿using SadConsole;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Console = SadConsole.Console;
 using Game = SadConsole.Game;
-using Microsoft.Xna.Framework.Input;
+using RogueArena.Commands;
 
 namespace RogueArena
 {
     class Program
     {
-
-        public const int Width = 80;
-        public const int Height = 50;
+        private const int _width = 80;
+        private const int _height = 50;
+        private static int _playerX;
+        private static int _playerY;
+        private static Console _defaultConsole;
 
         static void Main(string[] args)
         {
             // Setup the engine and create the main window.
-            Game.Create("fonts\\C64.font", Width, Height);
+            Game.Create("fonts\\C64.font", _width, _height);
 
             // Hook the start event so we can add consoles to the system.
             Game.OnInitialize = Init;
@@ -30,24 +29,41 @@ namespace RogueArena
 
         private static void Init()
         {
+            Game.Instance.Window.Title = "RogueArena";
+
+            _defaultConsole = new SadConsole.Console(_width, _height);
+            _defaultConsole.DefaultForeground = Color.White;
+            _defaultConsole.IsCursorDisabled = true;
+
+            Global.CurrentScreen = _defaultConsole;
+            Global.FocusedConsoles.Set(_defaultConsole);
+
+            _playerX = _width / 2;
+            _playerY = _height / 2;
         }
 
         private static void Update(GameTime gameTime)
         {
-            var console = Global.CurrentScreen;
-            console.DefaultForeground = Color.White;
-            console.Print(1, 1, "@");
+            _defaultConsole.Clear();
+            _defaultConsole.Print(_playerX, _playerY, "@");
 
-            if (SadConsole.Global.KeyboardState.KeysPressed.Count > 0)
+            if (Global.KeyboardState.KeysPressed.Count > 0)
             {
-                var key = Global.KeyboardState.KeysPressed[0].Key;
+                var command = InputHandler.HandleKeys(Global.KeyboardState.KeysPressed);
 
-                if (key == Keys.Escape)
+                var move = command as MoveCommand;
+                if (move != null)
+                {
+                    _playerX += move.X;
+                    _playerY += move.Y;
+                }
+
+                var exit = command as ExitCommand;
+                if (exit != null)
                 {
                     Game.Instance.Exit();
                 }
             }
-
         }
     }
 }
