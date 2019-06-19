@@ -4,7 +4,6 @@ namespace RogueArena
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using RogueArena.Commands;
-    using RogueArena.Entities;
     using SadConsole;
     using Game = SadConsole.Game;
 

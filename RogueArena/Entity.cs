@@ -1,4 +1,4 @@
-﻿namespace RogueArena.Entities
+﻿namespace RogueArena
 {
     using Microsoft.Xna.Framework;
 

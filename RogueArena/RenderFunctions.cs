@@ -1,7 +1,6 @@
 ﻿namespace RogueArena
 {
     using System.Collections.Generic;
-    using Entities;
     using SadConsole;
 
     public static class RenderFunctions
