@@ -4,11 +4,6 @@
 
     public class Entity
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
-        public char Character { get; private set; }
-        public Color Color { get; private set; }
-
         public Entity(int x, int y, char character, Color color)
         {
             X = x;
@@ -16,6 +11,11 @@
             Character = character;
             Color = color;
         }
+
+        public int X { get; private set; }
+        public int Y { get; private set; }
+        public char Character { get; private set; }
+        public Color Color { get; private set; }
 
         public void Move(int xDelta, int yDelta)
         {

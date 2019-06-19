@@ -2,9 +2,6 @@
 {
     public class Tile
     {
-        public bool Blocked { get; set; }
-        public bool BlockSight { get; set; }
-
         public Tile(bool blocked, bool? blockSight = null)
         {
             Blocked = blocked;
@@ -16,5 +13,8 @@
 
             BlockSight = blockSight.Value;
         }
+
+        public bool Blocked { get; set; }
+        public bool BlockSight { get; set; }
     }
 }

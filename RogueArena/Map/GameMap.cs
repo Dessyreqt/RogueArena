@@ -2,16 +2,16 @@
 {
     public class GameMap
     {
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public Tile[,] Tiles { get; private set; }
-
         public GameMap(int width, int height)
         {
             Width = width;
             Height = height;
             Tiles = InitializeTiles();
         }
+
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public Tile[,] Tiles { get; private set; }
 
         public Tile[,] InitializeTiles()
         {

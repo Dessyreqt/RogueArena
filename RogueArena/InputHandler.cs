@@ -1,8 +1,8 @@
 ﻿namespace RogueArena
 {
     using System.Collections.ObjectModel;
+    using Commands;
     using Microsoft.Xna.Framework.Input;
-    using RogueArena.Commands;
     using SadConsole.Input;
 
     public static class InputHandler

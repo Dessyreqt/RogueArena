@@ -1,4 +1,6 @@
 ﻿namespace RogueArena.Commands
 {
-    public class ExitCommand : Command { }
+    public class ExitCommand : Command
+    {
+    }
 }

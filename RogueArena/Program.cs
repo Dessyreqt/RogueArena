@@ -1,9 +1,9 @@
 ﻿namespace RogueArena
 {
     using System.Collections.Generic;
+    using Commands;
     using Map;
     using Microsoft.Xna.Framework;
-    using RogueArena.Commands;
     using SadConsole;
     using Game = SadConsole.Game;
 
@@ -13,17 +13,14 @@
         private const int _height = 50;
         private const int _mapWidth = 80;
         private const int _mapHeight = 45;
+
+        private static readonly List<Entity> _entities = new List<Entity>();
         private static Console _defaultConsole;
         private static Entity _player;
         private static GameMap _gameMap;
 
-        private static readonly List<Entity> _entities = new List<Entity>();
-        private static Dictionary<string, Color> _colors = new Dictionary<string, Color>
-        {
-            { "dark_wall", new Color(0, 0, 100) },
-            { "dark_ground", new Color(50, 50 , 150) }
-        };
-        
+        private static Dictionary<string, Color> _colors = new Dictionary<string, Color> { { "dark_wall", new Color(0, 0, 100) }, { "dark_ground", new Color(50, 50, 150) } };
+
 
         static void Main(string[] args)
         {
@@ -72,6 +69,7 @@
                         {
                             _player.Move(move.X, move.Y);
                         }
+
                         break;
                     case ExitCommand _:
                         Game.Instance.Exit();
