@@ -1,17 +1,20 @@
-﻿using SadConsole;
-using Microsoft.Xna.Framework;
-using Game = SadConsole.Game;
-using RogueArena.Commands;
-
+﻿
 namespace RogueArena
 {
+    using System.Collections.Generic;
+    using Microsoft.Xna.Framework;
+    using RogueArena.Commands;
+    using RogueArena.Entities;
+    using SadConsole;
+    using Game = SadConsole.Game;
+
     class Program
     {
         private const int _width = 80;
         private const int _height = 50;
-        private static int _playerX;
-        private static int _playerY;
         private static Console _defaultConsole;
+        private static readonly List<Entity> _entities = new List<Entity>();
+        private static Entity _player;
 
         static void Main(string[] args)
         {
@@ -38,14 +41,14 @@ namespace RogueArena
             Global.CurrentScreen = _defaultConsole;
             Global.FocusedConsoles.Set(_defaultConsole);
 
-            _playerX = _width / 2;
-            _playerY = _height / 2;
+            _player = new Entity(_width / 2, _height / 2, '@', Color.White);
+            _entities.Add(_player);
+            _entities.Add(new Entity(_width / 2 - 5, _height / 2, '@', Color.Yellow));
         }
 
         private static void Update(GameTime gameTime)
         {
-            _defaultConsole.Clear();
-            _defaultConsole.Print(_playerX, _playerY, "@");
+            RenderFunctions.ClearAll(_defaultConsole, _entities);
 
             if (Global.KeyboardState.KeysPressed.Count > 0)
             {
@@ -54,8 +57,7 @@ namespace RogueArena
                 var move = command as MoveCommand;
                 if (move != null)
                 {
-                    _playerX += move.X;
-                    _playerY += move.Y;
+                    _player.Move(move.X, move.Y);
                 }
 
                 var exit = command as ExitCommand;
@@ -64,6 +66,8 @@ namespace RogueArena
                     Game.Instance.Exit();
                 }
             }
+
+            RenderFunctions.RenderAll(_defaultConsole, _entities);
         }
     }
 }
