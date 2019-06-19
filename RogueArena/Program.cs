@@ -1,7 +1,7 @@
-﻿
-namespace RogueArena
+﻿namespace RogueArena
 {
     using System.Collections.Generic;
+    using Map;
     using Microsoft.Xna.Framework;
     using RogueArena.Commands;
     using SadConsole;
@@ -11,9 +11,19 @@ namespace RogueArena
     {
         private const int _width = 80;
         private const int _height = 50;
+        private const int _mapWidth = 80;
+        private const int _mapHeight = 45;
         private static Console _defaultConsole;
-        private static readonly List<Entity> _entities = new List<Entity>();
         private static Entity _player;
+        private static GameMap _gameMap;
+
+        private static readonly List<Entity> _entities = new List<Entity>();
+        private static Dictionary<string, Color> _colors = new Dictionary<string, Color>
+        {
+            { "dark_wall", new Color(0, 0, 100) },
+            { "dark_ground", new Color(50, 50 , 150) }
+        };
+        
 
         static void Main(string[] args)
         {
@@ -33,7 +43,7 @@ namespace RogueArena
         {
             Game.Instance.Window.Title = "RogueArena";
 
-            _defaultConsole = new SadConsole.Console(_width, _height);
+            _defaultConsole = new Console(_width, _height);
             _defaultConsole.DefaultForeground = Color.White;
             _defaultConsole.IsCursorDisabled = true;
 
@@ -43,6 +53,8 @@ namespace RogueArena
             _player = new Entity(_width / 2, _height / 2, '@', Color.White);
             _entities.Add(_player);
             _entities.Add(new Entity(_width / 2 - 5, _height / 2, '@', Color.Yellow));
+
+            _gameMap = new GameMap(_mapWidth, _mapHeight);
         }
 
         private static void Update(GameTime gameTime)
@@ -56,7 +68,10 @@ namespace RogueArena
                 var move = command as MoveCommand;
                 if (move != null)
                 {
-                    _player.Move(move.X, move.Y);
+                    if (!_gameMap.IsBlocked(_player.X + move.X, _player.Y + move.Y))
+                    {
+                        _player.Move(move.X, move.Y);
+                    }
                 }
 
                 var exit = command as ExitCommand;
@@ -66,7 +81,7 @@ namespace RogueArena
                 }
             }
 
-            RenderFunctions.RenderAll(_defaultConsole, _entities);
+            RenderFunctions.RenderAll(_defaultConsole, _entities, _gameMap, _colors);
         }
     }
 }

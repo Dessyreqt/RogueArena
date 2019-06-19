@@ -1,12 +1,31 @@
 ﻿namespace RogueArena
 {
     using System.Collections.Generic;
+    using Map;
+    using Microsoft.Xna.Framework;
     using SadConsole;
 
     public static class RenderFunctions
     {
-        public static void RenderAll(Console console, List<Entity> entities)
+        public static void RenderAll(Console console, List<Entity> entities, GameMap gameMap, Dictionary<string, Color> colors)
         {
+            for (int x = 0; x < gameMap.Width; x++)
+            {
+                for (int y = 0; y < gameMap.Height; y++)
+                {
+                    var wall = gameMap.Tiles[x, y].BlockSight;
+
+                    if (wall)
+                    {
+                        console.SetBackground(x, y, colors["dark_wall"]);
+                    }
+                    else
+                    {
+                        console.SetBackground(x, y, colors["dark_ground"]);
+                    }
+                }
+            }
+
             foreach (var entity in entities)
             {
                 DrawEntity(console, entity);

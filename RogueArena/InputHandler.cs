@@ -1,15 +1,15 @@
-﻿using Microsoft.Xna.Framework.Input;
-using RogueArena.Commands;
-using SadConsole.Input;
-using System.Collections.ObjectModel;
-
-namespace RogueArena
+﻿namespace RogueArena
 {
+    using System.Collections.ObjectModel;
+    using Microsoft.Xna.Framework.Input;
+    using RogueArena.Commands;
+    using SadConsole.Input;
+
     public static class InputHandler
     {
         public static Command HandleKeys(ReadOnlyCollection<AsciiKey> keys)
         {
-            if (keys.Count == 1)
+            if (keys.Count > 0)
             {
                 var key = keys[0].Key;
 
