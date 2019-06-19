@@ -65,19 +65,17 @@
             {
                 var command = InputHandler.HandleKeys(Global.KeyboardState.KeysPressed);
 
-                var move = command as MoveCommand;
-                if (move != null)
+                switch (command)
                 {
-                    if (!_gameMap.IsBlocked(_player.X + move.X, _player.Y + move.Y))
-                    {
-                        _player.Move(move.X, move.Y);
-                    }
-                }
-
-                var exit = command as ExitCommand;
-                if (exit != null)
-                {
-                    Game.Instance.Exit();
+                    case MoveCommand move:
+                        if (!_gameMap.IsBlocked(_player.X + move.X, _player.Y + move.Y))
+                        {
+                            _player.Move(move.X, move.Y);
+                        }
+                        break;
+                    case ExitCommand _:
+                        Game.Instance.Exit();
+                        break;
                 }
             }
 
