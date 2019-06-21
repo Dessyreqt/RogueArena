@@ -1,10 +1,12 @@
 ﻿namespace RogueArena
 {
+    using System;
     using System.Collections.Generic;
     using Commands;
     using Map;
     using Microsoft.Xna.Framework;
     using SadConsole;
+    using Console = SadConsole.Console;
     using Game = SadConsole.Game;
 
     class Program
@@ -13,8 +15,13 @@
         private const int _height = 50;
         private const int _mapWidth = 80;
         private const int _mapHeight = 45;
+        private const int _minRoomSize = 6;
+        private const int _maxRoomSize = 10;
+        private const int _maxRooms = 30;
 
         private static readonly List<Entity> _entities = new List<Entity>();
+        private static readonly Random _random = new Random();
+
         private static Console _defaultConsole;
         private static Entity _player;
         private static GameMap _gameMap;
@@ -51,7 +58,8 @@
             _entities.Add(_player);
             _entities.Add(new Entity(_width / 2 - 5, _height / 2, '@', Color.Yellow));
 
-            _gameMap = new GameMap(_mapWidth, _mapHeight);
+            _gameMap = new GameMap(_mapWidth, _mapHeight, _random);
+            _gameMap.MakeMap(_maxRooms, _minRoomSize, _maxRoomSize, _mapWidth, _mapHeight, _player);
         }
 
         private static void Update(GameTime gameTime)
