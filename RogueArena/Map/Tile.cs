@@ -2,19 +2,22 @@
 {
     public class Tile
     {
-        public Tile(bool blocked, bool? blockSight = null)
+        public Tile(bool walkable, bool? transparent = null)
         {
-            Blocked = blocked;
+            Walkable = walkable;
 
-            if (blockSight == null)
+            if (transparent == null)
             {
-                blockSight = blocked;
+                transparent = walkable;
             }
 
-            BlockSight = blockSight.Value;
+            Transparent = transparent.Value;
+            Explored = false;
         }
 
-        public bool Blocked { get; set; }
-        public bool BlockSight { get; set; }
+        public bool Walkable { get; set; }
+        public bool Transparent { get; set; }
+        public bool InView { get; set; }
+        public bool Explored { get; set; }
     }
 }

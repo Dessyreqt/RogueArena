@@ -18,15 +18,25 @@
         private const int _minRoomSize = 6;
         private const int _maxRoomSize = 10;
         private const int _maxRooms = 30;
-
+        private const int _fovAlgorithm = GameMap.FovBasic;
+        private const bool _fovLightWalls = true;
+        private const int _fovRadius = 10;
+        
         private static readonly List<Entity> _entities = new List<Entity>();
         private static readonly Random _random = new Random();
 
         private static Console _defaultConsole;
         private static Entity _player;
         private static GameMap _gameMap;
+        private static bool _fovRecompute;
 
-        private static Dictionary<string, Color> _colors = new Dictionary<string, Color> { { "dark_wall", new Color(0, 0, 100) }, { "dark_ground", new Color(50, 50, 150) } };
+        private static Dictionary<string, Color> _colors = new Dictionary<string, Color>
+                                                           {
+                                                               { "dark_wall", new Color(0, 0, 100) },
+                                                               { "dark_ground", new Color(50, 50, 150) },
+                                                               { "light_wall", new Color(130, 110, 50) },
+                                                               { "light_ground", new Color(200, 180, 50) }
+                                                           };
 
 
         static void Main(string[] args)
@@ -60,6 +70,7 @@
 
             _gameMap = new GameMap(_mapWidth, _mapHeight, _random);
             _gameMap.MakeMap(_maxRooms, _minRoomSize, _maxRoomSize, _mapWidth, _mapHeight, _player);
+            _fovRecompute = true;
         }
 
         private static void Update(GameTime gameTime)
@@ -76,6 +87,7 @@
                         if (!_gameMap.IsBlocked(_player.X + move.X, _player.Y + move.Y))
                         {
                             _player.Move(move.X, move.Y);
+                            _fovRecompute = true;
                         }
 
                         break;
@@ -85,7 +97,13 @@
                 }
             }
 
-            RenderFunctions.RenderAll(_defaultConsole, _entities, _gameMap, _colors);
+            if (_fovRecompute)
+            {
+                _gameMap.ComputeFov(_player.X, _player.Y, _fovRadius, _fovLightWalls, _fovAlgorithm);
+            }
+
+            RenderFunctions.RenderAll(_defaultConsole, _entities, _gameMap, _fovRecompute, _colors);
+            _fovRecompute = false;
         }
     }
 }
