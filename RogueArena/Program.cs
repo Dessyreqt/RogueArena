@@ -21,7 +21,8 @@
         private const int _fovAlgorithm = GameMap.FovBasic;
         private const bool _fovLightWalls = true;
         private const int _fovRadius = 10;
-        
+        private const int _maxMonstersPerRoom = 3;
+
         private static readonly List<Entity> _entities = new List<Entity>();
         private static readonly Random _random = new Random();
 
@@ -29,14 +30,15 @@
         private static Entity _player;
         private static GameMap _gameMap;
         private static bool _fovRecompute;
+        private static GameState _gameState;
 
         private static Dictionary<string, Color> _colors = new Dictionary<string, Color>
-                                                           {
-                                                               { "dark_wall", new Color(0, 0, 100) },
-                                                               { "dark_ground", new Color(50, 50, 150) },
-                                                               { "light_wall", new Color(130, 110, 50) },
-                                                               { "light_ground", new Color(200, 180, 50) }
-                                                           };
+        {
+            { "dark_wall", new Color(0, 0, 100) },
+            { "dark_ground", new Color(50, 50, 150) },
+            { "light_wall", new Color(130, 110, 50) },
+            { "light_ground", new Color(200, 180, 50) }
+        };
 
 
         static void Main(string[] args)
@@ -64,13 +66,13 @@
             Global.CurrentScreen = _defaultConsole;
             Global.FocusedConsoles.Set(_defaultConsole);
 
-            _player = new Entity(_width / 2, _height / 2, '@', Color.White);
+            _player = new Entity(0, 0, '@', Color.White, "Player", true);
             _entities.Add(_player);
-            _entities.Add(new Entity(_width / 2 - 5, _height / 2, '@', Color.Yellow));
 
             _gameMap = new GameMap(_mapWidth, _mapHeight, _random);
-            _gameMap.MakeMap(_maxRooms, _minRoomSize, _maxRoomSize, _mapWidth, _mapHeight, _player);
+            _gameMap.MakeMap(_maxRooms, _minRoomSize, _maxRoomSize, _mapWidth, _mapHeight, _player, _entities, _maxMonstersPerRoom);
             _fovRecompute = true;
+            _gameState = GameState.PlayersTurn;
         }
 
         private static void Update(GameTime gameTime)
@@ -84,16 +86,48 @@
                 switch (command)
                 {
                     case MoveCommand move:
-                        if (!_gameMap.IsBlocked(_player.X + move.X, _player.Y + move.Y))
+                        _defaultConsole.Clear(0, 45, 80);
+
+                        if (_gameState == GameState.PlayersTurn)
                         {
-                            _player.Move(move.X, move.Y);
-                            _fovRecompute = true;
+                            var destX = _player.X + move.X;
+                            var destY = _player.Y + move.Y;
+
+                            if (!_gameMap.IsBlocked(destX, destY))
+                            {
+                                var target = Entity.GetBlockingEntityAtLocation(_entities, destX, destY);
+
+                                if (target != null)
+                                {
+                                    Print(45, $"You kick the {target.Name} in the shins, much to its annoyance!");
+                                }
+                                else
+                                {
+                                    _player.Move(move.X, move.Y);
+                                    _fovRecompute = true;
+                                }
+
+                                _gameState = GameState.EnemyTurn;
+                            }
                         }
 
                         break;
                     case ExitCommand _:
                         Game.Instance.Exit();
                         break;
+                }
+
+                if (_gameState == GameState.EnemyTurn)
+                {
+                    foreach (var entity in _entities)
+                    {
+                        if (entity != _player)
+                        {
+                            Print(46, $"The {entity.Name} ponders the meaning of its existence.");
+                        }
+                    }
+
+                    _gameState = GameState.PlayersTurn;
                 }
             }
 
@@ -104,6 +138,12 @@
 
             RenderFunctions.RenderAll(_defaultConsole, _entities, _gameMap, _fovRecompute, _colors);
             _fovRecompute = false;
+        }
+
+        private static void Print(int line, string output)
+        {
+            _defaultConsole.Clear(0, line, 80);
+            _defaultConsole.Print(0,line,output);
         }
     }
 }

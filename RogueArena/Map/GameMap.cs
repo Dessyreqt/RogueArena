@@ -2,6 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
+    using Microsoft.Xna.Framework;
 
     public class GameMap
     {
@@ -9,7 +12,7 @@
 
         private readonly Random _random;
         private readonly int _tileCount;
-
+        
         public GameMap(int width, int height, Random random)
         {
             Width = width;
@@ -38,7 +41,7 @@
             return tiles;
         }
 
-        public void MakeMap(int maxRooms, int minRoomSize, int maxRoomSize, int mapWidth, int mapHeight, Entity player)
+        public void MakeMap(int maxRooms, int minRoomSize, int maxRoomSize, int mapWidth, int mapHeight, Entity player, List<Entity> entities, int maxMonstersPerRoom)
         {
             var rooms = new List<Rectangle>();
 
@@ -82,6 +85,8 @@
                     }
                 }
 
+                PlaceEntities(newRoom, entities, maxMonstersPerRoom);
+
                 rooms.Add(newRoom);
             }
         }
@@ -110,6 +115,33 @@
                     break;
                 default:
                     return;
+            }
+        }
+
+        private void PlaceEntities(Rectangle room, List<Entity> entities, int maxMonstersPerRoom)
+        {
+            var numMonsters = _random.Next(maxMonstersPerRoom);
+
+            for (int i = 0; i < maxMonstersPerRoom; i++)
+            {
+                var x = _random.Next(room.X1 + 1, room.X2 - 1);
+                var y = _random.Next(room.Y1 + 1, room.Y2 - 1);
+
+                if (!entities.Any(entity => entity.X == x && entity.Y == y))
+                {
+                    Entity monster;
+
+                    if (_random.Next(100) < 80)
+                    {
+                        monster = new Entity(x, y, 'o', Color.LightGreen, "Orc", true);
+                    }
+                    else
+                    {
+                        monster = new Entity(x, y, 'T', Color.DarkGreen, "Troll", true);
+                    }
+
+                    entities.Add(monster);
+                }
             }
         }
 
