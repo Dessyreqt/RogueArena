@@ -3,6 +3,7 @@
     using System.Collections.ObjectModel;
     using Commands;
     using Microsoft.Xna.Framework.Input;
+    using SadConsole;
     using SadConsole.Input;
 
     public static class InputHandler
@@ -37,16 +38,19 @@
                         return new MoveCommand { X = 1, Y = 0 };
                     case Keys.Y:
                     case Keys.NumPad7:
-                        return new MoveCommand{ X = -1, Y = -1 };
+                        return new MoveCommand { X = -1, Y = -1 };
                     case Keys.U:
                     case Keys.NumPad9:
-                        return new MoveCommand{ X = 1, Y = -1 };
+                        return new MoveCommand { X = 1, Y = -1 };
                     case Keys.B:
                     case Keys.NumPad1:
-                        return new MoveCommand{ X = -1, Y = 1 };
+                        return new MoveCommand { X = -1, Y = 1 };
                     case Keys.N:
                     case Keys.NumPad3:
-                        return new MoveCommand{ X = 1, Y = 1 };
+                        return new MoveCommand { X = 1, Y = 1 };
+                    case Keys.F5:
+                        Settings.ToggleFullScreen();
+                        return null;
                     case Keys.Escape:
                         return new ExitCommand();
                 }
