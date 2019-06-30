@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Cryptography.X509Certificates;
+    using Components;
     using Microsoft.Xna.Framework;
 
     public class GameMap
@@ -133,11 +134,17 @@
 
                     if (_random.Next(100) < 80)
                     {
-                        monster = new Entity(x, y, 'o', Color.LightGreen, "Orc", true);
+                        var orcFighter = new Fighter(10, 0, 3);
+                        var orcAi = new BasicMonster();
+
+                        monster = new Entity(x, y, 'o', Color.LightGreen, "Orc", true, orcFighter, orcAi);
                     }
                     else
                     {
-                        monster = new Entity(x, y, 'T', Color.DarkGreen, "Troll", true);
+                        var trollFighter = new Fighter(16, 1, 4);
+                        var trollAi = new BasicMonster();
+
+                        monster = new Entity(x, y, 'T', Color.DarkGreen, "Troll", true, trollFighter, trollAi);
                     }
 
                     entities.Add(monster);

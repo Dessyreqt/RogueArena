@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Commands;
+    using Components;
     using Map;
     using Microsoft.Xna.Framework;
     using SadConsole;
@@ -66,7 +67,7 @@
             Global.CurrentScreen = _defaultConsole;
             Global.FocusedConsoles.Set(_defaultConsole);
 
-            _player = new Entity(0, 0, '@', Color.White, "Player", true);
+            _player = new Entity(0, 0, '@', Color.White, "Player", true, new Fighter(30, 2, 5));
             _entities.Add(_player);
 
             _gameMap = new GameMap(_mapWidth, _mapHeight, _random);
@@ -99,7 +100,10 @@
 
                                 if (target != null)
                                 {
-                                    Print(45, $"You kick the {target.Name} in the shins, much to its annoyance!");
+                                    Print(45, $"You kick the {target.Name} in the shins, and it falls over dead!");
+                                    var corpse = new Entity(target.X, target.Y, '%', target.Color, $"{target.Name} corpse");
+                                    _entities.Remove(target);
+                                    _entities.Insert(0, corpse);
                                 }
                                 else
                                 {
@@ -119,11 +123,18 @@
 
                 if (_gameState == GameState.EnemyTurn)
                 {
+                    _defaultConsole.Clear(0, 46, 80);
+
                     foreach (var entity in _entities)
                     {
-                        if (entity != _player)
+                        if (entity.AI != null)
                         {
-                            Print(46, $"The {entity.Name} ponders the meaning of its existence.");
+                            var output = entity.AI.TakeTurn(_player, _gameMap, _entities);
+
+                            if (!string.IsNullOrWhiteSpace(output))
+                            {
+                                Print(46, output);
+                            }
                         }
                     }
 
@@ -143,7 +154,7 @@
         private static void Print(int line, string output)
         {
             _defaultConsole.Clear(0, line, 80);
-            _defaultConsole.Print(0,line,output);
+            _defaultConsole.Print(0, line, output);
         }
     }
 }
