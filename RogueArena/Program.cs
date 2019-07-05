@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Commands;
     using Components;
+    using Events;
     using Map;
     using Microsoft.Xna.Framework;
     using SadConsole;
@@ -32,14 +33,16 @@
         private static GameMap _gameMap;
         private static bool _fovRecompute;
         private static GameState _gameState;
+        private static int _lastEventCount = 0;
+        private static List<string> _messageLog;
 
         private static Dictionary<string, Color> _colors = new Dictionary<string, Color>
-        {
-            { "dark_wall", new Color(0, 0, 100) },
-            { "dark_ground", new Color(50, 50, 150) },
-            { "light_wall", new Color(130, 110, 50) },
-            { "light_ground", new Color(200, 180, 50) }
-        };
+                                                           {
+                                                               { "dark_wall", new Color(0, 0, 100) },
+                                                               { "dark_ground", new Color(50, 50, 150) },
+                                                               { "light_wall", new Color(130, 110, 50) },
+                                                               { "light_ground", new Color(200, 180, 50) }
+                                                           };
 
         static void Main(string[] args)
         {
@@ -59,6 +62,9 @@
         {
             Game.Instance.Window.Title = "RogueArena";
 
+            EventLog.Initialize();
+            _messageLog = new List<string>();
+
             _defaultConsole = new Console(_width, _height);
             _defaultConsole.DefaultForeground = Color.White;
             _defaultConsole.IsCursorDisabled = true;
@@ -66,7 +72,7 @@
             Global.CurrentScreen = _defaultConsole;
             Global.FocusedConsoles.Set(_defaultConsole);
 
-            _player = new Entity(0, 0, '@', Color.White, "Player", true, new Fighter(30, 2, 5));
+            _player = new Entity(0, 0, '@', Color.White, "Player", true, RenderOrder.Actor, new Fighter(30, 2, 5));
             _entities.Add(_player);
 
             _gameMap = new GameMap(_mapWidth, _mapHeight, _random);
@@ -99,10 +105,7 @@
 
                                 if (target != null)
                                 {
-                                    Print(45, $"You kick the {target.Name} in the shins, and it falls over dead!");
-                                    var corpse = new Entity(target.X, target.Y, '%', target.Color, $"{target.Name} corpse");
-                                    _entities.Remove(target);
-                                    _entities.Insert(0, corpse);
+                                    _player.Fighter.Attack(target);
                                 }
                                 else
                                 {
@@ -123,6 +126,8 @@
                         break;
                 }
 
+                ProcessEvents();
+
                 if (_gameState == GameState.EnemyTurn)
                 {
                     _defaultConsole.Clear(0, 46, 80);
@@ -131,16 +136,20 @@
                     {
                         if (entity.AI != null)
                         {
-                            var output = entity.AI.TakeTurn(_player, _gameMap, _entities);
+                            entity.AI.TakeTurn(_player, _gameMap, _entities);
+                            ProcessEvents();
 
-                            if (!string.IsNullOrWhiteSpace(output))
+                            if (_gameState == GameState.PlayerDead)
                             {
-                                Print(46, output);
+                                break;
                             }
                         }
                     }
 
-                    _gameState = GameState.PlayersTurn;
+                    if (_gameState != GameState.PlayerDead)
+                    {
+                        _gameState = GameState.PlayersTurn;
+                    }
                 }
             }
 
@@ -149,14 +158,42 @@
                 _gameMap.ComputeFov(_player.X, _player.Y, _fovRadius, _fovLightWalls, _fovAlgorithm);
             }
 
-            RenderFunctions.RenderAll(_defaultConsole, _entities, _gameMap, _fovRecompute, _colors);
+            RenderFunctions.RenderAll(_defaultConsole, _entities, _player, _gameMap, _fovRecompute, _colors);
             _fovRecompute = false;
+
+            if (_messageLog.Count > _lastEventCount)
+            {
+                RenderFunctions.RenderLog(_defaultConsole, _messageLog, 45, 3);
+            }
         }
 
-        private static void Print(int line, string output)
+        private static void ProcessEvents()
         {
-            _defaultConsole.Clear(0, line, 80);
-            _defaultConsole.Print(0, line, output);
+            for (var index = 0; index < EventLog.Instance.Count; index++)
+            {
+                var @event = EventLog.Instance[index];
+
+                switch (@event)
+                {
+                    case MessageEvent message:
+                        _messageLog.Add(message.Message);
+                        break;
+                    case DeadEvent dead:
+                        if (dead.Entity == _player)
+                        {
+                            DeathFunctions.KillPlayer(dead.Entity);
+                            _gameState = GameState.PlayerDead;
+                        }
+                        else
+                        {
+                            DeathFunctions.KillMonster(dead.Entity);
+                        }
+
+                        break;
+                }
+            }
+
+            EventLog.Instance.Clear();
         }
     }
 }

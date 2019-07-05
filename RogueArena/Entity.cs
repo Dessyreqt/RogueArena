@@ -10,7 +10,7 @@
 
     public class Entity
     {
-        public Entity(int x, int y, char character, Color color, string name, bool blocks = false, Fighter fighter = null, AI ai = null)
+        public Entity(int x, int y, char character, Color color, string name, bool blocks = false, int renderOrder = RogueArena.RenderOrder.Corpse, Fighter fighter = null, AI ai = null)
         {
             X = x;
             Y = y;
@@ -20,6 +20,7 @@
             Fighter = fighter;
             AI = ai;
             Blocks = blocks;
+            RenderOrder = renderOrder;
 
             if (Fighter != null)
             {
@@ -34,12 +35,13 @@
 
         public int X { get; set; }
         public int Y { get; set; }
-        public char Character { get; private set; }
-        public Color Color { get; private set; }
-        public string Name { get; private set; }
-        public bool Blocks { get; private set; }
-        public Fighter Fighter { get; private set; }
-        public AI AI { get; private set; }
+        public char Character { get; set; }
+        public Color Color { get; set; }
+        public string Name { get; set; }
+        public bool Blocks { get; set; }
+        public int RenderOrder { get; set; }
+        public Fighter Fighter { get; set; }
+        public AI AI { get; set; }
 
         public static Entity GetBlockingEntityAtLocation(List<Entity> entities, int destX, int destY)
         {
@@ -73,7 +75,7 @@
 
             foreach (var entity in entities)
             {
-                if (entity == this || entity == target)
+                if (entity == this || entity == target || !entity.Blocks)
                 {
                     continue;
                 }

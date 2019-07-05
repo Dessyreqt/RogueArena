@@ -1,13 +1,21 @@
 ﻿namespace RogueArena
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Map;
     using Microsoft.Xna.Framework;
     using SadConsole;
 
+    public class RenderOrder
+    {
+        public const int Corpse = 1;
+        public const int Item = 2;
+        public const int Actor = 3;
+    }
+
     public static class RenderFunctions
     {
-        public static void RenderAll(Console console, List<Entity> entities, GameMap gameMap, bool fovRecompute, Dictionary<string, Color> colors)
+        public static void RenderAll(Console console, List<Entity> entities, Entity player, GameMap gameMap, bool fovRecompute, Dictionary<string, Color> colors)
         {
             if (fovRecompute)
             {
@@ -44,10 +52,16 @@
                 }
             }
 
-            foreach (var entity in entities)
+            var entitiesInRenderOrder = entities.OrderBy(x => x.RenderOrder);
+
+            foreach (var entity in entitiesInRenderOrder)
             {
                 DrawEntity(console, entity, gameMap);
             }
+
+            var line = console.Height - 2;
+            console.Clear(0, line, console.Width);
+            console.Print(0, line, $"HP: {player.Fighter.Hp}/{player.Fighter.MaxHp}");
         }
 
         public static void ClearAll(Console console, List<Entity> entities)
@@ -69,6 +83,24 @@
         private static void ClearEntity(Console console, Entity entity)
         {
             console.Print(entity.X, entity.Y, " ");
+        }
+
+        public static void RenderLog(Console console, List<string> messageLog, int startingLine, int count)
+        {
+            var lineNo = 0;
+
+            for (var index = messageLog.Count - 1; index >= 0; index--)
+            {
+                var log = messageLog[index];
+                console.Clear(0, startingLine + lineNo, console.Width);
+                console.Print(0, startingLine + lineNo, log);
+
+                lineNo++;
+                if (lineNo >= count)
+                {
+                    break;
+                }
+            }
         }
     }
 }

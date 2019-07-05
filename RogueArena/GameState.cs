@@ -3,6 +3,7 @@
     public enum GameState
     {
         PlayersTurn,
-        EnemyTurn
+        EnemyTurn,
+        PlayerDead
     }
 }

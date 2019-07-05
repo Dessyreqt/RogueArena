@@ -137,14 +137,14 @@
                         var orcFighter = new Fighter(10, 0, 3);
                         var orcAi = new BasicMonster();
 
-                        monster = new Entity(x, y, 'o', Color.LightGreen, "Orc", true, orcFighter, orcAi);
+                        monster = new Entity(x, y, 'o', Color.LightGreen, "Orc", true, RenderOrder.Actor, orcFighter, orcAi);
                     }
                     else
                     {
                         var trollFighter = new Fighter(16, 1, 4);
                         var trollAi = new BasicMonster();
 
-                        monster = new Entity(x, y, 'T', Color.DarkGreen, "Troll", true, trollFighter, trollAi);
+                        monster = new Entity(x, y, 'T', Color.DarkGreen, "Troll", true, RenderOrder.Actor, trollFighter, trollAi);
                     }
 
                     entities.Add(monster);

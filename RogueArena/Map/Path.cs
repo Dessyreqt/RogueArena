@@ -96,8 +96,6 @@
 
             OpenList.Add(new NodeScore(0, new Point(OriginX, OriginY)));
 
-            bool foundDest = false;
-
             while (OpenList.Count != 0)
             {
                 var nodeScore = OpenList[0];
