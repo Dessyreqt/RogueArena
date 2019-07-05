@@ -19,7 +19,7 @@
             {
                 if (Owner.DistanceTo(target) >= 2)
                 {
-                    Owner.MoveTowards(target.X, target.Y, gameMap, entities);
+                    Owner.MoveAstar(target, gameMap, entities);
                     return string.Empty;
                 }
                 else if (target.Fighter.Hp > 0)

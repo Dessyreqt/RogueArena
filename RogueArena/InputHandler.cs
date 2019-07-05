@@ -53,6 +53,8 @@
                         return null;
                     case Keys.Escape:
                         return new ExitCommand();
+                    case Keys.R:
+                        return new RestCommand();
                 }
             }
 

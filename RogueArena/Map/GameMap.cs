@@ -3,17 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
     using Components;
     using Microsoft.Xna.Framework;
 
+    [Serializable]
     public class GameMap
     {
         public const int FovBasic = 0;
 
         private readonly Random _random;
         private readonly int _tileCount;
-        
+
         public GameMap(int width, int height, Random random)
         {
             Width = width;

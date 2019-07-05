@@ -6,7 +6,7 @@
     using Components;
     using Map;
     using Microsoft.Xna.Framework;
-    using SharpDX.MediaFoundation;
+    using Util;
 
     public class Entity
     {
@@ -64,6 +64,37 @@
             if (!(gameMap.IsBlocked(X + dx, Y + dy) || GetBlockingEntityAtLocation(entities, X + dx, Y + dy) != null))
             {
                 Move(dx, dy);
+            }
+        }
+
+        public void MoveAstar(Entity target, GameMap gameMap, List<Entity> entities)
+        {
+            var newMap = gameMap.DeepClone();
+
+            foreach (var entity in entities)
+            {
+                if (entity == this || entity == target)
+                {
+                    continue;
+                }
+
+                newMap.Tiles[entity.X, entity.Y].Walkable = false;
+            }
+
+            var path = new Path(newMap, 1.41);
+
+            var pathExists = path.Compute(X, Y, target.X, target.Y);
+
+            if (pathExists && path.Nodes.Count > 0 && path.Nodes.Count < 25)
+            {
+                var newLocation = path.Nodes[1];
+
+                X = newLocation.X;
+                Y = newLocation.Y;
+            }
+            else
+            {
+                MoveTowards(target.X, target.Y, gameMap, entities);
             }
         }
 

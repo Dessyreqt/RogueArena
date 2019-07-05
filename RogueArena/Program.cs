@@ -41,7 +41,6 @@
             { "light_ground", new Color(200, 180, 50) }
         };
 
-
         static void Main(string[] args)
         {
             // Setup the engine and create the main window.
@@ -115,6 +114,9 @@
                             }
                         }
 
+                        break;
+                    case RestCommand _:
+                        _gameState = GameState.EnemyTurn;
                         break;
                     case ExitCommand _:
                         Game.Instance.Exit();

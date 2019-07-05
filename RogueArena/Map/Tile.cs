@@ -1,5 +1,8 @@
 ﻿namespace RogueArena.Map
 {
+    using System;
+
+    [Serializable]
     public class Tile
     {
         public Tile(bool walkable, bool? transparent = null)
