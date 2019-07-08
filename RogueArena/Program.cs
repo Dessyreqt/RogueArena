@@ -15,8 +15,11 @@
     {
         private const int _width = 80;
         private const int _height = 50;
+        private const int _barWidth = 20;
+        private const int _panelHeight = 7;
+        private const int _panelY = _height - _panelHeight;
         private const int _mapWidth = 80;
-        private const int _mapHeight = 45;
+        private const int _mapHeight = 43;
         private const int _minRoomSize = 6;
         private const int _maxRoomSize = 10;
         private const int _maxRooms = 30;
@@ -29,6 +32,7 @@
         private static readonly Random _random = new Random();
 
         private static Console _defaultConsole;
+        private static Console _panel;
         private static Entity _player;
         private static GameMap _gameMap;
         private static bool _fovRecompute;
@@ -68,6 +72,10 @@
             _defaultConsole = new Console(_width, _height);
             _defaultConsole.DefaultForeground = Color.White;
             _defaultConsole.IsCursorDisabled = true;
+
+            _panel = new Console(_width, _panelHeight) { Position = new Microsoft.Xna.Framework.Point(0, _panelY)};
+
+            _defaultConsole.Children.Add(_panel);
 
             Global.CurrentScreen = _defaultConsole;
             Global.FocusedConsoles.Set(_defaultConsole);
@@ -158,7 +166,7 @@
                 _gameMap.ComputeFov(_player.X, _player.Y, _fovRadius, _fovLightWalls, _fovAlgorithm);
             }
 
-            RenderFunctions.RenderAll(_defaultConsole, _entities, _player, _gameMap, _fovRecompute, _colors);
+            RenderFunctions.RenderAll(_defaultConsole, _panel, _entities, _player, _gameMap, _fovRecompute, _colors, _barWidth);
             _fovRecompute = false;
 
             if (_messageLog.Count > _lastEventCount)

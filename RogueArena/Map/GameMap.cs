@@ -123,7 +123,7 @@
         {
             var numMonsters = _random.Next(maxMonstersPerRoom);
 
-            for (int i = 0; i < maxMonstersPerRoom; i++)
+            for (int i = 0; i < numMonsters; i++)
             {
                 var x = _random.Next(room.X1 + 1, room.X2 - 1);
                 var y = _random.Next(room.Y1 + 1, room.Y2 - 1);
