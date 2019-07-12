@@ -10,12 +10,12 @@
             player.Character = '%';
             player.Color = Color.DarkRed;
 
-            EventLog.Add(new MessageEvent("You died!"));
+            EventLog.Add(new MessageEvent("You died!", Color.Red));
         }
 
         public static void KillMonster(Entity monster)
         {
-            EventLog.Add(new MessageEvent($"{monster.Name} is dead!"));
+            EventLog.Add(new MessageEvent($"{monster.Name} is dead!", Color.Orange));
 
             monster.Character = '%';
             monster.Color = Color.DarkRed;

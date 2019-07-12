@@ -8,6 +8,7 @@
     using Map;
     using Microsoft.Xna.Framework;
     using SadConsole;
+    using SadConsole.Input;
     using Console = SadConsole.Console;
     using Game = SadConsole.Game;
 
@@ -15,17 +16,26 @@
     {
         private const int _width = 80;
         private const int _height = 50;
+
         private const int _barWidth = 20;
         private const int _panelHeight = 7;
         private const int _panelY = _height - _panelHeight;
+
+        private const int _messageX = _barWidth + 2;
+        private const int _messageWidth = _width - _barWidth - 2;
+        private const int _messageHeight = _panelHeight - 1;
+
         private const int _mapWidth = 80;
         private const int _mapHeight = 43;
+
         private const int _minRoomSize = 6;
         private const int _maxRoomSize = 10;
         private const int _maxRooms = 30;
+
         private const int _fovAlgorithm = GameMap.FovBasic;
         private const bool _fovLightWalls = true;
         private const int _fovRadius = 10;
+
         private const int _maxMonstersPerRoom = 3;
 
         private static readonly List<Entity> _entities = new List<Entity>();
@@ -37,16 +47,16 @@
         private static GameMap _gameMap;
         private static bool _fovRecompute;
         private static GameState _gameState;
-        private static int _lastEventCount = 0;
-        private static List<string> _messageLog;
+        private static MessageLog _messageLog;
+        private static MouseEventArgs _mouse;
 
         private static Dictionary<string, Color> _colors = new Dictionary<string, Color>
-                                                           {
-                                                               { "dark_wall", new Color(0, 0, 100) },
-                                                               { "dark_ground", new Color(50, 50, 150) },
-                                                               { "light_wall", new Color(130, 110, 50) },
-                                                               { "light_ground", new Color(200, 180, 50) }
-                                                           };
+        {
+            { "dark_wall", new Color(0, 0, 100) },
+            { "dark_ground", new Color(50, 50, 150) },
+            { "light_wall", new Color(130, 110, 50) },
+            { "light_ground", new Color(200, 180, 50) }
+        };
 
         static void Main(string[] args)
         {
@@ -67,13 +77,14 @@
             Game.Instance.Window.Title = "RogueArena";
 
             EventLog.Initialize();
-            _messageLog = new List<string>();
+            _messageLog = new MessageLog(_messageX, _messageWidth, _messageHeight);
 
             _defaultConsole = new Console(_width, _height);
             _defaultConsole.DefaultForeground = Color.White;
             _defaultConsole.IsCursorDisabled = true;
+            _defaultConsole.MouseMove += Console_MouseMove;
 
-            _panel = new Console(_width, _panelHeight) { Position = new Microsoft.Xna.Framework.Point(0, _panelY)};
+            _panel = new Console(_width, _panelHeight) { Position = new Microsoft.Xna.Framework.Point(0, _panelY) };
 
             _defaultConsole.Children.Add(_panel);
 
@@ -87,6 +98,11 @@
             _gameMap.MakeMap(_maxRooms, _minRoomSize, _maxRoomSize, _mapWidth, _mapHeight, _player, _entities, _maxMonstersPerRoom);
             _fovRecompute = true;
             _gameState = GameState.PlayersTurn;
+        }
+
+        private static void Console_MouseMove(object sender, MouseEventArgs e)
+        {
+            _mouse = e;
         }
 
         private static void Update(GameTime gameTime)
@@ -166,13 +182,8 @@
                 _gameMap.ComputeFov(_player.X, _player.Y, _fovRadius, _fovLightWalls, _fovAlgorithm);
             }
 
-            RenderFunctions.RenderAll(_defaultConsole, _panel, _entities, _player, _gameMap, _fovRecompute, _colors, _barWidth);
+            RenderFunctions.RenderAll(_defaultConsole, _panel, _entities, _player, _gameMap, _fovRecompute, _messageLog, _colors, _barWidth, _mouse);
             _fovRecompute = false;
-
-            if (_messageLog.Count > _lastEventCount)
-            {
-                RenderFunctions.RenderLog(_defaultConsole, _messageLog, 45, 3);
-            }
         }
 
         private static void ProcessEvents()
@@ -184,7 +195,7 @@
                 switch (@event)
                 {
                     case MessageEvent message:
-                        _messageLog.Add(message.Message);
+                        _messageLog.AddMessage(message.Message);
                         break;
                     case DeadEvent dead:
                         if (dead.Entity == _player)

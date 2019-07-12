@@ -2,10 +2,11 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Events;
     using Map;
     using Microsoft.Xna.Framework;
     using SadConsole;
-    using Cell = SadConsole.Cell;
+    using SadConsole.Input;
     using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
     public class RenderOrder
@@ -39,8 +40,10 @@
             Entity player,
             GameMap gameMap,
             bool fovRecompute,
+            MessageLog messageLog,
             Dictionary<string, Color> colors,
-            int barWidth)
+            int barWidth,
+            MouseEventArgs mouse)
         {
             if (fovRecompute)
             {
@@ -85,7 +88,18 @@
             }
 
             panel.Clear();
+
+            var panelY = 1;
+
+            foreach (var message in messageLog.Messages)
+            {
+                panel.Print(messageLog.X, panelY, message.Text, message.Color);
+                panelY++;
+            }
+
             RenderBar(panel, 1, 1, barWidth, "HP", player.Fighter.Hp, player.Fighter.MaxHp, Color.Red, Color.DarkRed);
+
+            panel.Print(1, 0, GetNamesUnderMouse(mouse, entities, gameMap));
         }
 
         public static void ClearAll(Console console, List<Entity> entities)
@@ -112,6 +126,14 @@
                     break;
                 }
             }
+        }
+
+        private static string GetNamesUnderMouse(MouseEventArgs mouse, List<Entity> entities, GameMap gameMap)
+        {
+            var pos = mouse.MouseState.CellPosition;
+            var names = entities.Where(entity => entity.X == pos.X && entity.Y == pos.Y && gameMap.Tiles[entity.X, entity.Y].InView).Select(entity => entity.Name);
+
+            return string.Join(", ", names);
         }
 
         private static void DrawEntity(Console console, Entity entity, GameMap gameMap)
