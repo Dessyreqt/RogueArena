@@ -37,6 +37,7 @@
         private const int _fovRadius = 10;
 
         private const int _maxMonstersPerRoom = 3;
+        private const int _maxItemsPerRoom = 2;
 
         private static readonly List<Entity> _entities = new List<Entity>();
         private static readonly Random _random = new Random();
@@ -91,11 +92,11 @@
             Global.CurrentScreen = _defaultConsole;
             Global.FocusedConsoles.Set(_defaultConsole);
 
-            _player = new Entity(0, 0, '@', Color.White, "Player", true, RenderOrder.Actor, new Fighter(30, 2, 5));
+            _player = new Entity(0, 0, '@', Color.White, "Player", true, RenderOrder.Actor, new Fighter(30, 2, 5), inventory: new Inventory(26));
             _entities.Add(_player);
 
             _gameMap = new GameMap(_mapWidth, _mapHeight, _random);
-            _gameMap.MakeMap(_maxRooms, _minRoomSize, _maxRoomSize, _mapWidth, _mapHeight, _player, _entities, _maxMonstersPerRoom);
+            _gameMap.MakeMap(_maxRooms, _minRoomSize, _maxRoomSize, _mapWidth, _mapHeight, _player, _entities, _maxMonstersPerRoom, _maxItemsPerRoom);
             _fovRecompute = true;
             _gameState = GameState.PlayersTurn;
         }
@@ -142,8 +143,38 @@
                         }
 
                         break;
+                    case PickupCommand _:
+                        if (_gameState == GameState.PlayersTurn)
+                        {
+                            Entity foundEntity = null;
+
+                            foreach (var entity in _entities)
+                            {
+                                if (entity.Item != null && entity.X == _player.X && entity.Y == _player.Y)
+                                {
+                                    _player.Inventory.AddItem(entity);
+                                    foundEntity = entity;
+                                    break;
+                                }
+                            }
+
+                            if (foundEntity != null)
+                            {
+                                _gameState = GameState.EnemyTurn;
+                            }
+                            else
+                            {
+                                EventLog.Instance.Add(new MessageEvent("There is nothing here to pick up.", Color.Yellow));
+                            }
+                        }
+
+                        break;
                     case RestCommand _:
-                        _gameState = GameState.EnemyTurn;
+                        if (_gameState == GameState.PlayersTurn)
+                        {
+                            _gameState = GameState.EnemyTurn;
+                        }
+
                         break;
                     case ExitCommand _:
                         Game.Instance.Exit();
@@ -206,6 +237,19 @@
                         else
                         {
                             DeathFunctions.KillMonster(dead.Entity);
+                        }
+
+                        break;
+                    case ItemPickupEvent pickup:
+                        _entities.Remove(pickup.Item);
+
+                        if (pickup.Entity == _player)
+                        {
+                            EventLog.Instance.Add(new MessageEvent($"You pick up the {pickup.Item.Name}!", Color.Blue));
+                        }
+                        else
+                        {
+                            EventLog.Instance.Add(new MessageEvent($"The {pickup.Entity.Name} picks up the {pickup.Item.Name}.", Color.Beige));
                         }
 
                         break;

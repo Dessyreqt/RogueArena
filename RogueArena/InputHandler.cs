@@ -48,6 +48,8 @@
                     case Keys.N:
                     case Keys.NumPad3:
                         return new MoveCommand { X = 1, Y = 1 };
+                    case Keys.G:
+                        return new PickupCommand();
                     case Keys.F5:
                         Settings.ToggleFullScreen();
                         return null;

@@ -42,7 +42,16 @@
             return tiles;
         }
 
-        public void MakeMap(int maxRooms, int minRoomSize, int maxRoomSize, int mapWidth, int mapHeight, Entity player, List<Entity> entities, int maxMonstersPerRoom)
+        public void MakeMap(
+            int maxRooms,
+            int minRoomSize,
+            int maxRoomSize,
+            int mapWidth,
+            int mapHeight,
+            Entity player,
+            List<Entity> entities,
+            int maxMonstersPerRoom,
+            int maxItemsPerRoom)
         {
             var rooms = new List<Rectangle>();
 
@@ -86,7 +95,7 @@
                     }
                 }
 
-                PlaceEntities(newRoom, entities, maxMonstersPerRoom);
+                PlaceEntities(newRoom, entities, maxMonstersPerRoom, maxItemsPerRoom);
 
                 rooms.Add(newRoom);
             }
@@ -119,9 +128,10 @@
             }
         }
 
-        private void PlaceEntities(Rectangle room, List<Entity> entities, int maxMonstersPerRoom)
+        private void PlaceEntities(Rectangle room, List<Entity> entities, int maxMonstersPerRoom, int maxItemsPerRoom)
         {
             var numMonsters = _random.Next(maxMonstersPerRoom);
+            var numItems = _random.Next(maxItemsPerRoom);
 
             for (int i = 0; i < numMonsters; i++)
             {
@@ -148,6 +158,19 @@
                     }
 
                     entities.Add(monster);
+                }
+            }
+
+            for (int i = 0; i < numItems; i++)
+            {
+                var x = _random.Next(room.X1 + 1, room.X2 - 1);
+                var y = _random.Next(room.Y1 + 1, room.Y2 - 1);
+
+                if (!entities.Any(entity => entity.X == x && entity.Y == y))
+                {
+                    var item = new Entity(x, y, '!', Color.DarkViolet, "Healing Potion", renderOrder: RenderOrder.Item, item: new Item());
+
+                    entities.Add(item);
                 }
             }
         }

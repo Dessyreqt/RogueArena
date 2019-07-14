@@ -10,7 +10,18 @@
 
     public class Entity
     {
-        public Entity(int x, int y, char character, Color color, string name, bool blocks = false, int renderOrder = RogueArena.RenderOrder.Corpse, Fighter fighter = null, AI ai = null)
+        public Entity(
+            int x,
+            int y,
+            char character,
+            Color color,
+            string name,
+            bool blocks = false,
+            int renderOrder = RogueArena.RenderOrder.Corpse,
+            Fighter fighter = null,
+            AI ai = null,
+            Item item = null,
+            Inventory inventory = null)
         {
             X = x;
             Y = y;
@@ -19,6 +30,8 @@
             Name = name;
             Fighter = fighter;
             AI = ai;
+            Item = item;
+            Inventory = inventory;
             Blocks = blocks;
             RenderOrder = renderOrder;
 
@@ -31,6 +44,16 @@
             {
                 AI.Owner = this;
             }
+
+            if (Item != null)
+            {
+                Item.Owner = this;
+            }
+
+            if (Inventory != null)
+            {
+                Inventory.Owner = this;
+            }
         }
 
         public int X { get; set; }
@@ -42,6 +65,8 @@
         public int RenderOrder { get; set; }
         public Fighter Fighter { get; set; }
         public AI AI { get; set; }
+        public Item Item { get; set; }
+        public Inventory Inventory { get; set; }
 
         public static Entity GetBlockingEntityAtLocation(List<Entity> entities, int destX, int destY)
         {
