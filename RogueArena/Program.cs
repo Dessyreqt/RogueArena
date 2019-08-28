@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Windows;
     using Commands;
     using Components;
     using Events;
@@ -11,6 +12,7 @@
     using SadConsole.Input;
     using Console = SadConsole.Console;
     using Game = SadConsole.Game;
+    using Point = Microsoft.Xna.Framework.Point;
 
     class Program
     {
@@ -44,20 +46,22 @@
 
         private static Console _defaultConsole;
         private static Console _panel;
+        private static Console _inventoryMenu;
         private static Entity _player;
         private static GameMap _gameMap;
         private static bool _fovRecompute;
         private static GameState _gameState;
+        private static GameState _previousGameState;
         private static MessageLog _messageLog;
         private static MouseEventArgs _mouse;
 
         private static Dictionary<string, Color> _colors = new Dictionary<string, Color>
-        {
-            { "dark_wall", new Color(0, 0, 100) },
-            { "dark_ground", new Color(50, 50, 150) },
-            { "light_wall", new Color(130, 110, 50) },
-            { "light_ground", new Color(200, 180, 50) }
-        };
+                                                           {
+                                                               { "dark_wall", new Color(0, 0, 100) },
+                                                               { "dark_ground", new Color(50, 50, 150) },
+                                                               { "light_wall", new Color(130, 110, 50) },
+                                                               { "light_ground", new Color(200, 180, 50) }
+                                                           };
 
         static void Main(string[] args)
         {
@@ -76,6 +80,8 @@
         private static void Init()
         {
             Game.Instance.Window.Title = "RogueArena";
+            LoadPosition();
+            Game.Instance.Window.ClientSizeChanged += (sender, e) => { SavePosition(); };
 
             EventLog.Initialize();
             _messageLog = new MessageLog(_messageX, _messageWidth, _messageHeight);
@@ -85,7 +91,7 @@
             _defaultConsole.IsCursorDisabled = true;
             _defaultConsole.MouseMove += Console_MouseMove;
 
-            _panel = new Console(_width, _panelHeight) { Position = new Microsoft.Xna.Framework.Point(0, _panelY) };
+            _panel = new Console(_width, _panelHeight) { Position = new Point(0, _panelY) };
 
             _defaultConsole.Children.Add(_panel);
 
@@ -101,6 +107,32 @@
             _gameState = GameState.PlayersTurn;
         }
 
+        private static void LoadPosition()
+        {
+            var x = Math.Max(Properties.Settings.Default.PositionX, 0);
+            var y = Math.Max(Properties.Settings.Default.PositionY, 0);
+
+            if (x + Game.Instance.Window.ClientBounds.Width / 2 > SystemParameters.VirtualScreenWidth)
+            {
+                x = (int)SystemParameters.VirtualScreenWidth - Game.Instance.Window.ClientBounds.Width;
+            }
+
+            if (y + Game.Instance.Window.ClientBounds.Height / 2 > SystemParameters.VirtualScreenHeight)
+            {
+                y = (int)SystemParameters.VirtualScreenHeight - Game.Instance.Window.ClientBounds.Height;
+            }
+
+            Game.Instance.Window.Position = new Point(x, y);
+        }
+
+        private static void SavePosition()
+        {
+            Properties.Settings.Default.PositionX = Game.Instance.Window.Position.X;
+            Properties.Settings.Default.PositionY = Game.Instance.Window.Position.Y;
+
+            Properties.Settings.Default.Save();
+        }
+
         private static void Console_MouseMove(object sender, MouseEventArgs e)
         {
             _mouse = e;
@@ -112,10 +144,30 @@
 
             if (Global.KeyboardState.KeysPressed.Count > 0)
             {
-                var command = InputHandler.HandleKeys(Global.KeyboardState.KeysPressed);
+                var command = InputHandler.HandleKeys(Global.KeyboardState.KeysPressed, _gameState);
 
                 switch (command)
                 {
+                    case ExitCommand _:
+                        if (_gameState == GameState.ShowInventory)
+                        {
+                            _gameState = _previousGameState;
+                            RemoveInventoryMenu();
+                        }
+                        else
+                        {
+                            Game.Instance.Exit();
+                        }
+
+                        break;
+                    case InventoryIndexCommand inv:
+                        if (_previousGameState != GameState.PlayerDead && inv.Index < _player.Inventory.Items.Count)
+                        {
+                            var item = _player.Inventory.Items[inv.Index];
+                            _player.Inventory.Use(item);
+                        }
+
+                        break;
                     case MoveCommand move:
                         _defaultConsole.Clear(0, 45, 80);
 
@@ -176,8 +228,18 @@
                         }
 
                         break;
-                    case ExitCommand _:
-                        Game.Instance.Exit();
+                    case ShowInventoryCommand _:
+                        _previousGameState = _gameState;
+                        _gameState = GameState.ShowInventory;
+                        _inventoryMenu = Menus.InventoryMenu(
+                            _defaultConsole,
+                            "Press the key next to an item to use it, or Esc to cancel.",
+                            _player.Inventory,
+                            50,
+                            _width,
+                            _height);
+                        _defaultConsole.Children.Add(_inventoryMenu);
+
                         break;
                 }
 
@@ -185,6 +247,7 @@
 
                 if (_gameState == GameState.EnemyTurn)
                 {
+                    RemoveInventoryMenu();
                     _defaultConsole.Clear(0, 46, 80);
 
                     foreach (var entity in _entities)
@@ -213,8 +276,17 @@
                 _gameMap.ComputeFov(_player.X, _player.Y, _fovRadius, _fovLightWalls, _fovAlgorithm);
             }
 
-            RenderFunctions.RenderAll(_defaultConsole, _panel, _entities, _player, _gameMap, _fovRecompute, _messageLog, _colors, _barWidth, _mouse);
+            RenderFunctions.RenderAll(_defaultConsole, _panel, _entities, _player, _gameMap, _fovRecompute, _messageLog, _colors, _barWidth, _mouse, _gameState);
             _fovRecompute = false;
+        }
+
+        private static void RemoveInventoryMenu()
+        {
+            if (_inventoryMenu != null)
+            {
+                _defaultConsole.Children.Remove(_inventoryMenu);
+                _inventoryMenu = null;
+            }
         }
 
         private static void ProcessEvents()
@@ -225,9 +297,6 @@
 
                 switch (@event)
                 {
-                    case MessageEvent message:
-                        _messageLog.AddMessage(message.Message);
-                        break;
                     case DeadEvent dead:
                         if (dead.Entity == _player)
                         {
@@ -240,18 +309,27 @@
                         }
 
                         break;
+                    case ItemConsumedEvent consumed:
+                        _gameState = GameState.EnemyTurn;
+
+                        EventLog.Add(new MessageEvent(consumed.Message));
+
+                        break;
                     case ItemPickupEvent pickup:
                         _entities.Remove(pickup.Item);
 
                         if (pickup.Entity == _player)
                         {
-                            EventLog.Instance.Add(new MessageEvent($"You pick up the {pickup.Item.Name}!", Color.Blue));
+                            EventLog.Add(new MessageEvent($"You pick up the {pickup.Item.Name}!", Color.Blue));
                         }
                         else
                         {
-                            EventLog.Instance.Add(new MessageEvent($"The {pickup.Entity.Name} picks up the {pickup.Item.Name}.", Color.Beige));
+                            EventLog.Add(new MessageEvent($"The {pickup.Entity.Name} picks up the {pickup.Item.Name}.", Color.Beige));
                         }
 
+                        break;
+                    case MessageEvent message:
+                        _messageLog.AddMessage(message.Message);
                         break;
                 }
             }

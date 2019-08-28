@@ -2,21 +2,16 @@
 {
     using Microsoft.Xna.Framework;
 
-    public class MessageEvent : Event
+    public class ItemConsumedEvent : Event
     {
-        public MessageEvent(string message)
+        public ItemConsumedEvent(string message)
             : this(message, Color.White)
         {
         }
 
-        public MessageEvent(string message, Color color)
+        public ItemConsumedEvent(string message, Color color)
         {
             Message = new Message(message, color);
-        }
-
-        public MessageEvent(Message message)
-        {
-            Message = message;
         }
 
         public Message Message { get; }

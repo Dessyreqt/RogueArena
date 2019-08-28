@@ -4,6 +4,7 @@
     {
         PlayersTurn,
         EnemyTurn,
-        PlayerDead
+        PlayerDead,
+        ShowInventory
     }
 }

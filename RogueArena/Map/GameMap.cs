@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Components;
+    using Components.ItemFunctions;
     using Microsoft.Xna.Framework;
 
     [Serializable]
@@ -168,7 +169,7 @@
 
                 if (!entities.Any(entity => entity.X == x && entity.Y == y))
                 {
-                    var item = new Entity(x, y, '!', Color.DarkViolet, "Healing Potion", renderOrder: RenderOrder.Item, item: new Item());
+                    var item = new Entity(x, y, '!', Color.DarkViolet, "Healing Potion", renderOrder: RenderOrder.Item, item: new Item(new HealFunction(4)));
 
                     entities.Add(item);
                 }

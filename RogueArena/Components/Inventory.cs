@@ -28,5 +28,35 @@
                 Items.Add(entity);
             }
         }
+
+        public void Use(Entity itemEntity)
+        {
+            var item = itemEntity?.Item;
+
+            if (item == null)
+            {
+                return;
+            }
+
+            if (item.ItemFunction == null)
+            {
+                EventLog.Add(new MessageEvent($"The {itemEntity.Name} cannot be used", Color.Yellow));
+            }
+            else
+            {
+                item.ItemFunction.Target = Owner;
+                var events = item.ItemFunction.Execute();
+
+                foreach (var @event in events)
+                {
+                    if (@event is ItemConsumedEvent)
+                    {
+                        Items.Remove(itemEntity);
+                    }
+
+                    EventLog.Add(@event);
+                }
+            }
+        }
     }
 }

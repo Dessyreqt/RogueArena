@@ -24,6 +24,7 @@
 
             if (Hp <= 0)
             {
+                Hp = 0;
                 EventLog.Add(new DeadEvent(Owner));
             }
         }
@@ -40,6 +41,16 @@
             else
             {
                 EventLog.Add(new MessageEvent($"{Owner.Name} attacks {target.Name} but does no damage."));
+            }
+        }
+
+        public void Heal(int amount)
+        {
+            Hp += amount;
+
+            if (Hp > MaxHp)
+            {
+                Hp = MaxHp;
             }
         }
     }
