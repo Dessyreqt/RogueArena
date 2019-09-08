@@ -94,10 +94,5 @@
 
             return Menu(console, header, options, inventoryWidth, screenWidth, screenHeight);
         }
-
-        private static int GetHeaderHeight(Console console, int i, int i1, int width, int screenHeight, string header)
-        {
-            return 2;
-        }
     }
 }

@@ -5,6 +5,7 @@
         PlayersTurn,
         EnemyTurn,
         PlayerDead,
-        ShowInventory
+        ShowInventory,
+        DropInventory,
     }
 }

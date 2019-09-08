@@ -20,13 +20,18 @@
         {
             if (Items.Count >= Capacity)
             {
-                EventLog.Instance.Add(new MessageEvent("You cannot carry any more, your inventory is full.", Color.Yellow));
+                EventLog.Add(new MessageEvent("You cannot carry any more, your inventory is full.", Color.Yellow));
             }
             else
             {
-                EventLog.Instance.Add(new ItemPickupEvent(Owner, entity));
+                EventLog.Add(new ItemPickupEvent(Owner, entity));
                 Items.Add(entity);
             }
+        }
+
+        public void RemoveItem(Entity entity)
+        {
+            Items.Remove(entity);
         }
 
         public void Use(Entity itemEntity)
@@ -57,6 +62,15 @@
                     EventLog.Add(@event);
                 }
             }
+        }
+
+        public void Drop(Entity itemEntity)
+        {
+            itemEntity.X = Owner.X;
+            itemEntity.Y = Owner.Y;
+
+            RemoveItem(itemEntity);
+            EventLog.Add(new ItemDroppedEvent(Owner, itemEntity));
         }
     }
 }

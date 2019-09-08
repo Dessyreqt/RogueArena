@@ -148,8 +148,21 @@
 
                 switch (command)
                 {
+                    case DropInventoryCommand _:
+                        _previousGameState = _gameState;
+                        _gameState = GameState.DropInventory;
+                        _inventoryMenu = Menus.InventoryMenu(
+                            _defaultConsole,
+                            "Press the key next to an item to drop it, or Esc to cancel.",
+                            _player.Inventory,
+                            50,
+                            _width,
+                            _height);
+                        _defaultConsole.Children.Add(_inventoryMenu);
+
+                        break;
                     case ExitCommand _:
-                        if (_gameState == GameState.ShowInventory)
+                        if (_gameState == GameState.ShowInventory || _gameState == GameState.DropInventory)
                         {
                             _gameState = _previousGameState;
                             RemoveInventoryMenu();
@@ -164,7 +177,15 @@
                         if (_previousGameState != GameState.PlayerDead && inv.Index < _player.Inventory.Items.Count)
                         {
                             var item = _player.Inventory.Items[inv.Index];
-                            _player.Inventory.Use(item);
+
+                            if (_gameState == GameState.ShowInventory)
+                            {
+                                _player.Inventory.Use(item);
+                            }
+                            else if (_gameState == GameState.DropInventory)
+                            {
+                                _player.Inventory.Drop(item);
+                            }
                         }
 
                         break;
@@ -276,7 +297,7 @@
                 _gameMap.ComputeFov(_player.X, _player.Y, _fovRadius, _fovLightWalls, _fovAlgorithm);
             }
 
-            RenderFunctions.RenderAll(_defaultConsole, _panel, _entities, _player, _gameMap, _fovRecompute, _messageLog, _colors, _barWidth, _mouse, _gameState);
+            RenderFunctions.RenderAll(_defaultConsole, _panel, _entities, _player, _gameMap, _fovRecompute, _messageLog, _colors, _barWidth, _mouse);
             _fovRecompute = false;
         }
 
@@ -313,6 +334,21 @@
                         _gameState = GameState.EnemyTurn;
 
                         EventLog.Add(new MessageEvent(consumed.Message));
+
+                        break;
+                    case ItemDroppedEvent dropped:
+                        _entities.Add(dropped.Item);
+
+                        if (dropped.Entity == _player)
+                        {
+                            EventLog.Add(new MessageEvent($"You dropped the {dropped.Item.Name}!", Color.Yellow));
+                        }
+                        else
+                        {
+                            EventLog.Add(new MessageEvent($"The {dropped.Entity.Name} dropped the {dropped.Item.Name}.", Color.Beige));
+                        }
+
+                        _gameState = GameState.EnemyTurn;
 
                         break;
                     case ItemPickupEvent pickup:
