@@ -64,12 +64,9 @@
                 var y = _random.Next(mapHeight - height - 1);
                 var newRoom = new Rectangle(x, y, width, height);
 
-                foreach (var otherRoom in rooms)
+                if (rooms.Any(room => newRoom.Intersects(room)))
                 {
-                    if (newRoom.Intersects(otherRoom))
-                    {
-                        break;
-                    }
+                    continue;
                 }
 
                 CreateRoom(newRoom);

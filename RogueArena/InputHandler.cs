@@ -79,31 +79,23 @@
                 switch (key)
                 {
                     case Keys.Up:
-                    case Keys.K:
                     case Keys.NumPad8:
                         return new MoveCommand(0, -1);
                     case Keys.Down:
-                    case Keys.J:
                     case Keys.NumPad2:
                         return new MoveCommand(0, 1);
                     case Keys.Left:
-                    case Keys.H:
                     case Keys.NumPad4:
                         return new MoveCommand(-1, 0);
                     case Keys.Right:
-                    case Keys.L:
                     case Keys.NumPad6:
                         return new MoveCommand(1, 0);
-                    case Keys.Y:
                     case Keys.NumPad7:
                         return new MoveCommand(-1, -1);
-                    case Keys.U:
                     case Keys.NumPad9:
                         return new MoveCommand(1, -1);
-                    case Keys.B:
                     case Keys.NumPad1:
                         return new MoveCommand(-1, 1);
-                    case Keys.N:
                     case Keys.NumPad3:
                         return new MoveCommand(1, 1);
                     case Keys.G:
@@ -116,6 +108,7 @@
                     case Keys.R:
                         return new RestCommand();
                     case Keys.I:
+                    case Keys.B:
                         return new ShowInventoryCommand();
                     case Keys.D:
                         return new DropInventoryCommand();
