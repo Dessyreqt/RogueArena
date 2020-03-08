@@ -4,16 +4,18 @@
 
     public class ItemConsumedEvent : Event
     {
-        public ItemConsumedEvent(string message)
-            : this(message, Color.White)
+        public ItemConsumedEvent(string message, Entity target = null)
+            : this(message, Color.White, target)
         {
         }
 
-        public ItemConsumedEvent(string message, Color color)
+        public ItemConsumedEvent(string message, Color color, Entity target = null)
         {
             Message = new Message(message, color);
+            Target = target;
         }
 
         public Message Message { get; }
+        public Entity Target { get; }
     }
 }

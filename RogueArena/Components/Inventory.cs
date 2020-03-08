@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Events;
     using Microsoft.Xna.Framework;
+    using RogueArena.Map;
 
     public class Inventory
     {
@@ -34,7 +35,7 @@
             Items.Remove(entity);
         }
 
-        public void Use(Entity itemEntity)
+        public void Use(Entity itemEntity, List<Entity> entities, GameMap gameMap)
         {
             var item = itemEntity?.Item;
 
@@ -50,6 +51,9 @@
             else
             {
                 item.ItemFunction.Target = Owner;
+                item.ItemFunction.Entities = entities;
+                item.ItemFunction.GameMap = gameMap;
+
                 var events = item.ItemFunction.Execute();
 
                 foreach (var @event in events)

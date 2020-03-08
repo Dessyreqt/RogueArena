@@ -180,7 +180,7 @@
 
                             if (_gameState == GameState.ShowInventory)
                             {
-                                _player.Inventory.Use(item);
+                                _player.Inventory.Use(item, _entities, _gameMap);
                             }
                             else if (_gameState == GameState.DropInventory)
                             {

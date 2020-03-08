@@ -166,9 +166,18 @@
 
                 if (!entities.Any(entity => entity.X == x && entity.Y == y))
                 {
-                    var item = new Entity(x, y, '!', Color.DarkViolet, "Healing Potion", renderOrder: RenderOrder.Item, item: new Item(new HealFunction(4)));
+                    var itemChance = _random.Next(100);
 
-                    entities.Add(item);
+                    if (itemChance < 70)
+                    {
+                        var item = new Entity(x, y, '!', Color.DarkViolet, "Healing Potion", renderOrder: RenderOrder.Item, item: new Item(new HealFunction(4)));
+                        entities.Add(item);
+                    }
+                    else
+                    {
+                        var item = new Entity(x, y, '#', Color.Yellow, "Lightning Scroll", renderOrder: RenderOrder.Item, item: new Item(new CastLightningFunction(20, 5)));
+                        entities.Add(item);
+                    }
                 }
             }
         }
