@@ -6,6 +6,7 @@
     using Components;
     using Map;
     using Microsoft.Xna.Framework;
+    using RogueArena.Components.AI;
     using Util;
 
     public class Entity

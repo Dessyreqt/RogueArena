@@ -6,6 +6,7 @@
     using Components;
     using Components.ItemFunctions;
     using Microsoft.Xna.Framework;
+    using RogueArena.Components.AI;
     using RogueArena.Events;
 
     [Serializable]
@@ -13,15 +14,10 @@
     {
         public const int FovBasic = 0;
 
-        private readonly Random _random;
-        private readonly int _tileCount;
-
-        public GameMap(int width, int height, Random random)
+        public GameMap(int width, int height)
         {
             Width = width;
             Height = height;
-            _tileCount = width * height;
-            _random = random;
             Tiles = InitializeTiles();
         }
 
@@ -59,10 +55,10 @@
 
             for (int i = 0; i < maxRooms; i++)
             {
-                var width = _random.Next(minRoomSize, maxRoomSize);
-                var height = _random.Next(minRoomSize, maxRoomSize);
-                var x = _random.Next(mapWidth - width - 1);
-                var y = _random.Next(mapHeight - height - 1);
+                var width = Rng.Next(minRoomSize, maxRoomSize);
+                var height = Rng.Next(minRoomSize, maxRoomSize);
+                var x = Rng.Next(mapWidth - width - 1);
+                var y = Rng.Next(mapHeight - height - 1);
                 var newRoom = new Rectangle(x, y, width, height);
 
                 if (rooms.Any(room => newRoom.Intersects(room)))
@@ -82,7 +78,7 @@
                 {
                     var prevCenter = rooms[rooms.Count - 1].Center;
 
-                    if (_random.Next(2) == 1)
+                    if (Rng.Next(2) == 1)
                     {
                         CreateHorizontalTunnel(prevCenter.X, newCenter.X, prevCenter.Y);
                         CreateVerticalTunnel(prevCenter.Y, newCenter.Y, newCenter.X);
@@ -129,19 +125,19 @@
 
         private void PlaceEntities(Rectangle room, List<Entity> entities, int maxMonstersPerRoom, int maxItemsPerRoom)
         {
-            var numMonsters = _random.Next(maxMonstersPerRoom);
-            var numItems = _random.Next(maxItemsPerRoom);
+            var numMonsters = Rng.Next(maxMonstersPerRoom);
+            var numItems = Rng.Next(maxItemsPerRoom);
 
             for (int i = 0; i < numMonsters; i++)
             {
-                var x = _random.Next(room.X1 + 1, room.X2 - 1);
-                var y = _random.Next(room.Y1 + 1, room.Y2 - 1);
+                var x = Rng.Next(room.X1 + 1, room.X2 - 1);
+                var y = Rng.Next(room.Y1 + 1, room.Y2 - 1);
 
                 if (!entities.Any(entity => entity.X == x && entity.Y == y))
                 {
                     Entity monster;
 
-                    if (_random.Next(100) < 80)
+                    if (Rng.Next(100) < 80)
                     {
                         var orcFighter = new Fighter(10, 0, 3);
                         var orcAi = new BasicMonster();
@@ -162,21 +158,26 @@
 
             for (int i = 0; i < numItems; i++)
             {
-                var x = _random.Next(room.X1 + 1, room.X2 - 1);
-                var y = _random.Next(room.Y1 + 1, room.Y2 - 1);
+                var x = Rng.Next(room.X1 + 1, room.X2 - 1);
+                var y = Rng.Next(room.Y1 + 1, room.Y2 - 1);
 
                 if (!entities.Any(entity => entity.X == x && entity.Y == y))
                 {
-                    var itemChance = _random.Next(100);
+                    var itemChance = Rng.Next(100);
 
                     if (itemChance < 70)
                     {
                         var item = new Entity(x, y, '!', Color.DarkViolet, "Healing Potion", renderOrder: RenderOrder.Item, item: new Item(new HealFunction(4)));
                         entities.Add(item);
                     }
-                    else if (itemChance < 85)
+                    else if (itemChance < 80)
                     {
                         var item = new Entity(x, y, '#', Color.Red, "Fireball Scroll", renderOrder:RenderOrder.Item, item: new Item(new CastFireballFunction(12, 3), true, new Message("Left-click a target tile for the fireball, or right-click to cancel.", Color.LightCyan)));
+                        entities.Add(item);
+                    }
+                    else if (itemChance < 90)
+                    {
+                        var item = new Entity(x, y, '#', Color.LightPink, "Confusion Scroll", renderOrder:RenderOrder.Item, item: new Item(new CastConfuseFunction(), true, new Message("Left-click an enemy to confuse it, or right-click to cancel.", Color.LightCyan)));
                         entities.Add(item);
                     }
                     else

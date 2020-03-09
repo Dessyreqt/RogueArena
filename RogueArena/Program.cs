@@ -43,7 +43,6 @@
         private const int _maxItemsPerRoom = 2;
 
         private static readonly List<Entity> _entities = new List<Entity>();
-        private static readonly Random _random = new Random();
 
         private static Console _defaultConsole;
         private static Console _panel;
@@ -85,7 +84,6 @@
             LoadPosition();
             Game.Instance.Window.ClientSizeChanged += (sender, e) => { SavePosition(); };
 
-            EventLog.Initialize();
             _messageLog = new MessageLog(_messageX, _messageWidth, _messageHeight);
 
             _defaultConsole = new Console(_width, _height);
@@ -103,7 +101,7 @@
             _player = new Entity(0, 0, '@', Color.White, "Player", true, RenderOrder.Actor, new Fighter(30, 2, 5), inventory: new Inventory(26));
             _entities.Add(_player);
 
-            _gameMap = new GameMap(_mapWidth, _mapHeight, _random);
+            _gameMap = new GameMap(_mapWidth, _mapHeight);
             _gameMap.MakeMap(_maxRooms, _minRoomSize, _maxRoomSize, _mapWidth, _mapHeight, _player, _entities, _maxMonstersPerRoom, _maxItemsPerRoom);
             _fovRecompute = true;
             _gameState = GameState.PlayersTurn;
@@ -113,7 +111,7 @@
 
         private static void InitializeInventory()
         {
-            //_player.Inventory.AddItem(new Entity(0, 0, '#', Color.Red, "Fireball Scroll", renderOrder:RenderOrder.Item, item: new Item(new CastFireballFunction(12, 3), true, new Message("Left-click a target tile for the fireball, or right-click to cancel.", Color.LightCyan))));
+            //_player.Inventory.AddItem(new Entity(0, 0, '#', Color.LightPink, "Confusion Scroll", renderOrder:RenderOrder.Item, item: new Item(new CastConfuseFunction(), true, new Message("Left-click an enemy to confuse it, or right-click to cancel.", Color.LightCyan))));
         }
 
         private static void LoadPosition()
@@ -278,38 +276,40 @@
                 }
 
                 ProcessEvents();
-
-                if (_gameState == GameState.EnemyTurn)
-                {
-                    RemoveInventoryMenu();
-                    _defaultConsole.Clear(0, 46, 80);
-
-                    foreach (var entity in _entities)
-                    {
-                        if (entity.AI != null)
-                        {
-                            entity.AI.TakeTurn(_player, _gameMap, _entities);
-                            ProcessEvents();
-
-                            if (_gameState == GameState.PlayerDead)
-                            {
-                                break;
-                            }
-                        }
-                    }
-
-                    if (_gameState != GameState.PlayerDead)
-                    {
-                        _gameState = GameState.PlayersTurn;
-                    }
-                }
             }
 
+            if (_gameState == GameState.EnemyTurn)
+            {
+                RemoveInventoryMenu();
+                _defaultConsole.Clear(0, 46, 80);
+
+                foreach (var entity in _entities)
+                {
+                    if (entity.AI != null)
+                    {
+                        entity.AI.TakeTurn(_player, _gameMap, _entities);
+                        ProcessEvents();
+
+                        if (_gameState == GameState.PlayerDead)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                if (_gameState != GameState.PlayerDead)
+                {
+                    _gameState = GameState.PlayersTurn;
+                }
+
+                ProcessEvents();
+            } 
+            
             if (_gameState == GameState.Targeting)
             {
                 RemoveInventoryMenu();
 
-                if (Global.MouseState.LeftButtonDown)
+                if (Global.MouseState.LeftClicked)
                 {
                     var targetPos = _mouse.MouseState.CellPosition;
 
