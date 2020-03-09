@@ -4,6 +4,10 @@
 
     public class Message
     {
+        public Message(string text) : this(text, Color.White)
+        {
+        }
+
         public Message(string text, Color color)
         {
             Text = text;

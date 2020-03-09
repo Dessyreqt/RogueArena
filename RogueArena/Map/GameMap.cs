@@ -6,6 +6,7 @@
     using Components;
     using Components.ItemFunctions;
     using Microsoft.Xna.Framework;
+    using RogueArena.Events;
 
     [Serializable]
     public class GameMap
@@ -171,6 +172,11 @@
                     if (itemChance < 70)
                     {
                         var item = new Entity(x, y, '!', Color.DarkViolet, "Healing Potion", renderOrder: RenderOrder.Item, item: new Item(new HealFunction(4)));
+                        entities.Add(item);
+                    }
+                    else if (itemChance < 85)
+                    {
+                        var item = new Entity(x, y, '#', Color.Red, "Fireball Scroll", renderOrder:RenderOrder.Item, item: new Item(new CastFireballFunction(12, 3), true, new Message("Left-click a target tile for the fireball, or right-click to cancel.", Color.LightCyan)));
                         entities.Add(item);
                     }
                     else

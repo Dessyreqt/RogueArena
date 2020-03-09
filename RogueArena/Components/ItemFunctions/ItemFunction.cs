@@ -10,5 +10,7 @@
         public List<Entity> Entities { get; set; }
         public GameMap GameMap { get; set; }
         public abstract List<Event> Execute();
+        public int? TargetX { get; set; }
+        public int? TargetY { get; set; }
     }
 }

@@ -19,9 +19,30 @@
                 case GameState.ShowInventory:
                 case GameState.DropInventory:
                     return HandleShowInventoryKeys(keys);
+                case GameState.Targeting:
+                    return HandleTargetingKeys(keys);
                 default:
                     return null;
             }
+        }
+
+        private static Command HandleTargetingKeys(ReadOnlyCollection<AsciiKey> keys)
+        {
+            if (keys.Count > 0)
+            {
+                var key = keys[0].Key;
+             
+                switch (key)
+                {
+                    case Keys.F5:
+                        Settings.ToggleFullScreen();
+                        return null;
+                    case Keys.Escape:
+                        return new ExitCommand();
+                }
+            }
+
+            return null;
         }
 
         private static Command HandleShowInventoryKeys(ReadOnlyCollection<AsciiKey> keys)

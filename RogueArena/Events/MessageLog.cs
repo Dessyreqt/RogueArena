@@ -1,6 +1,7 @@
 ﻿namespace RogueArena.Events
 {
     using System.Collections.Generic;
+    using Microsoft.Xna.Framework;
 
     public class MessageLog
     {
@@ -16,6 +17,16 @@
         public int X { get; }
         public int Width { get; }
         public int Height { get; }
+
+        public void AddMessage(string text)
+        {
+            AddMessage(new Message(text));
+        }
+
+        public void AddMessage(string text, Color color)
+        {
+            AddMessage(new Message(text, color));
+        }
 
         public void AddMessage(Message message)
         {

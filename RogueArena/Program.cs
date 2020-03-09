@@ -8,6 +8,7 @@
     using Events;
     using Map;
     using Microsoft.Xna.Framework;
+    using RogueArena.Components.ItemFunctions;
     using SadConsole;
     using SadConsole.Input;
     using Console = SadConsole.Console;
@@ -54,6 +55,7 @@
         private static GameState _previousGameState;
         private static MessageLog _messageLog;
         private static MouseEventArgs _mouse;
+        private static Entity _targetingItem;
 
         private static Dictionary<string, Color> _colors = new Dictionary<string, Color>
                                                            {
@@ -105,6 +107,13 @@
             _gameMap.MakeMap(_maxRooms, _minRoomSize, _maxRoomSize, _mapWidth, _mapHeight, _player, _entities, _maxMonstersPerRoom, _maxItemsPerRoom);
             _fovRecompute = true;
             _gameState = GameState.PlayersTurn;
+
+            InitializeInventory();
+        }
+
+        private static void InitializeInventory()
+        {
+            //_player.Inventory.AddItem(new Entity(0, 0, '#', Color.Red, "Fireball Scroll", renderOrder:RenderOrder.Item, item: new Item(new CastFireballFunction(12, 3), true, new Message("Left-click a target tile for the fireball, or right-click to cancel.", Color.LightCyan))));
         }
 
         private static void LoadPosition()
@@ -166,6 +175,10 @@
                         {
                             _gameState = _previousGameState;
                             RemoveInventoryMenu();
+                        }
+                        else if (_gameState == GameState.Targeting)
+                        {
+                            EventLog.Add(new TargetingCanceledEvent());
                         }
                         else
                         {
@@ -237,7 +250,7 @@
                             }
                             else
                             {
-                                EventLog.Instance.Add(new MessageEvent("There is nothing here to pick up.", Color.Yellow));
+                                EventLog.Add(new MessageEvent("There is nothing here to pick up.", Color.Yellow));
                             }
                         }
 
@@ -292,6 +305,24 @@
                 }
             }
 
+            if (_gameState == GameState.Targeting)
+            {
+                RemoveInventoryMenu();
+
+                if (Global.MouseState.LeftButtonDown)
+                {
+                    var targetPos = _mouse.MouseState.CellPosition;
+
+                    _player.Inventory.Use(_targetingItem, _entities, _gameMap, targetPos.X, targetPos.Y);
+                    ProcessEvents();
+                }
+                else if (Global.MouseState.RightButtonDown)
+                {
+                    EventLog.Add(new TargetingCanceledEvent());
+                    ProcessEvents();
+                }
+            }
+
             if (_fovRecompute)
             {
                 _gameMap.ComputeFov(_player.X, _player.Y, _fovRadius, _fovLightWalls, _fovAlgorithm);
@@ -333,7 +364,7 @@
                     case ItemConsumedEvent consumed:
                         _gameState = GameState.EnemyTurn;
 
-                        EventLog.Add(new MessageEvent(consumed.Message));
+                        _messageLog.AddMessage(consumed.Message);
 
                         break;
                     case ItemDroppedEvent dropped:
@@ -341,11 +372,11 @@
 
                         if (dropped.Entity == _player)
                         {
-                            EventLog.Add(new MessageEvent($"You dropped the {dropped.Item.Name}!", Color.Yellow));
+                            _messageLog.AddMessage($"You dropped the {dropped.Item.Name}!", Color.Yellow);
                         }
                         else
                         {
-                            EventLog.Add(new MessageEvent($"The {dropped.Entity.Name} dropped the {dropped.Item.Name}.", Color.Beige));
+                            _messageLog.AddMessage($"The {dropped.Entity.Name} dropped the {dropped.Item.Name}.", Color.Beige);
                         }
 
                         _gameState = GameState.EnemyTurn;
@@ -356,16 +387,28 @@
 
                         if (pickup.Entity == _player)
                         {
-                            EventLog.Add(new MessageEvent($"You pick up the {pickup.Item.Name}!", Color.Blue));
+                            _messageLog.AddMessage($"You pick up the {pickup.Item.Name}!", Color.Blue);
                         }
                         else
                         {
-                            EventLog.Add(new MessageEvent($"The {pickup.Entity.Name} picks up the {pickup.Item.Name}.", Color.Beige));
+                            _messageLog.AddMessage($"The {pickup.Entity.Name} picks up the {pickup.Item.Name}.", Color.Beige);
                         }
 
                         break;
                     case MessageEvent message:
                         _messageLog.AddMessage(message.Message);
+                        break;
+                    case TargetingCanceledEvent _:
+                        _gameState = _previousGameState;
+                        _messageLog.AddMessage("Targeting canceled.");
+                        break;
+                    case TargetingStartEvent targeting:
+                        _previousGameState = GameState.PlayersTurn;
+                        _gameState = GameState.Targeting;
+
+                        _targetingItem = targeting.ItemEntity;
+
+                        _messageLog.AddMessage(_targetingItem.Item.TargetingMessage);
                         break;
                 }
             }

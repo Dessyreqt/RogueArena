@@ -125,6 +125,14 @@
             }
         }
 
+        public double DistanceTo(int x, int y)
+        {
+            var dx = x - X;
+            var dy = y - Y;
+
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
         public double DistanceTo(Entity other)
         {
             var dx = other.X - X;

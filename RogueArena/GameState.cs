@@ -7,5 +7,6 @@
         PlayerDead,
         ShowInventory,
         DropInventory,
+        Targeting,
     }
 }

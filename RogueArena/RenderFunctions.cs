@@ -110,24 +110,6 @@
             }
         }
 
-        public static void RenderLog(Console console, List<string> messageLog, int startingLine, int count)
-        {
-            var lineNo = 0;
-
-            for (var index = messageLog.Count - 1; index >= 0; index--)
-            {
-                var log = messageLog[index];
-                console.Clear(0, startingLine + lineNo, console.Width);
-                console.Print(0, startingLine + lineNo, log);
-
-                lineNo++;
-                if (lineNo >= count)
-                {
-                    break;
-                }
-            }
-        }
-
         private static string GetNamesUnderMouse(MouseEventArgs mouse, List<Entity> entities, GameMap gameMap)
         {
             var pos = mouse.MouseState.CellPosition;

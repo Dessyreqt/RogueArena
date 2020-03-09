@@ -35,7 +35,7 @@
             Items.Remove(entity);
         }
 
-        public void Use(Entity itemEntity, List<Entity> entities, GameMap gameMap)
+        public void Use(Entity itemEntity, List<Entity> entities, GameMap gameMap, int? targetX = null, int? targetY = null)
         {
             var item = itemEntity?.Item;
 
@@ -50,20 +50,29 @@
             }
             else
             {
-                item.ItemFunction.Target = Owner;
-                item.ItemFunction.Entities = entities;
-                item.ItemFunction.GameMap = gameMap;
-
-                var events = item.ItemFunction.Execute();
-
-                foreach (var @event in events)
+                if (item.Targeting && (targetX == null || targetY == null))
                 {
-                    if (@event is ItemConsumedEvent)
-                    {
-                        Items.Remove(itemEntity);
-                    }
+                    EventLog.Add(new TargetingStartEvent(itemEntity));
+                }
+                else
+                {
+                    item.ItemFunction.Target = Owner;
+                    item.ItemFunction.Entities = entities;
+                    item.ItemFunction.GameMap = gameMap;
+                    item.ItemFunction.TargetX = targetX;
+                    item.ItemFunction.TargetY = targetY;
 
-                    EventLog.Add(@event);
+                    var events = item.ItemFunction.Execute();
+
+                    foreach (var @event in events)
+                    {
+                        if (@event is ItemConsumedEvent)
+                        {
+                            Items.Remove(itemEntity);
+                        }
+
+                        EventLog.Add(@event);
+                    }
                 }
             }
         }
