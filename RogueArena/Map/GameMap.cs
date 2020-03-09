@@ -7,6 +7,7 @@
     using Components.ItemFunctions;
     using Microsoft.Xna.Framework;
     using RogueArena.Components.AI;
+    using RogueArena.Data;
     using RogueArena.Events;
 
     [Serializable]
@@ -139,17 +140,11 @@
 
                     if (Rng.Next(100) < 80)
                     {
-                        var orcFighter = new Fighter(10, 0, 3);
-                        var orcAi = new BasicMonster();
-
-                        monster = new Entity(x, y, 'o', Color.LightGreen, "Orc", true, RenderOrder.Actor, orcFighter, orcAi);
+                        monster = Monsters.Get(Monsters.Orc, x, y);
                     }
                     else
                     {
-                        var trollFighter = new Fighter(16, 1, 4);
-                        var trollAi = new BasicMonster();
-
-                        monster = new Entity(x, y, 'T', Color.DarkGreen, "Troll", true, RenderOrder.Actor, trollFighter, trollAi);
+                        monster = Monsters.Get(Monsters.Troll, x, y);
                     }
 
                     entities.Add(monster);
@@ -167,22 +162,22 @@
 
                     if (itemChance < 70)
                     {
-                        var item = new Entity(x, y, '!', Color.DarkViolet, "Healing Potion", renderOrder: RenderOrder.Item, item: new Item(new HealFunction(4)));
+                        var item = Items.Get(Items.HealingPotion, x, y);
                         entities.Add(item);
                     }
                     else if (itemChance < 80)
                     {
-                        var item = new Entity(x, y, '#', Color.Red, "Fireball Scroll", renderOrder:RenderOrder.Item, item: new Item(new CastFireballFunction(12, 3), true, new Message("Left-click a target tile for the fireball, or right-click to cancel.", Color.LightCyan)));
+                        var item = Items.Get(Items.FireballScroll, x, y);
                         entities.Add(item);
                     }
                     else if (itemChance < 90)
                     {
-                        var item = new Entity(x, y, '#', Color.LightPink, "Confusion Scroll", renderOrder:RenderOrder.Item, item: new Item(new CastConfuseFunction(), true, new Message("Left-click an enemy to confuse it, or right-click to cancel.", Color.LightCyan)));
+                        var item = Items.Get(Items.ConfusionScroll, x, y);
                         entities.Add(item);
                     }
                     else
                     {
-                        var item = new Entity(x, y, '#', Color.Yellow, "Lightning Scroll", renderOrder: RenderOrder.Item, item: new Item(new CastLightningFunction(20, 5)));
+                        var item = Items.Get(Items.LightningScroll, x, y);
                         entities.Add(item);
                     }
                 }

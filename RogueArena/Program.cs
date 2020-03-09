@@ -9,6 +9,7 @@
     using Map;
     using Microsoft.Xna.Framework;
     using RogueArena.Components.ItemFunctions;
+    using RogueArena.Data;
     using SadConsole;
     using SadConsole.Input;
     using Console = SadConsole.Console;
@@ -111,7 +112,7 @@
 
         private static void InitializeInventory()
         {
-            //_player.Inventory.AddItem(new Entity(0, 0, '#', Color.LightPink, "Confusion Scroll", renderOrder:RenderOrder.Item, item: new Item(new CastConfuseFunction(), true, new Message("Left-click an enemy to confuse it, or right-click to cancel.", Color.LightCyan))));
+            //_player.Inventory.AddItem(Items.Get(Items.FireballScroll, 0, 0));
         }
 
         private static void LoadPosition()
