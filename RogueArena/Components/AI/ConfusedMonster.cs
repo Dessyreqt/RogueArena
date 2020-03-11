@@ -4,6 +4,7 @@
     using Microsoft.Xna.Framework;
     using RogueArena.Events;
     using RogueArena.Map;
+    using RogueArena.Rng;
 
     public class ConfusedMonster : AI
     {

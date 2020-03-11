@@ -1,4 +1,4 @@
-﻿namespace RogueArena
+﻿namespace RogueArena.Rng
 {
     using System;
 
@@ -11,16 +11,16 @@
         {
         }
 
-        private static Random Instance => Lazy.Value._random ?? (Lazy.Value._random = new Random());
+        private static Random _instance => Lazy.Value._random ?? (Lazy.Value._random = new Random());
 
         public static int Next(int maxValue)
         {
-            return Instance.Next(maxValue);
+            return _instance.Next(maxValue);
         }
 
         public static int Next(int minValue, int maxValue)
         {
-            return Instance.Next(minValue, maxValue);
+            return _instance.Next(minValue, maxValue);
         }
     }
 }

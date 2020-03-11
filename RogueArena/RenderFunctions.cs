@@ -5,6 +5,7 @@
     using Events;
     using Map;
     using Microsoft.Xna.Framework;
+    using RogueArena.Data;
     using SadConsole;
     using SadConsole.Input;
     using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -41,7 +42,6 @@
             GameMap gameMap,
             bool fovRecompute,
             MessageLog messageLog,
-            Dictionary<string, Color> colors,
             int barWidth,
             MouseEventArgs mouse)
         {
@@ -56,11 +56,11 @@
                         {
                             if (wall)
                             {
-                                console.SetBackground(x, y, colors["light_wall"]);
+                                console.SetBackground(x, y, Colors.LightWall);
                             }
                             else
                             {
-                                console.SetBackground(x, y, colors["light_ground"]);
+                                console.SetBackground(x, y, Colors.LightGround);
                             }
 
                             gameMap.Tiles[x, y].Explored = true;
@@ -69,11 +69,11 @@
                         {
                             if (wall)
                             {
-                                console.SetBackground(x, y, colors["dark_wall"]);
+                                console.SetBackground(x, y, Colors.DarkWall);
                             }
                             else
                             {
-                                console.SetBackground(x, y, colors["dark_ground"]);
+                                console.SetBackground(x, y, Colors.DarkGround);
                             }
                         }
                     }

@@ -12,11 +12,20 @@
         {
         }
 
-        public static List<Event> Instance => Lazy.Value._log ?? (Lazy.Value._log = new List<Event>());
+        private static List<Event> _instance => Lazy.Value._log ?? (Lazy.Value._log = new List<Event>());
 
         public static void Add(Event @event)
         {
-            Instance.Add(@event);
+            _instance.Add(@event);
+        }
+
+        public static int Count => _instance.Count;
+
+        public static Event Event(int index) => _instance[index];
+
+        public static void Clear()
+        {
+            _instance.Clear();
         }
     }
 }

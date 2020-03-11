@@ -3,12 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Components;
-    using Components.ItemFunctions;
-    using Microsoft.Xna.Framework;
-    using RogueArena.Components.AI;
     using RogueArena.Data;
-    using RogueArena.Events;
+    using RogueArena.Rng;
 
     [Serializable]
     public class GameMap
