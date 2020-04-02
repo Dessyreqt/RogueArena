@@ -3,11 +3,13 @@
     using System;
     using System.Windows;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
     using RogueArena.Commands.Game;
     using RogueArena.Commands.MainMenu;
     using RogueArena.Data;
     using RogueArena.Events;
     using SadConsole;
+    using SadConsole.DrawCalls;
     using SadConsole.Input;
     using Console = SadConsole.Console;
     using Game = SadConsole.Game;
@@ -18,6 +20,7 @@
 
         private static Console _defaultConsole;
         private static Console _panel;
+        private static Texture2D _titleScreen;
 
         private static MenuManager _menuManager;
 
@@ -48,8 +51,11 @@
             LoadPosition();
             Game.Instance.Window.ClientSizeChanged += (sender, e) => { SavePosition(); };
 
+            LoadContent();
+
             _defaultConsole = new Console(Constants.ScreenWidth, Constants.ScreenHeight);
             _defaultConsole.DefaultForeground = Color.White;
+            _defaultConsole.DefaultBackground = Color.Transparent;
             _defaultConsole.IsCursorDisabled = true;
             _defaultConsole.MouseMove += Console_MouseMove;
 
@@ -67,6 +73,11 @@
             _showLoadErrorMessage = false;
 
             InitializeInventory();
+        }
+
+        private static void LoadContent()
+        {
+            _titleScreen = Game.Instance.Content.Load<Texture2D>(@"Textures\menu_background");
         }
 
         private static void InitializeInventory()
@@ -109,7 +120,8 @@
         {
             if (_showMainMenu)
             { 
-                _menuManager.ShowMainMenu(_defaultConsole, Constants.ScreenWidth, Constants.ScreenHeight);
+                //_menuManager.ShowMainMenu(_defaultConsole, Constants.ScreenWidth, Constants.ScreenHeight);
+                Global.DrawCalls.Add(new DrawCallTexture(_titleScreen, _defaultConsole.Position.ToVector2()));
                 HandleMainMenu();
             }
             else
