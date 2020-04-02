@@ -3,11 +3,15 @@
     using System;
     using System.Windows;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
     using RogueArena.Commands.Game;
     using RogueArena.Commands.MainMenu;
     using RogueArena.Data;
     using RogueArena.Events;
+    using RogueArena.Graphics;
     using SadConsole;
+    using SadConsole.Components;
+    using SadConsole.DrawCalls;
     using SadConsole.Input;
     using Console = SadConsole.Console;
     using Game = SadConsole.Game;
@@ -18,6 +22,8 @@
 
         private static Console _defaultConsole;
         private static Console _panel;
+        private static Texture2D _titleScreenTexture;
+        private static BackgroundComponent _titleScreenBackground;
 
         private static MenuManager _menuManager;
 
@@ -48,8 +54,11 @@
             LoadPosition();
             Game.Instance.Window.ClientSizeChanged += (sender, e) => { SavePosition(); };
 
+            LoadContent();
+
             _defaultConsole = new Console(Constants.ScreenWidth, Constants.ScreenHeight);
             _defaultConsole.DefaultForeground = Color.White;
+            _defaultConsole.DefaultBackground = Color.Transparent;
             _defaultConsole.IsCursorDisabled = true;
             _defaultConsole.MouseMove += Console_MouseMove;
 
@@ -67,6 +76,12 @@
             _showLoadErrorMessage = false;
 
             InitializeInventory();
+        }
+
+        private static void LoadContent()
+        {
+            _titleScreenTexture = Game.Instance.Content.Load<Texture2D>(@"Textures\menu_background");
+            _titleScreenBackground = new BackgroundComponent(_titleScreenTexture);
         }
 
         private static void InitializeInventory()
@@ -110,10 +125,12 @@
             if (_showMainMenu)
             { 
                 _menuManager.ShowMainMenu(_defaultConsole, Constants.ScreenWidth, Constants.ScreenHeight);
+                _defaultConsole.Components.Add(_titleScreenBackground);
                 HandleMainMenu();
             }
             else
             {
+                _defaultConsole.Components.Remove(_titleScreenBackground);
                 _menuManager.HideMainMenu(_defaultConsole);
                 _menuManager.HideMessageBox(_defaultConsole);
                 PlayGame();
