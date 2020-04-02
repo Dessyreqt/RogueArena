@@ -68,18 +68,20 @@
 
         public static GameData Load()
         {
-            using (var file = new StreamReader(_saveLocation))
+            using (var file = new FileStream(_saveLocation, FileMode.Open))
             {
-                var data = file.ReadToEnd();
-                return JsonConvert.DeserializeObject<GameData>(data, _serializerSettings);
+                var data = new byte[file.Length];
+                file.Read(data, 0, (int)file.Length);
+                return JsonConvert.DeserializeObject<GameData>(Compression.Unzip(data), _serializerSettings);
             }
         }
 
         public void Save()
         {
-            using (var file = new StreamWriter(_saveLocation, false))
+            using (var file = new FileStream(_saveLocation, FileMode.OpenOrCreate))
             {
-                file.Write(JsonConvert.SerializeObject(this, _serializerSettings));
+                var data = Compression.Zip(JsonConvert.SerializeObject(this, _serializerSettings));
+                file.Write(data, 0, data.Length);
             }
         }
     }
