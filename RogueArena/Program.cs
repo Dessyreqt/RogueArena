@@ -8,7 +8,9 @@
     using RogueArena.Commands.MainMenu;
     using RogueArena.Data;
     using RogueArena.Events;
+    using RogueArena.Graphics;
     using SadConsole;
+    using SadConsole.Components;
     using SadConsole.DrawCalls;
     using SadConsole.Input;
     using Console = SadConsole.Console;
@@ -20,7 +22,8 @@
 
         private static Console _defaultConsole;
         private static Console _panel;
-        private static Texture2D _titleScreen;
+        private static Texture2D _titleScreenTexture;
+        private static BackgroundComponent _titleScreenBackground;
 
         private static MenuManager _menuManager;
 
@@ -77,7 +80,8 @@
 
         private static void LoadContent()
         {
-            _titleScreen = Game.Instance.Content.Load<Texture2D>(@"Textures\menu_background");
+            _titleScreenTexture = Game.Instance.Content.Load<Texture2D>(@"Textures\menu_background");
+            _titleScreenBackground = new BackgroundComponent(_titleScreenTexture);
         }
 
         private static void InitializeInventory()
@@ -120,12 +124,13 @@
         {
             if (_showMainMenu)
             { 
-                //_menuManager.ShowMainMenu(_defaultConsole, Constants.ScreenWidth, Constants.ScreenHeight);
-                Global.DrawCalls.Add(new DrawCallTexture(_titleScreen, _defaultConsole.Position.ToVector2()));
+                _menuManager.ShowMainMenu(_defaultConsole, Constants.ScreenWidth, Constants.ScreenHeight);
+                _defaultConsole.Components.Add(_titleScreenBackground);
                 HandleMainMenu();
             }
             else
             {
+                _defaultConsole.Components.Remove(_titleScreenBackground);
                 _menuManager.HideMainMenu(_defaultConsole);
                 _menuManager.HideMessageBox(_defaultConsole);
                 PlayGame();

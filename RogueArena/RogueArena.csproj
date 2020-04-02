@@ -10,9 +10,6 @@
   <ItemGroup>
     <MonoGameContentReference Include="**\*.mgcb" />
   </ItemGroup>
-
-  <ItemGroup>
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.7.0.1708" />
     <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.9" />
