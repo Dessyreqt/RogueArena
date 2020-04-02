@@ -11,6 +11,11 @@
     {
         public const int FovBasic = 0;
 
+        public GameMap()
+        {
+            // here for deserialization purposes
+        }
+
         public GameMap(int width, int height)
         {
             Width = width;
@@ -18,9 +23,9 @@
             Tiles = InitializeTiles();
         }
 
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public Tile[,] Tiles { get; private set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public Tile[,] Tiles { get; set; }
 
         public Tile[,] InitializeTiles()
         {

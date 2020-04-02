@@ -1,10 +1,17 @@
 ﻿namespace RogueArena.Events
 {
+    using System;
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
 
+    [Serializable]
     public class MessageLog
     {
+        public MessageLog()
+        {
+            // here for deserialization purposes
+        }
+
         public MessageLog(int x, int width, int height)
         {
             Messages = new List<Message>();
@@ -13,10 +20,10 @@
             Height = height;
         }
 
-        public List<Message> Messages { get; }
-        public int X { get; }
-        public int Width { get; }
-        public int Height { get; }
+        public List<Message> Messages { get; set; }
+        public int X { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         public void AddMessage(string text)
         {

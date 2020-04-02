@@ -11,6 +11,11 @@
 
     public class Entity
     {
+        public Entity()
+        {
+            // here for deserialization purposes
+        }
+
         public Entity(
             int x,
             int y,

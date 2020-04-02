@@ -3,8 +3,6 @@
     using System;
     using System.Windows;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using RogueArena.Commands;
     using RogueArena.Commands.Game;
     using RogueArena.Commands.MainMenu;
     using RogueArena.Data;
@@ -117,21 +115,18 @@
             else
             {
                 _menuManager.HideMainMenu(_defaultConsole);
+                _menuManager.HideMessageBox(_defaultConsole);
                 PlayGame();
+            }
+
+            if (_showLoadErrorMessage)
+            {
+                _menuManager.ShowMessageBox(_defaultConsole, "No save game to load", 50, Constants.ScreenWidth, Constants.ScreenHeight);
             }
         }
 
         private static void HandleMainMenu()
         {
-            if (_showLoadErrorMessage)
-            {
-                _menuManager.ShowMessageBox(_defaultConsole, "No save game to load", 50, Constants.ScreenWidth, Constants.ScreenHeight);
-            }
-            else
-            {
-                _menuManager.HideMessageBox(_defaultConsole);
-            }
-
             var action = InputHandler.HandleMainMenuKeys(Global.KeyboardState.KeysPressed);
 
             if (action != null)
@@ -147,6 +142,18 @@
                     _showMainMenu = false;
                     break;
                 case LoadSavedGameCommand _:
+                    _gameData = GameData.Load();
+
+                    if (_gameData == null)
+                    {
+                        _showLoadErrorMessage = true;
+                    }
+                    else
+                    {
+                        _previousGameState = _gameData.GameState;
+                        _showMainMenu = false;
+                    }
+
                     break;
                 case ExitGameCommand _:
                     Game.Instance.Exit();
@@ -188,6 +195,7 @@
                         }
                         else
                         {
+                            _gameData.Save();
                             Game.Instance.Exit();
                         }
 

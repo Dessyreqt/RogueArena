@@ -4,6 +4,11 @@
 
     public class Message
     {
+        private Message()
+        {
+            // here for deserialization purposes
+        }
+
         public Message(string text) : this(text, Color.White)
         {
         }
@@ -14,7 +19,7 @@
             Color = color;
         }
 
-        public string Text { get; }
-        public Color Color { get; }
+        public string Text { get; set; }
+        public Color Color { get; set; }
     }
 }
