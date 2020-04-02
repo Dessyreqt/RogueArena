@@ -3,12 +3,14 @@
     using System.Collections.ObjectModel;
     using Commands;
     using Microsoft.Xna.Framework.Input;
+    using RogueArena.Commands.Game;
+    using RogueArena.Commands.MainMenu;
     using SadConsole;
     using SadConsole.Input;
 
     public static class InputHandler
     {
-        public static Command HandleKeys(ReadOnlyCollection<AsciiKey> keys, GameState gameState)
+        public static Command HandleGameKeys(ReadOnlyCollection<AsciiKey> keys, GameState gameState)
         {
             switch (gameState)
             {
@@ -24,6 +26,26 @@
                 default:
                     return null;
             }
+        }
+
+        public static Command HandleMainMenuKeys(ReadOnlyCollection<AsciiKey> keys)
+        {
+            if (keys.Count > 0)
+            {
+                var key = keys[0].Key;
+
+                switch (key)
+                {
+                    case Keys.A:
+                        return new NewGameCommand();
+                    case Keys.B:
+                        return new LoadSavedGameCommand();
+                    case Keys.C:
+                        return new ExitGameCommand();
+                }
+            }
+
+            return null;
         }
 
         private static Command HandleTargetingKeys(ReadOnlyCollection<AsciiKey> keys)

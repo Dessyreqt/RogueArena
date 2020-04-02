@@ -3,7 +3,10 @@
     using System;
     using System.Windows;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
     using RogueArena.Commands;
+    using RogueArena.Commands.Game;
+    using RogueArena.Commands.MainMenu;
     using RogueArena.Data;
     using RogueArena.Events;
     using SadConsole;
@@ -17,8 +20,11 @@
 
         private static Console _defaultConsole;
         private static Console _panel;
-        private static Console _inventoryMenu;
 
+        private static MenuManager _menuManager;
+
+        private static bool _showMainMenu;
+        private static bool _showLoadErrorMessage;
         private static bool _fovRecompute;
         private static GameState _previousGameState;
         private static MouseEventArgs _mouse;
@@ -53,13 +59,14 @@
 
             _defaultConsole.Children.Add(_panel);
 
+            _menuManager = new MenuManager();
+
             Global.CurrentScreen = _defaultConsole;
             Global.FocusedConsoles.Set(_defaultConsole);
 
-            _gameData = GameData.New();
-
             _fovRecompute = true;
-            _previousGameState = _gameData.GameState;
+            _showMainMenu = true;
+            _showLoadErrorMessage = false;
 
             InitializeInventory();
         }
@@ -102,32 +109,78 @@
 
         private static void Update(GameTime gameTime)
         {
+            if (_showMainMenu)
+            { 
+                _menuManager.ShowMainMenu(_defaultConsole, Constants.ScreenWidth, Constants.ScreenHeight);
+                HandleMainMenu();
+            }
+            else
+            {
+                _menuManager.HideMainMenu(_defaultConsole);
+                PlayGame();
+            }
+        }
+
+        private static void HandleMainMenu()
+        {
+            if (_showLoadErrorMessage)
+            {
+                _menuManager.ShowMessageBox(_defaultConsole, "No save game to load", 50, Constants.ScreenWidth, Constants.ScreenHeight);
+            }
+            else
+            {
+                _menuManager.HideMessageBox(_defaultConsole);
+            }
+
+            var action = InputHandler.HandleMainMenuKeys(Global.KeyboardState.KeysPressed);
+
+            if (action != null)
+            {
+                _showLoadErrorMessage = false;
+            }
+
+            switch (action)
+            {
+                case NewGameCommand _:
+                    _gameData = GameData.New();
+                    _previousGameState = _gameData.GameState;
+                    _showMainMenu = false;
+                    break;
+                case LoadSavedGameCommand _:
+                    break;
+                case ExitGameCommand _:
+                    Game.Instance.Exit();
+                    break;
+            }
+        }
+
+        private static void PlayGame()
+        {
             RenderFunctions.ClearAll(_defaultConsole, _gameData.Entities);
 
             if (Global.KeyboardState.KeysPressed.Count > 0)
             {
-                var command = InputHandler.HandleKeys(Global.KeyboardState.KeysPressed, _gameData.GameState);
+                var command = InputHandler.HandleGameKeys(Global.KeyboardState.KeysPressed, _gameData.GameState);
 
                 switch (command)
                 {
                     case DropInventoryCommand _:
                         _previousGameState = _gameData.GameState;
                         _gameData.GameState = GameState.DropInventory;
-                        _inventoryMenu = Menus.InventoryMenu(
+                        _menuManager.ShowInventoryMenu(
                             _defaultConsole,
                             "Press the key next to an item to drop it, or Esc to cancel.",
                             _gameData.Player.Inventory,
                             50,
                             Constants.ScreenWidth,
                             Constants.ScreenHeight);
-                        _defaultConsole.Children.Add(_inventoryMenu);
 
                         break;
                     case ExitCommand _:
                         if (_gameData.GameState == GameState.ShowInventory || _gameData.GameState == GameState.DropInventory)
                         {
                             _gameData.GameState = _previousGameState;
-                            RemoveInventoryMenu();
+                            _menuManager.HideInventoryMenu(_defaultConsole);
                         }
                         else if (_gameData.GameState == GameState.Targeting)
                         {
@@ -218,14 +271,13 @@
                     case ShowInventoryCommand _:
                         _previousGameState = _gameData.GameState;
                         _gameData.GameState = GameState.ShowInventory;
-                        _inventoryMenu = Menus.InventoryMenu(
+                        _menuManager.ShowInventoryMenu(
                             _defaultConsole,
                             "Press the key next to an item to use it, or Esc to cancel.",
                             _gameData.Player.Inventory,
                             50,
                             Constants.ScreenWidth,
                             Constants.ScreenHeight);
-                        _defaultConsole.Children.Add(_inventoryMenu);
 
                         break;
                 }
@@ -235,7 +287,7 @@
 
             if (_gameData.GameState == GameState.EnemyTurn)
             {
-                RemoveInventoryMenu();
+                _menuManager.HideInventoryMenu(_defaultConsole);
                 _defaultConsole.Clear(0, 46, 80);
 
                 foreach (var entity in _gameData.Entities)
@@ -262,7 +314,7 @@
 
             if (_gameData.GameState == GameState.Targeting)
             {
-                RemoveInventoryMenu();
+                _menuManager.HideInventoryMenu(_defaultConsole);
 
                 if (Global.MouseState.LeftClicked)
                 {
@@ -283,26 +335,8 @@
                 _gameData.GameMap.ComputeFov(_gameData.Player.X, _gameData.Player.Y, Constants.FovRadius, Constants.FovLightWalls, Constants.FovAlgorithm);
             }
 
-            RenderFunctions.RenderAll(
-                _defaultConsole,
-                _panel,
-                _gameData.Entities,
-                _gameData.Player,
-                _gameData.GameMap,
-                _fovRecompute,
-                _gameData.MessageLog,
-                Constants.BarWidth,
-                _mouse);
+            RenderFunctions.RenderAll(_defaultConsole, _panel, _gameData.Entities, _gameData.Player, _gameData.GameMap, _fovRecompute, _gameData.MessageLog, Constants.BarWidth, _mouse);
             _fovRecompute = false;
-        }
-
-        private static void RemoveInventoryMenu()
-        {
-            if (_inventoryMenu != null)
-            {
-                _defaultConsole.Children.Remove(_inventoryMenu);
-                _inventoryMenu = null;
-            }
         }
 
         private static void ProcessEvents()
