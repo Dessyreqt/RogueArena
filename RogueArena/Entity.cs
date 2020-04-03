@@ -6,7 +6,6 @@
     using Components;
     using Map;
     using Microsoft.Xna.Framework;
-    using RogueArena.Components.AI;
     using Util;
 
     public class Entity
@@ -23,23 +22,25 @@
             Color color,
             string name,
             bool blocks = false,
-            int renderOrder = RogueArena.RenderOrder.Corpse,
+            RenderOrder renderOrder = RenderOrder.Corpse,
             FighterComponent fighterComponent = null,
             AiComponent aiComponent = null,
             ItemComponent itemComponent = null,
-            InventoryComponent inventoryComponent = null)
+            InventoryComponent inventoryComponent = null,
+            StairsComponent stairsComponent = null)
         {
             X = x;
             Y = y;
             Character = character;
             Color = color;
             Name = name;
+            Blocks = blocks;
+            RenderOrder = renderOrder;
             FighterComponent = fighterComponent;
             AiComponent = aiComponent;
             ItemComponent = itemComponent;
             InventoryComponent = inventoryComponent;
-            Blocks = blocks;
-            RenderOrder = renderOrder;
+            StairsComponent = stairsComponent;
 
             if (FighterComponent != null)
             {
@@ -60,6 +61,11 @@
             {
                 InventoryComponent.Owner = this;
             }
+
+            if (StairsComponent != null)
+            {
+                StairsComponent.Owner = this;
+            }
         }
 
         public int X { get; set; }
@@ -68,11 +74,12 @@
         public Color Color { get; set; }
         public string Name { get; set; }
         public bool Blocks { get; set; }
-        public int RenderOrder { get; set; }
+        public RenderOrder RenderOrder { get; set; }
         public FighterComponent FighterComponent { get; set; }
         public AiComponent AiComponent { get; set; }
         public ItemComponent ItemComponent { get; set; }
         public InventoryComponent InventoryComponent { get; set; }
+        public StairsComponent StairsComponent { get; set; }
 
         public static Entity GetBlockingEntityAtLocation(List<Entity> entities, int destX, int destY)
         {

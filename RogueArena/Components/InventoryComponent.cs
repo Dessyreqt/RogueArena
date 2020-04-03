@@ -5,7 +5,7 @@
     using Microsoft.Xna.Framework;
     using RogueArena.Map;
 
-    public class InventoryComponent
+    public class InventoryComponent : Component
     {
         public InventoryComponent()
         {
@@ -20,7 +20,6 @@
 
         public int Capacity { get; set; }
         public List<Entity> Items { get; set; }
-        public Entity Owner { get; set; }
 
         public void AddItem(Entity entity)
         {

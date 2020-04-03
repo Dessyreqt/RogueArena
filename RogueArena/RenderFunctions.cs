@@ -10,11 +10,12 @@
     using SadConsole.Input;
     using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
-    public class RenderOrder
+    public enum RenderOrder
     {
-        public const int Corpse = 1;
-        public const int Item = 2;
-        public const int Actor = 3;
+        Stairs,
+        Corpse,
+        Item,
+        Actor,
     }
 
     public static class RenderFunctions
@@ -98,6 +99,7 @@
             }
 
             RenderBar(panel, 1, 1, barWidth, "HP", player.FighterComponent.Hp, player.FighterComponent.MaxHp, Color.Red, Color.DarkRed);
+            panel.Print(1, 3, $"Dungeon level: {gameMap.DungeonLevel}");
 
             panel.Print(1, 0, GetNamesUnderMouse(mouse, entities, gameMap));
         }
@@ -120,7 +122,7 @@
 
         private static void DrawEntity(Console console, Entity entity, GameMap gameMap)
         {
-            if (gameMap.Tiles[entity.X, entity.Y].InView)
+            if (gameMap.Tiles[entity.X, entity.Y].InView || (entity.StairsComponent != null && gameMap.Tiles[entity.X, entity.Y].Explored))
             {
                 console.Print(entity.X, entity.Y, $"{entity.Character}", entity.Color);
             }

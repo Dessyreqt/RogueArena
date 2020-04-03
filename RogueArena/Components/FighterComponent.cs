@@ -2,7 +2,7 @@
 {
     using Events;
 
-    public class FighterComponent
+    public class FighterComponent : Component
     {
         public FighterComponent()
         {
@@ -17,7 +17,6 @@
             Power = power;
         }
 
-        public Entity Owner { get; set; }
         public int MaxHp { get; set; }
         public int Hp { get; set; }
         public int Defense { get; set; }

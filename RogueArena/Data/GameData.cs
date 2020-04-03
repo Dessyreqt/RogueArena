@@ -1,6 +1,5 @@
 ﻿namespace RogueArena.Data
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using Microsoft.Xna.Framework;
@@ -15,7 +14,10 @@
 
         private static JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
         {
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects, TypeNameHandling = TypeNameHandling.All, ReferenceLoopHandling = ReferenceLoopHandling.Serialize, NullValueHandling = NullValueHandling.Ignore
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            TypeNameHandling = TypeNameHandling.All,
+            ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+            NullValueHandling = NullValueHandling.Ignore
         };
 
         public GameData()

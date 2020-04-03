@@ -10,8 +10,6 @@
     using RogueArena.Events;
     using RogueArena.Graphics;
     using SadConsole;
-    using SadConsole.Components;
-    using SadConsole.DrawCalls;
     using SadConsole.Input;
     using Console = SadConsole.Console;
     using Game = SadConsole.Game;
@@ -263,19 +261,19 @@
                     case PickupCommand _:
                         if (_gameData.GameState == GameState.PlayersTurn)
                         {
-                            Entity foundEntity = null;
+                            Entity itemEntity = null;
 
                             foreach (var entity in _gameData.Entities)
                             {
                                 if (entity.ItemComponent != null && entity.X == _gameData.Player.X && entity.Y == _gameData.Player.Y)
                                 {
                                     _gameData.Player.InventoryComponent.AddItem(entity);
-                                    foundEntity = entity;
+                                    itemEntity = entity;
                                     break;
                                 }
                             }
 
-                            if (foundEntity != null)
+                            if (itemEntity != null)
                             {
                                 _gameData.GameState = GameState.EnemyTurn;
                             }
@@ -303,6 +301,30 @@
                             50,
                             Constants.ScreenWidth,
                             Constants.ScreenHeight);
+
+                        break;
+                    case TakeStairsCommand _:
+                        Entity stairsEntity = null;
+
+                        foreach (var entity in _gameData.Entities)
+                        {
+                            if (entity.StairsComponent != null && entity.X == _gameData.Player.X && entity.Y == _gameData.Player.Y)
+                            {
+                                stairsEntity = entity;
+                                break;
+                            }
+                        }
+
+                        if (stairsEntity != null)
+                        {
+                            _gameData.Entities = _gameData.GameMap.NextFloor(_gameData.Player, _gameData.MessageLog);
+                            _fovRecompute = true;
+                            _defaultConsole.Clear();
+                        }
+                        else
+                        {
+                            EventLog.Add(new MessageEvent("There are no stairs here.", Color.Yellow));
+                        }
 
                         break;
                 }

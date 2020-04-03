@@ -148,13 +148,15 @@
                         return null;
                     case Keys.Escape:
                         return new ExitCommand();
-                    case Keys.R:
+                    case Keys.Z:
                         return new RestCommand();
                     case Keys.I:
                     case Keys.B:
                         return new ShowInventoryCommand();
                     case Keys.D:
                         return new DropInventoryCommand();
+                    case Keys.S:
+                        return new TakeStairsCommand();
                 }
             }
 
