@@ -5,13 +5,13 @@
 
     public class BasicMonster : AiComponent
     {
-        public override void TakeTurn(Entity target, GameMap gameMap, List<Entity> entities)
+        public override void TakeTurn(Entity target, DungeonMap dungeonMap, List<Entity> entities)
         {
-            if (gameMap.Tiles[Owner.X, Owner.Y].InView)
+            if (dungeonMap.Tiles[Owner.X, Owner.Y].InView)
             {
                 if (Owner.DistanceTo(target) >= 2)
                 {
-                    Owner.MoveAstar(target, gameMap, entities);
+                    Owner.MoveAstar(target, dungeonMap, entities);
                 }
                 else if (target.FighterComponent.Hp > 0)
                 {

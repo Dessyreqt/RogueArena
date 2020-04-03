@@ -40,7 +40,7 @@
             Console panel,
             List<Entity> entities,
             Entity player,
-            GameMap gameMap,
+            DungeonMap dungeonMap,
             bool fovRecompute,
             MessageLog messageLog,
             int barWidth,
@@ -48,12 +48,12 @@
         {
             if (fovRecompute)
             {
-                for (int x = 0; x < gameMap.Width; x++)
+                for (int x = 0; x < dungeonMap.Width; x++)
                 {
-                    for (int y = 0; y < gameMap.Height; y++)
+                    for (int y = 0; y < dungeonMap.Height; y++)
                     {
-                        var wall = !gameMap.Tiles[x, y].Transparent;
-                        if (gameMap.Tiles[x, y].InView)
+                        var wall = !dungeonMap.Tiles[x, y].Transparent;
+                        if (dungeonMap.Tiles[x, y].InView)
                         {
                             if (wall)
                             {
@@ -64,9 +64,9 @@
                                 console.SetBackground(x, y, Colors.LightGround);
                             }
 
-                            gameMap.Tiles[x, y].Explored = true;
+                            dungeonMap.Tiles[x, y].Explored = true;
                         }
-                        else if (gameMap.Tiles[x, y].Explored)
+                        else if (dungeonMap.Tiles[x, y].Explored)
                         {
                             if (wall)
                             {
@@ -85,7 +85,7 @@
 
             foreach (var entity in entitiesInRenderOrder)
             {
-                DrawEntity(console, entity, gameMap);
+                DrawEntity(console, entity, dungeonMap);
             }
 
             panel.Clear();
@@ -99,9 +99,9 @@
             }
 
             RenderBar(panel, 1, 1, barWidth, "HP", player.FighterComponent.Hp, player.FighterComponent.MaxHp, Color.Red, Color.DarkRed);
-            panel.Print(1, 3, $"Dungeon level: {gameMap.DungeonLevel}");
+            panel.Print(1, 3, $"Dungeon level: {dungeonMap.DungeonLevel}");
 
-            panel.Print(1, 0, GetNamesUnderMouse(mouse, entities, gameMap));
+            panel.Print(1, 0, GetNamesUnderMouse(mouse, entities, dungeonMap));
         }
 
         public static void ClearAll(Console console, List<Entity> entities)
@@ -112,17 +112,17 @@
             }
         }
 
-        private static string GetNamesUnderMouse(MouseEventArgs mouse, List<Entity> entities, GameMap gameMap)
+        private static string GetNamesUnderMouse(MouseEventArgs mouse, List<Entity> entities, DungeonMap dungeonMap)
         {
             var pos = mouse.MouseState.CellPosition;
-            var names = entities.Where(entity => entity.X == pos.X && entity.Y == pos.Y && gameMap.Tiles[entity.X, entity.Y].InView).Select(entity => entity.Name);
+            var names = entities.Where(entity => entity.X == pos.X && entity.Y == pos.Y && dungeonMap.Tiles[entity.X, entity.Y].InView).Select(entity => entity.Name);
 
             return string.Join(", ", names);
         }
 
-        private static void DrawEntity(Console console, Entity entity, GameMap gameMap)
+        private static void DrawEntity(Console console, Entity entity, DungeonMap dungeonMap)
         {
-            if (gameMap.Tiles[entity.X, entity.Y].InView || (entity.StairsComponent != null && gameMap.Tiles[entity.X, entity.Y].Explored))
+            if (dungeonMap.Tiles[entity.X, entity.Y].InView || (entity.StairsComponent != null && dungeonMap.Tiles[entity.X, entity.Y].Explored))
             {
                 console.Print(entity.X, entity.Y, $"{entity.Character}", entity.Color);
             }

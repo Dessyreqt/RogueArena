@@ -10,21 +10,21 @@
     using RogueArena.Rng;
 
     [Serializable]
-    public class GameMap
+    public class DungeonMap
     {
         public const int FovBasic = 0;
 
-        public GameMap()
+        public DungeonMap()
         {
             // here for deserialization purposes
         }
 
-        public GameMap(int width, int height)
+        public DungeonMap(int dungeonLevel, int width, int height)
         {
             Width = width;
             Height = height;
             Tiles = InitializeTiles();
-            DungeonLevel = 1;
+            DungeonLevel = dungeonLevel;
         }
 
         public int Width { get; set; }
@@ -61,6 +61,11 @@
             var rooms = new List<Rectangle>();
             Point lastCenter = new Point(0, 0);
 
+            if (!entities.Contains(player))
+            {
+                entities.Add(player);
+            }
+
             for (int i = 0; i < maxRooms; i++)
             {
                 var width = Rng.Next(minRoomSize, maxRoomSize);
@@ -82,6 +87,13 @@
                 {
                     player.X = newCenter.X;
                     player.Y = newCenter.Y;
+
+                    if (DungeonLevel > 1)
+                    {
+                        var upStairsComponent = new StairsComponent(DungeonLevel - 1);
+                        var upStairs = new Entity(lastCenter.X, lastCenter.Y, '<', Color.White, $"Stairs to Level {upStairsComponent.ToFloor}", renderOrder: RenderOrder.Stairs, stairsComponent: upStairsComponent);
+                        entities.Add(upStairs);
+                    }
                 }
                 else
                 {
@@ -100,12 +112,11 @@
                 }
 
                 PlaceEntities(newRoom, entities, maxMonstersPerRoom, maxItemsPerRoom);
-
                 rooms.Add(newRoom);
             }
 
-            var stairsComponent = new StairsComponent(DungeonLevel + 1);
-            var downStairs = new Entity(lastCenter.X, lastCenter.Y, '>', Color.White, $"Stairs to Level {stairsComponent.ToFloor}", renderOrder: RenderOrder.Stairs, stairsComponent: stairsComponent);
+            var downStairsComponent = new StairsComponent(DungeonLevel + 1);
+            var downStairs = new Entity(lastCenter.X, lastCenter.Y, '>', Color.White, $"Stairs to Level {downStairsComponent.ToFloor}", renderOrder: RenderOrder.Stairs, stairsComponent: downStairsComponent);
             entities.Add(downStairs);
         }
 
@@ -134,21 +145,6 @@
                 default:
                     return;
             }
-        }
-
-        public List<Entity> NextFloor(Entity player, MessageLog messageLog)
-        {
-            DungeonLevel++;
-            var entities = new List<Entity> { player };
-
-            Tiles = InitializeTiles();
-            MakeMap(Constants.MaxRooms, Constants.MinRoomSize, Constants.MaxRoomSize, Constants.MapWidth, Constants.MapHeight, player, entities, Constants.MaxMonstersPerRoom, Constants.MaxItemsPerRoom);
-
-            player.FighterComponent.Heal(player.FighterComponent.MaxHp / 2);
-            
-            messageLog.AddMessage("You take a moment to rest, and recover your strength.", Color.Violet);
-
-            return entities;
         }
 
         private void PlaceEntities(Rectangle room, List<Entity> entities, int maxMonstersPerRoom, int maxItemsPerRoom)

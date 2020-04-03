@@ -5,6 +5,6 @@
 
     public abstract class AiComponent : Component
     {
-        public abstract void TakeTurn(Entity target, GameMap gameMap, List<Entity> entities);
+        public abstract void TakeTurn(Entity target, DungeonMap dungeonMap, List<Entity> entities);
     }
 }

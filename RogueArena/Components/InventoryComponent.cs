@@ -39,7 +39,7 @@
             Items.Remove(entity);
         }
 
-        public void Use(Entity itemEntity, List<Entity> entities, GameMap gameMap, int? targetX = null, int? targetY = null)
+        public void Use(Entity itemEntity, List<Entity> entities, DungeonMap dungeonMap, int? targetX = null, int? targetY = null)
         {
             var item = itemEntity?.ItemComponent;
 
@@ -62,7 +62,7 @@
                 {
                     item.ItemFunction.Target = Owner;
                     item.ItemFunction.Entities = entities;
-                    item.ItemFunction.GameMap = gameMap;
+                    item.ItemFunction.DungeonMap = dungeonMap;
                     item.ItemFunction.TargetX = targetX;
                     item.ItemFunction.TargetY = targetY;
 

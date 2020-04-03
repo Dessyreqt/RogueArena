@@ -28,7 +28,7 @@
 
             foreach (var entity in Entities)
             {
-                if (entity.FighterComponent != null && entity != Caster && GameMap.Tiles[entity.X, entity.Y].InView)
+                if (entity.FighterComponent != null && entity != Caster && DungeonMap.Tiles[entity.X, entity.Y].InView)
                 {
                     var distance = Caster.DistanceTo(entity);
 

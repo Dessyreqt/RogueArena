@@ -23,7 +23,7 @@
         public const int MaxRoomSize = 10;
         public const int MaxRooms = 30;
 
-        public const int FovAlgorithm = GameMap.FovBasic;
+        public const int FovAlgorithm = DungeonMap.FovBasic;
         public const bool FovLightWalls = true;
         public const int FovRadius = 10;
 

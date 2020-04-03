@@ -222,7 +222,7 @@
 
                             if (_gameData.GameState == GameState.ShowInventory)
                             {
-                                _gameData.Player.InventoryComponent.Use(item, _gameData.Entities, _gameData.GameMap);
+                                _gameData.Player.InventoryComponent.Use(item, _gameData.Entities, _gameData.DungeonLevel.Map);
                             }
                             else if (_gameData.GameState == GameState.DropInventory)
                             {
@@ -239,7 +239,7 @@
                             var destX = _gameData.Player.X + move.X;
                             var destY = _gameData.Player.Y + move.Y;
 
-                            if (!_gameData.GameMap.IsBlocked(destX, destY))
+                            if (!_gameData.DungeonLevel.Map.IsBlocked(destX, destY))
                             {
                                 var target = Entity.GetBlockingEntityAtLocation(_gameData.Entities, destX, destY);
 
@@ -317,7 +317,8 @@
 
                         if (stairsEntity != null)
                         {
-                            _gameData.Entities = _gameData.GameMap.NextFloor(_gameData.Player, _gameData.MessageLog);
+                            _gameData.DungeonLevel = _gameData.DungeonLevel.GoToFloor(stairsEntity.StairsComponent.ToFloor, _gameData.Player, _gameData.MessageLog);
+                            _gameData.Entities = _gameData.DungeonLevel.Entities;
                             _fovRecompute = true;
                             _defaultConsole.Clear();
                         }
@@ -341,7 +342,7 @@
                 {
                     if (entity.AiComponent != null)
                     {
-                        entity.AiComponent.TakeTurn(_gameData.Player, _gameData.GameMap, _gameData.Entities);
+                        entity.AiComponent.TakeTurn(_gameData.Player, _gameData.DungeonLevel.Map, _gameData.Entities);
                         ProcessEvents();
 
                         if (_gameData.GameState == GameState.PlayerDead)
@@ -367,7 +368,7 @@
                 {
                     var targetPos = _mouse.MouseState.CellPosition;
 
-                    _gameData.Player.InventoryComponent.Use(_targetingItem, _gameData.Entities, _gameData.GameMap, targetPos.X, targetPos.Y);
+                    _gameData.Player.InventoryComponent.Use(_targetingItem, _gameData.Entities, _gameData.DungeonLevel.Map, targetPos.X, targetPos.Y);
                     ProcessEvents();
                 }
                 else if (Global.MouseState.RightButtonDown)
@@ -379,10 +380,10 @@
 
             if (_fovRecompute)
             {
-                _gameData.GameMap.ComputeFov(_gameData.Player.X, _gameData.Player.Y, Constants.FovRadius, Constants.FovLightWalls, Constants.FovAlgorithm);
+                _gameData.DungeonLevel.Map.ComputeFov(_gameData.Player.X, _gameData.Player.Y, Constants.FovRadius, Constants.FovLightWalls, Constants.FovAlgorithm);
             }
 
-            RenderFunctions.RenderAll(_defaultConsole, _panel, _gameData.Entities, _gameData.Player, _gameData.GameMap, _fovRecompute, _gameData.MessageLog, Constants.BarWidth, _mouse);
+            RenderFunctions.RenderAll(_defaultConsole, _panel, _gameData.Entities, _gameData.Player, _gameData.DungeonLevel.Map, _fovRecompute, _gameData.MessageLog, Constants.BarWidth, _mouse);
             _fovRecompute = false;
         }
 

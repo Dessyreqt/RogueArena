@@ -28,7 +28,7 @@
             var x = TargetX.Value;
             var y = TargetY.Value;
 
-            if (!GameMap.Tiles[x, y].InView)
+            if (!DungeonMap.Tiles[x, y].InView)
             {
                 events.Add(new MessageEvent("You cannot target a tile outside your field of view.", Color.Yellow));
                 return events;

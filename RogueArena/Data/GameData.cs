@@ -23,7 +23,7 @@
         public GameData()
         {
             Entities = new List<Entity>();
-            GameMap = null;
+            DungeonLevel = null;
             GameState = GameState.PlayersTurn;
             MessageLog = null;
         }
@@ -32,7 +32,7 @@
 
         public Entity Player { get; set; }
 
-        public GameMap GameMap { get; set; }
+        public DungeonLevel DungeonLevel { get; set; }
 
         public MessageLog MessageLog { get; set; }
 
@@ -46,22 +46,21 @@
 
             var player = new Entity(0, 0, '@', Color.White, "Player", true, RenderOrder.Actor, new FighterComponent(30, 2, 5), inventoryComponent: new InventoryComponent(26));
 
-            gameData.Entities.Clear();
-            gameData.Entities.Add(player);
-
+            gameData.DungeonLevel = new DungeonLevel(1, Constants.MapWidth, Constants.MapHeight);
             gameData.Player = player;
-
-            gameData.GameMap = new GameMap(Constants.MapWidth, Constants.MapHeight);
-            gameData.GameMap.MakeMap(
+ 
+            gameData.DungeonLevel.Map.MakeMap(
                 Constants.MaxRooms,
                 Constants.MinRoomSize,
                 Constants.MaxRoomSize,
                 Constants.MapWidth,
                 Constants.MapHeight,
                 player,
-                gameData.Entities,
+                gameData.DungeonLevel.Entities,
                 Constants.MaxMonstersPerRoom,
                 Constants.MaxItemsPerRoom);
+
+            gameData.Entities = gameData.DungeonLevel.Entities;
 
             gameData.GameState = GameState.PlayersTurn;
 

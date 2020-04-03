@@ -17,7 +17,7 @@
         public AiComponent PreviousAi { get; set; }
         public int NumberOfTurns { get; set; }
 
-        public override void TakeTurn(Entity target, GameMap gameMap, List<Entity> entities)
+        public override void TakeTurn(Entity target, DungeonMap dungeonMap, List<Entity> entities)
         {
             if (NumberOfTurns > 0)
             {
@@ -26,7 +26,7 @@
 
                 if (randomX != Owner.X && randomY != Owner.Y)
                 {
-                    Owner.MoveTowards(randomX, randomY, gameMap, entities);
+                    Owner.MoveTowards(randomX, randomY, dungeonMap, entities);
                 }
 
                 NumberOfTurns -= 1;

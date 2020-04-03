@@ -8,6 +8,7 @@
     using Microsoft.Xna.Framework;
     using Util;
 
+    [Serializable]
     public class Entity
     {
         public Entity()
@@ -92,7 +93,7 @@
             Y += yDelta;
         }
 
-        public void MoveTowards(int targetX, int targetY, GameMap gameMap, List<Entity> entities)
+        public void MoveTowards(int targetX, int targetY, DungeonMap dungeonMap, List<Entity> entities)
         {
             var dx = targetX - X;
             var dy = targetY - Y;
@@ -101,15 +102,15 @@
             dx = (int)Math.Round(dx / distance);
             dy = (int)Math.Round(dy / distance);
 
-            if (!(gameMap.IsBlocked(X + dx, Y + dy) || GetBlockingEntityAtLocation(entities, X + dx, Y + dy) != null))
+            if (!(dungeonMap.IsBlocked(X + dx, Y + dy) || GetBlockingEntityAtLocation(entities, X + dx, Y + dy) != null))
             {
                 Move(dx, dy);
             }
         }
 
-        public void MoveAstar(Entity target, GameMap gameMap, List<Entity> entities)
+        public void MoveAstar(Entity target, DungeonMap dungeonMap, List<Entity> entities)
         {
-            var newMap = gameMap.DeepClone();
+            var newMap = dungeonMap.DeepClone();
 
             foreach (var entity in entities)
             {
@@ -134,7 +135,7 @@
             }
             else
             {
-                MoveTowards(target.X, target.Y, gameMap, entities);
+                MoveTowards(target.X, target.Y, dungeonMap, entities);
             }
         }
 

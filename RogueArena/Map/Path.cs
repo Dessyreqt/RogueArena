@@ -39,7 +39,7 @@
         private static readonly List<int> _directionX = new List<int> { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
         private static readonly List<int> _directionY = new List<int> { -1, -1, -1, 0, 0, 0, 1, 1, 1 };
 
-        public Path(GameMap map, double diagonalCost)
+        public Path(DungeonMap map, double diagonalCost)
         {
             if (map == null)
             {
@@ -63,7 +63,7 @@
         public Cell[,] CellDetails { get; private set; }
         public List<NodeScore> OpenList { get; private set; }
         public double DiagonalCost { get; private set; }
-        public GameMap Map { get; private set; }
+        public DungeonMap Map { get; private set; }
 
         public bool Compute(int originX, int originY, int destX, int destY)
         {
