@@ -6,15 +6,15 @@
     using RogueArena.Map;
     using RogueArena.Rng;
 
-    public class ConfusedMonster : AI
+    public class ConfusedMonster : AiComponent
     {
-        public ConfusedMonster(AI previousAi, int numberOfTurns)
+        public ConfusedMonster(AiComponent previousAi, int numberOfTurns)
         {
             PreviousAi = previousAi;
             NumberOfTurns = numberOfTurns;
         }
 
-        public AI PreviousAi { get; set; }
+        public AiComponent PreviousAi { get; set; }
         public int NumberOfTurns { get; set; }
 
         public override void TakeTurn(Entity target, GameMap gameMap, List<Entity> entities)
@@ -33,7 +33,7 @@
             }
             else
             {
-                Owner.AI = PreviousAi;
+                Owner.AiComponent = PreviousAi;
                 EventLog.Add(new MessageEvent($"The {Owner.Name} is no longer confused!", Color.Red));
             }
         }

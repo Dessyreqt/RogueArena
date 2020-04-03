@@ -3,9 +3,14 @@
     using ItemFunctions;
     using RogueArena.Events;
 
-    public class Item
+    public class ItemComponent
     {
-        public Item(ItemFunction itemFunction = null, bool targeting = false, Message targetingMessage = null)
+        public ItemComponent()
+        {
+            // here for deserialization purposes
+        }
+
+        public ItemComponent(ItemFunction itemFunction = null, bool targeting = false, Message targetingMessage = null)
         {
             ItemFunction = itemFunction;
             Targeting = targeting;

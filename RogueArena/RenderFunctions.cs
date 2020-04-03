@@ -97,7 +97,7 @@
                 panelY++;
             }
 
-            RenderBar(panel, 1, 1, barWidth, "HP", player.Fighter.Hp, player.Fighter.MaxHp, Color.Red, Color.DarkRed);
+            RenderBar(panel, 1, 1, barWidth, "HP", player.FighterComponent.Hp, player.FighterComponent.MaxHp, Color.Red, Color.DarkRed);
 
             panel.Print(1, 0, GetNamesUnderMouse(mouse, entities, gameMap));
         }

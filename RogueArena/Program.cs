@@ -194,7 +194,7 @@
                         _menuManager.ShowInventoryMenu(
                             _defaultConsole,
                             "Press the key next to an item to drop it, or Esc to cancel.",
-                            _gameData.Player.Inventory,
+                            _gameData.Player.InventoryComponent,
                             50,
                             Constants.ScreenWidth,
                             Constants.ScreenHeight);
@@ -218,17 +218,17 @@
 
                         break;
                     case InventoryIndexCommand inv:
-                        if (_previousGameState != GameState.PlayerDead && inv.Index < _gameData.Player.Inventory.Items.Count)
+                        if (_previousGameState != GameState.PlayerDead && inv.Index < _gameData.Player.InventoryComponent.Items.Count)
                         {
-                            var item = _gameData.Player.Inventory.Items[inv.Index];
+                            var item = _gameData.Player.InventoryComponent.Items[inv.Index];
 
                             if (_gameData.GameState == GameState.ShowInventory)
                             {
-                                _gameData.Player.Inventory.Use(item, _gameData.Entities, _gameData.GameMap);
+                                _gameData.Player.InventoryComponent.Use(item, _gameData.Entities, _gameData.GameMap);
                             }
                             else if (_gameData.GameState == GameState.DropInventory)
                             {
-                                _gameData.Player.Inventory.Drop(item);
+                                _gameData.Player.InventoryComponent.Drop(item);
                             }
                         }
 
@@ -247,7 +247,7 @@
 
                                 if (target != null)
                                 {
-                                    _gameData.Player.Fighter.Attack(target);
+                                    _gameData.Player.FighterComponent.Attack(target);
                                 }
                                 else
                                 {
@@ -267,9 +267,9 @@
 
                             foreach (var entity in _gameData.Entities)
                             {
-                                if (entity.Item != null && entity.X == _gameData.Player.X && entity.Y == _gameData.Player.Y)
+                                if (entity.ItemComponent != null && entity.X == _gameData.Player.X && entity.Y == _gameData.Player.Y)
                                 {
-                                    _gameData.Player.Inventory.AddItem(entity);
+                                    _gameData.Player.InventoryComponent.AddItem(entity);
                                     foundEntity = entity;
                                     break;
                                 }
@@ -299,7 +299,7 @@
                         _menuManager.ShowInventoryMenu(
                             _defaultConsole,
                             "Press the key next to an item to use it, or Esc to cancel.",
-                            _gameData.Player.Inventory,
+                            _gameData.Player.InventoryComponent,
                             50,
                             Constants.ScreenWidth,
                             Constants.ScreenHeight);
@@ -317,9 +317,9 @@
 
                 foreach (var entity in _gameData.Entities)
                 {
-                    if (entity.AI != null)
+                    if (entity.AiComponent != null)
                     {
-                        entity.AI.TakeTurn(_gameData.Player, _gameData.GameMap, _gameData.Entities);
+                        entity.AiComponent.TakeTurn(_gameData.Player, _gameData.GameMap, _gameData.Entities);
                         ProcessEvents();
 
                         if (_gameData.GameState == GameState.PlayerDead)
@@ -345,7 +345,7 @@
                 {
                     var targetPos = _mouse.MouseState.CellPosition;
 
-                    _gameData.Player.Inventory.Use(_targetingItem, _gameData.Entities, _gameData.GameMap, targetPos.X, targetPos.Y);
+                    _gameData.Player.InventoryComponent.Use(_targetingItem, _gameData.Entities, _gameData.GameMap, targetPos.X, targetPos.Y);
                     ProcessEvents();
                 }
                 else if (Global.MouseState.RightButtonDown)
@@ -431,7 +431,7 @@
 
                         _targetingItem = targeting.ItemEntity;
 
-                        _gameData.MessageLog.AddMessage(_targetingItem.Item.TargetingMessage);
+                        _gameData.MessageLog.AddMessage(_targetingItem.ItemComponent.TargetingMessage);
                         break;
                 }
             }

@@ -24,41 +24,41 @@
             string name,
             bool blocks = false,
             int renderOrder = RogueArena.RenderOrder.Corpse,
-            Fighter fighter = null,
-            AI ai = null,
-            Item item = null,
-            Inventory inventory = null)
+            FighterComponent fighterComponent = null,
+            AiComponent aiComponent = null,
+            ItemComponent itemComponent = null,
+            InventoryComponent inventoryComponent = null)
         {
             X = x;
             Y = y;
             Character = character;
             Color = color;
             Name = name;
-            Fighter = fighter;
-            AI = ai;
-            Item = item;
-            Inventory = inventory;
+            FighterComponent = fighterComponent;
+            AiComponent = aiComponent;
+            ItemComponent = itemComponent;
+            InventoryComponent = inventoryComponent;
             Blocks = blocks;
             RenderOrder = renderOrder;
 
-            if (Fighter != null)
+            if (FighterComponent != null)
             {
-                Fighter.Owner = this;
+                FighterComponent.Owner = this;
             }
 
-            if (AI != null)
+            if (AiComponent != null)
             {
-                AI.Owner = this;
+                AiComponent.Owner = this;
             }
 
-            if (Item != null)
+            if (ItemComponent != null)
             {
-                Item.Owner = this;
+                ItemComponent.Owner = this;
             }
 
-            if (Inventory != null)
+            if (InventoryComponent != null)
             {
-                Inventory.Owner = this;
+                InventoryComponent.Owner = this;
             }
         }
 
@@ -69,10 +69,10 @@
         public string Name { get; set; }
         public bool Blocks { get; set; }
         public int RenderOrder { get; set; }
-        public Fighter Fighter { get; set; }
-        public AI AI { get; set; }
-        public Item Item { get; set; }
-        public Inventory Inventory { get; set; }
+        public FighterComponent FighterComponent { get; set; }
+        public AiComponent AiComponent { get; set; }
+        public ItemComponent ItemComponent { get; set; }
+        public InventoryComponent InventoryComponent { get; set; }
 
         public static Entity GetBlockingEntityAtLocation(List<Entity> entities, int destX, int destY)
         {

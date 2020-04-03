@@ -20,8 +20,8 @@
             monster.Character = '%';
             monster.Color = Color.DarkRed;
             monster.Blocks = false;
-            monster.Fighter = null;
-            monster.AI = null;
+            monster.FighterComponent = null;
+            monster.AiComponent = null;
             monster.Name = $"remains of {monster.Name}";
             monster.RenderOrder = RenderOrder.Corpse;
         }

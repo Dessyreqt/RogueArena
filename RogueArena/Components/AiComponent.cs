@@ -1,9 +1,9 @@
-﻿namespace RogueArena.Components.AI
+﻿namespace RogueArena.Components
 {
     using System.Collections.Generic;
     using Map;
 
-    public abstract class AI
+    public abstract class AiComponent
     {
         public Entity Owner { get; set; }
 

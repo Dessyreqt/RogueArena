@@ -22,18 +22,18 @@
         {
             var events = new List<Event>();
 
-            if (Target?.Fighter == null)
+            if (Target?.FighterComponent == null)
             {
                 return events;
             }
 
-            if (Target.Fighter.Hp == Target.Fighter.MaxHp)
+            if (Target.FighterComponent.Hp == Target.FighterComponent.MaxHp)
             {
                 events.Add(new MessageEvent("You are already at full health", Color.Yellow));
             }
             else
             {
-                Target.Fighter.Heal(Amount);
+                Target.FighterComponent.Heal(Amount);
                 events.Add(new ItemConsumedEvent("Your wounds start to feel better!", Color.Green));
             }
 

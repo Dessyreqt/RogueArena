@@ -28,7 +28,7 @@
 
             foreach (var entity in Entities)
             {
-                if (entity.Fighter != null && entity != Caster && GameMap.Tiles[entity.X, entity.Y].InView)
+                if (entity.FighterComponent != null && entity != Caster && GameMap.Tiles[entity.X, entity.Y].InView)
                 {
                     var distance = Caster.DistanceTo(entity);
 
@@ -43,7 +43,7 @@
             if (Target != null)
             {
                 events.Add(new ItemConsumedEvent($"A lighting bolt strikes the {Target.Name} with a loud thunder! The damage is {Damage}", Target));
-                Target.Fighter.TakeDamage(Damage);
+                Target.FighterComponent.TakeDamage(Damage);
             }
             else
             {

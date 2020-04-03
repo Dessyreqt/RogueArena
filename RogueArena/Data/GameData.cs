@@ -42,7 +42,7 @@
 
             gameData.MessageLog = new MessageLog(Constants.MessageX, Constants.MessageWidth, Constants.MessageHeight);
 
-            var player = new Entity(0, 0, '@', Color.White, "Player", true, RenderOrder.Actor, new Fighter(30, 2, 5), inventory: new Inventory(26));
+            var player = new Entity(0, 0, '@', Color.White, "Player", true, RenderOrder.Actor, new FighterComponent(30, 2, 5), inventoryComponent: new InventoryComponent(26));
 
             gameData.Entities.Clear();
             gameData.Entities.Add(player);

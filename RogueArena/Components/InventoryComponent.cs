@@ -5,14 +5,14 @@
     using Microsoft.Xna.Framework;
     using RogueArena.Map;
 
-    public class Inventory
+    public class InventoryComponent
     {
-        public Inventory()
+        public InventoryComponent()
         {
             // here for deserialization purposes
         }
 
-        public Inventory(int capacity)
+        public InventoryComponent(int capacity)
         {
             Capacity = capacity;
             Items = new List<Entity>();
@@ -42,7 +42,7 @@
 
         public void Use(Entity itemEntity, List<Entity> entities, GameMap gameMap, int? targetX = null, int? targetY = null)
         {
-            var item = itemEntity?.Item;
+            var item = itemEntity?.ItemComponent;
 
             if (item == null)
             {

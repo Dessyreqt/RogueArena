@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using RogueArena.Map;
 
-    public class BasicMonster : AI
+    public class BasicMonster : AiComponent
     {
         public override void TakeTurn(Entity target, GameMap gameMap, List<Entity> entities)
         {
@@ -13,9 +13,9 @@
                 {
                     Owner.MoveAstar(target, gameMap, entities);
                 }
-                else if (target.Fighter.Hp > 0)
+                else if (target.FighterComponent.Hp > 0)
                 {
-                    Owner.Fighter.Attack(target);
+                    Owner.FighterComponent.Attack(target);
                 }
             }
         }

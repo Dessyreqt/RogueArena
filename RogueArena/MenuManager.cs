@@ -31,19 +31,19 @@
             }
         }
 
-        public void ShowInventoryMenu(Console console, string header, Inventory inventory, int inventoryWidth, int screenWidth, int screenHeight)
+        public void ShowInventoryMenu(Console console, string header, InventoryComponent inventoryComponent, int inventoryWidth, int screenWidth, int screenHeight)
         {
             if (_inventoryMenu == null)
             {
                 List<string> options;
 
-                if (inventory.Items.Count == 0)
+                if (inventoryComponent.Items.Count == 0)
                 {
                     options = new List<string> { "Inventory is empty." };
                 }
                 else
                 {
-                    options = inventory.Items.Select(x => x.Name).ToList();
+                    options = inventoryComponent.Items.Select(x => x.Name).ToList();
                 }
 
                 _inventoryMenu = ShowMenu(console, header, options, inventoryWidth, screenWidth, screenHeight);

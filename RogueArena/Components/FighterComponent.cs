@@ -2,14 +2,14 @@
 {
     using Events;
 
-    public class Fighter
+    public class FighterComponent
     {
-        public Fighter()
+        public FighterComponent()
         {
             // here for deserialization purposes
         }
 
-        public Fighter(int hp, int defense, int power)
+        public FighterComponent(int hp, int defense, int power)
         {
             MaxHp = hp;
             Hp = hp;
@@ -36,11 +36,11 @@
 
         public void Attack(Entity target)
         {
-            var damage = Power - target.Fighter.Defense;
+            var damage = Power - target.FighterComponent.Defense;
 
             if (damage > 0)
             {
-                target.Fighter.TakeDamage(damage);
+                target.FighterComponent.TakeDamage(damage);
                 EventLog.Add(new MessageEvent($"{Owner.Name} attacks {target.Name} for {damage} hit points."));
             }
             else
