@@ -6,12 +6,17 @@
 
     public class HealFunction : ItemFunction
     {
+        public HealFunction()
+        {
+            // here for deserialization purposes
+        }
+
         public HealFunction(int amount)
         {
             Amount = amount;
         }
 
-        public int Amount { get; }
+        public int Amount { get; set; }
 
         public override List<Event> Execute()
         {

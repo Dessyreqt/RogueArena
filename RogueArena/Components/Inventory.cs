@@ -7,14 +7,19 @@
 
     public class Inventory
     {
+        public Inventory()
+        {
+            // here for deserialization purposes
+        }
+
         public Inventory(int capacity)
         {
             Capacity = capacity;
             Items = new List<Entity>();
         }
 
-        public int Capacity { get; }
-        public List<Entity> Items { get; }
+        public int Capacity { get; set; }
+        public List<Entity> Items { get; set; }
         public Entity Owner { get; set; }
 
         public void AddItem(Entity entity)

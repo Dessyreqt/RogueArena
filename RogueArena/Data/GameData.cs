@@ -72,7 +72,8 @@
             {
                 var data = new byte[file.Length];
                 file.Read(data, 0, (int)file.Length);
-                return JsonConvert.DeserializeObject<GameData>(Compression.Unzip(data), _serializerSettings);
+                var json = Compression.Unzip(data);
+                return JsonConvert.DeserializeObject<GameData>(json, _serializerSettings);
             }
         }
 
@@ -80,7 +81,8 @@
         {
             using (var file = new FileStream(_saveLocation, FileMode.OpenOrCreate))
             {
-                var data = Compression.Zip(JsonConvert.SerializeObject(this, _serializerSettings));
+                var json = JsonConvert.SerializeObject(this, _serializerSettings);
+                var data = Compression.Zip(json);
                 file.Write(data, 0, data.Length);
             }
         }

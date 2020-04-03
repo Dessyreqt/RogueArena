@@ -4,6 +4,11 @@
 
     public class Fighter
     {
+        public Fighter()
+        {
+            // here for deserialization purposes
+        }
+
         public Fighter(int hp, int defense, int power)
         {
             MaxHp = hp;
@@ -13,10 +18,10 @@
         }
 
         public Entity Owner { get; set; }
-        public int MaxHp { get; private set; }
-        public int Hp { get; private set; }
-        public int Defense { get; private set; }
-        public int Power { get; private set; }
+        public int MaxHp { get; set; }
+        public int Hp { get; set; }
+        public int Defense { get; set; }
+        public int Power { get; set; }
 
         public void TakeDamage(int amount)
         {
