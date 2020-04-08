@@ -13,6 +13,7 @@
         private Console _mainMenu = null;
         private Console _inventoryMenu = null;
         private Console _messageBox = null;
+        private Console _levelUpMenu = null;
 
         public void ShowMessageBox(Console console, string header, int width, int screenWidth, int screenHeight)
         {
@@ -73,6 +74,30 @@
             {
                 console.Children.Remove(_mainMenu);
                 _mainMenu = null;
+            }
+        }
+
+        public void ShowLevelUpMenu(Console console, string header, Entity player, int width, int screenWidth, int screenHeight)
+        {
+            if (_levelUpMenu == null)
+            {
+                var options = new List<string>
+                {
+                    $"Constitution (+20 HP, from {player.FighterComponent.MaxHp})",
+                    $"Strength (+1 attack, from {player.FighterComponent.Power})",
+                    $"Agility (+1 defense, from {player.FighterComponent.Defense})"
+                };
+
+                _levelUpMenu = ShowMenu(console, header, options, width, screenWidth, screenHeight);
+            }
+        }
+
+        public void HideLevelUpMenu(Console console)
+        {
+            if (_levelUpMenu != null)
+            {
+                console.Children.Remove(_levelUpMenu);
+                _levelUpMenu = null;
             }
         }
 

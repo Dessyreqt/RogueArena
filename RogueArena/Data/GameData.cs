@@ -44,11 +44,21 @@
 
             gameData.MessageLog = new MessageLog(Constants.MessageX, Constants.MessageWidth, Constants.MessageHeight);
 
-            var player = new Entity(0, 0, '@', Color.White, "Player", true, RenderOrder.Actor, new FighterComponent(30, 2, 5), inventoryComponent: new InventoryComponent(26));
+            var player = new Entity(
+                0,
+                0,
+                '@',
+                Color.White,
+                "Player",
+                true,
+                RenderOrder.Actor,
+                new FighterComponent(30, 2, 5),
+                inventoryComponent: new InventoryComponent(26),
+                levelComponent: new LevelComponent());
 
             gameData.DungeonLevel = new DungeonLevel(1, Constants.MapWidth, Constants.MapHeight);
             gameData.Player = player;
- 
+
             gameData.DungeonLevel.Map.MakeMap(
                 Constants.MaxRooms,
                 Constants.MinRoomSize,

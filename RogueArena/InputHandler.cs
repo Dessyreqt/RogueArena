@@ -23,6 +23,8 @@
                     return HandleShowInventoryKeys(keys);
                 case GameState.Targeting:
                     return HandleTargetingKeys(keys);
+                case GameState.LevelUp:
+                    return HandleLevelUpKeys(keys);
                 default:
                     return null;
             }
@@ -86,6 +88,26 @@
                         return null;
                     case Keys.Escape:
                         return new ExitCommand();
+                }
+            }
+
+            return null;
+        }
+
+        private static Command HandleLevelUpKeys(ReadOnlyCollection<AsciiKey> keys)
+        {
+            if (keys.Count > 0)
+            {
+                var key = keys[0].Key;
+
+                switch (key)
+                {
+                    case Keys.A:
+                        return new LevelUpCommand(LevelUpType.Hp);
+                    case Keys.B:
+                        return new LevelUpCommand(LevelUpType.Str);
+                    case Keys.C:
+                        return new LevelUpCommand(LevelUpType.Def);
                 }
             }
 

@@ -8,5 +8,6 @@
         ShowInventory,
         DropInventory,
         Targeting,
+        LevelUp,
     }
 }

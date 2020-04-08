@@ -9,18 +9,20 @@
             // here for deserialization purposes
         }
 
-        public FighterComponent(int hp, int defense, int power)
+        public FighterComponent(int hp, int defense, int power, int xp = 0)
         {
             MaxHp = hp;
             Hp = hp;
             Defense = defense;
             Power = power;
+            Xp = xp;
         }
 
         public int MaxHp { get; set; }
         public int Hp { get; set; }
         public int Defense { get; set; }
         public int Power { get; set; }
+        public int Xp { get; set; }
 
         public void TakeDamage(int amount)
         {
@@ -30,6 +32,7 @@
             {
                 Hp = 0;
                 EventLog.Add(new DeadEvent(Owner));
+                EventLog.Add(new XpEvent(Xp));
             }
         }
 

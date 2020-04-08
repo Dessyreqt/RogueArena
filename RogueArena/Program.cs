@@ -231,6 +231,24 @@
                         }
 
                         break;
+                    case LevelUpCommand levelUp:
+                        switch (levelUp.LevelUpType)
+                        {
+                            case LevelUpType.Hp:
+                                _gameData.Player.FighterComponent.MaxHp += 20;
+                                _gameData.Player.FighterComponent.Hp += 20;
+                                break;
+                            case LevelUpType.Str:
+                                _gameData.Player.FighterComponent.Power += 1;
+                                break;
+                            case LevelUpType.Def:
+                                _gameData.Player.FighterComponent.Defense += 1;
+                                break;
+                        }
+
+                        _gameData.GameState = _previousGameState;
+                        _menuManager.HideLevelUpMenu(_defaultConsole);
+                        break;
                     case MoveCommand move:
                         _defaultConsole.Clear(0, 45, 80);
 
@@ -455,6 +473,19 @@
                         _targetingItem = targeting.ItemEntity;
 
                         _gameData.MessageLog.AddMessage(_targetingItem.ItemComponent.TargetingMessage);
+                        break;
+                    case XpEvent xp:
+                        var leveledUp = _gameData.Player.LevelComponent.AddXp(xp.Xp);
+                        _gameData.MessageLog.AddMessage($"You gain {xp.Xp} experience points.");
+
+                        if (leveledUp)
+                        {
+                            _gameData.MessageLog.AddMessage($"Your battle skills grow stronger! You reached level {_gameData.Player.LevelComponent.CurrentLevel}!", Color.Yellow);
+                            _previousGameState = _gameData.GameState;
+                            _gameData.GameState = GameState.LevelUp;
+                            _menuManager.ShowLevelUpMenu(_defaultConsole, "Level up! Choose a stat to raise:", _gameData.Player, 40, Constants.ScreenWidth, Constants.ScreenHeight);
+                        }
+
                         break;
                 }
             }
