@@ -52,12 +52,17 @@
                 "Player",
                 true,
                 RenderOrder.Actor,
-                new FighterComponent(100, 1, 4),
+                new FighterComponent(100, 1, 2),
                 inventoryComponent: new InventoryComponent(26),
-                levelComponent: new LevelComponent());
+                levelComponent: new LevelComponent(),
+                equipmentComponent: new EquipmentComponent());
 
             gameData.DungeonLevel = new DungeonLevel(1, Constants.MapWidth, Constants.MapHeight);
             gameData.Player = player;
+
+            var dagger = Items.Get(Items.Dagger, 0, 0);
+            gameData.Player.InventoryComponent.AddItem(dagger);
+            gameData.Player.EquipmentComponent.ToggleEquip(dagger);
 
             gameData.DungeonLevel.Map.MakeMap(
                 Constants.MaxRooms,

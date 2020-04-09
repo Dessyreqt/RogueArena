@@ -11,17 +11,20 @@
 
         public FighterComponent(int hp, int defense, int power, int xp = 0)
         {
-            MaxHp = hp;
+            BaseMaxHp = hp;
             Hp = hp;
-            Defense = defense;
-            Power = power;
+            BaseDefense = defense;
+            BasePower = power;
             Xp = xp;
         }
 
-        public int MaxHp { get; set; }
+        public int BaseMaxHp { get; set; }
+        public int BaseDefense { get; set; }
+        public int BasePower { get; set; }
+        public int MaxHp => BaseMaxHp + (Owner.EquipmentComponent?.MaxHpBonus ?? 0);
         public int Hp { get; set; }
-        public int Defense { get; set; }
-        public int Power { get; set; }
+        public int Defense => BaseDefense + (Owner.EquipmentComponent?.DefenseBonus ?? 0);
+        public int Power => BasePower + (Owner.EquipmentComponent?.PowerBonus ?? 0);
         public int Xp { get; set; }
 
         public void TakeDamage(int amount)

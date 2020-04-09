@@ -155,8 +155,8 @@
         {
             var maxMonstersPerRoom = FromDungeonLevel(new Dictionary<int, int> { { 1, 2 }, { 4, 3 }, { 6, 5 } });
             var maxItemsPerRoom = FromDungeonLevel(new Dictionary<int, int> { { 1, 1 }, { 4, 2 } });
-            var numMonsters = Rng.Next(maxMonstersPerRoom);
-            var numItems = Rng.Next(maxItemsPerRoom);
+            var numMonsters = Rng.Next(maxMonstersPerRoom + 1);
+            var numItems = Rng.Next(maxItemsPerRoom + 1);
 
             var monsterChances = new Dictionary<string, int>
             {
@@ -167,7 +167,9 @@
                 { Items.HealingPotion, 35 },
                 { Items.LightningScroll, FromDungeonLevel(new Dictionary<int, int> { { 4, 25 } }) },
                 { Items.FireballScroll, FromDungeonLevel(new Dictionary<int, int> { { 6, 25 } }) },
-                { Items.ConfusionScroll, FromDungeonLevel(new Dictionary<int, int> { { 2, 10 } }) }
+                { Items.ConfusionScroll, FromDungeonLevel(new Dictionary<int, int> { { 2, 10 } }) },
+                { Items.Sword, FromDungeonLevel(new Dictionary<int, int> { { 4, 5 } }) },
+                { Items.Shield, FromDungeonLevel(new Dictionary<int, int> { { 8, 15 } }) },
             };
 
             for (int i = 0; i < numMonsters; i++)

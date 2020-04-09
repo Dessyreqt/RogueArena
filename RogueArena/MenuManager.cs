@@ -33,19 +33,32 @@
             }
         }
 
-        public void ShowInventoryMenu(Console console, string header, InventoryComponent inventoryComponent, int inventoryWidth, int screenWidth, int screenHeight)
+        public void ShowInventoryMenu(Console console, string header, Entity player, int inventoryWidth, int screenWidth, int screenHeight)
         {
             if (_inventoryMenu == null)
             {
                 List<string> options;
 
-                if (inventoryComponent.Items.Count == 0)
+                if (player.InventoryComponent.Items.Count == 0)
                 {
                     options = new List<string> { "Inventory is empty." };
                 }
                 else
                 {
-                    options = inventoryComponent.Items.Select(x => x.Name).ToList();
+                    options = player.InventoryComponent.Items.Select(x =>
+                    {
+                        if (player.EquipmentComponent.MainHand == x)
+                        {
+                            return $"{x.Name} (in main hand)";
+                        }
+
+                        if (player.EquipmentComponent.OffHand == x)
+                        {
+                            return $"{x.Name} (in off hand)";
+                        }
+
+                        return x.Name;
+                    }).ToList();
                 }
 
                 _inventoryMenu = ShowMenu(console, header, options, inventoryWidth, screenWidth, screenHeight);
@@ -89,7 +102,7 @@
                     $"Agility (+1 defense, from {player.FighterComponent.Defense})"
                 };
 
-                _levelUpMenu = ShowMenu(console, header, options, width, screenWidth, screenHeight);
+                _levelUpMenu = ShowMenu(console, header, options, width, screenWidth, screenHeight, Color.DarkGreen);
             }
         }
 
@@ -138,6 +151,11 @@
 
         private static Console ShowMenu(Console console, string header, List<string> options, int width, int screenWidth, int screenHeight)
         {
+            return ShowMenu(console, header, options, width, screenWidth, screenHeight, Color.DarkGray);
+        }
+
+        private static Console ShowMenu(Console console, string header, List<string> options, int width, int screenWidth, int screenHeight, Color backgroundColor)
+        {
             if (options.Count > 26)
             {
                 throw new ArgumentException("Cannot have a menu with more than 26 options");
@@ -149,7 +167,7 @@
 
             var window = new Console(width, height);
 
-            window.DefaultBackground = Color.DarkGray;
+            window.DefaultBackground = backgroundColor;
             window.DefaultForeground = Color.White;
             window.Print(0, 0, wrappedHeader, window.DefaultForeground);
 

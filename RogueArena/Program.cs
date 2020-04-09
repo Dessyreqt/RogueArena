@@ -72,19 +72,12 @@
             _fovRecompute = true;
             _showMainMenu = true;
             _showLoadErrorMessage = false;
-
-            InitializeInventory();
         }
 
         private static void LoadContent()
         {
             _titleScreenTexture = Game.Instance.Content.Load<Texture2D>(@"Textures\menu_background");
             _titleScreenBackground = new BackgroundComponent(_titleScreenTexture);
-        }
-
-        private static void InitializeInventory()
-        {
-            //_gameData.Player.Inventory.AddItem(Items.Get(Items.FireballScroll, 0, 0));
         }
 
         private static void LoadPosition()
@@ -155,6 +148,7 @@
                     _gameData = GameData.New();
                     _previousGameState = _gameData.GameState;
                     _showMainMenu = false;
+                    ProcessEvents();
                     break;
                 case LoadSavedGameCommand _:
                     _gameData = GameData.Load();
@@ -192,7 +186,7 @@
                         _menuManager.ShowInventoryMenu(
                             _defaultConsole,
                             "Press the key next to an item to drop it, or Esc to cancel.",
-                            _gameData.Player.InventoryComponent,
+                            _gameData.Player,
                             50,
                             Constants.ScreenWidth,
                             Constants.ScreenHeight);
@@ -240,14 +234,14 @@
                         switch (levelUp.LevelUpType)
                         {
                             case LevelUpType.Hp:
-                                _gameData.Player.FighterComponent.MaxHp += 20;
+                                _gameData.Player.FighterComponent.BaseMaxHp += 20;
                                 _gameData.Player.FighterComponent.Hp += 20;
                                 break;
                             case LevelUpType.Str:
-                                _gameData.Player.FighterComponent.Power += 1;
+                                _gameData.Player.FighterComponent.BasePower += 1;
                                 break;
                             case LevelUpType.Def:
-                                _gameData.Player.FighterComponent.Defense += 1;
+                                _gameData.Player.FighterComponent.BaseDefense += 1;
                                 break;
                         }
 
@@ -326,7 +320,7 @@
                         _menuManager.ShowInventoryMenu(
                             _defaultConsole,
                             "Press the key next to an item to use it, or Esc to cancel.",
-                            _gameData.Player.InventoryComponent,
+                            _gameData.Player,
                             50,
                             Constants.ScreenWidth,
                             Constants.ScreenHeight);
@@ -445,8 +439,18 @@
                         }
 
                         break;
+                    case EquippedEvent equipped:
+                        _gameData.MessageLog.AddMessage($"You equipped the {equipped.EquippedEntity.Name}.");
+                        break;
                     case ItemConsumedEvent consumed:
-                        _gameData.GameState = GameState.EnemyTurn;
+                        if (_gameData.GameState == GameState.LevelUp)
+                        {
+                            _previousGameState = GameState.EnemyTurn;
+                        }
+                        else
+                        {
+                            _gameData.GameState = GameState.EnemyTurn;
+                        }
 
                         _gameData.MessageLog.AddMessage(consumed.Message);
 
@@ -493,6 +497,13 @@
                         _targetingItem = targeting.ItemEntity;
 
                         _gameData.MessageLog.AddMessage(_targetingItem.ItemComponent.TargetingMessage);
+                        break;
+                    case ToggleEquipEvent equip:
+                        _gameData.Player.EquipmentComponent.ToggleEquip(equip.EquippableEntity);
+                        _gameData.GameState = GameState.EnemyTurn;
+                        break;
+                    case UnequippedEvent unequipped:
+                        _gameData.MessageLog.AddMessage($"You unequipped the {unequipped.UnequippedEntity.Name}.");
                         break;
                     case XpEvent xp:
                         var leveledUp = _gameData.Player.LevelComponent.AddXp(xp.Xp);

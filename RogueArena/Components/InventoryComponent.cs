@@ -50,7 +50,14 @@
 
             if (item.ItemFunction == null)
             {
-                EventLog.Add(new MessageEvent($"The {itemEntity.Name} cannot be used", Color.Yellow));
+                if (itemEntity.EquippableComponent != null)
+                {
+                    EventLog.Add(new ToggleEquipEvent(itemEntity));
+                }
+                else
+                {
+                    EventLog.Add(new MessageEvent($"The {itemEntity.Name} cannot be used", Color.Yellow));
+                }
             }
             else
             {
@@ -83,6 +90,11 @@
 
         public void Drop(Entity itemEntity)
         {
+            if (Owner.EquipmentComponent.MainHand == itemEntity || Owner.EquipmentComponent.OffHand == itemEntity)
+            {
+                Owner.EquipmentComponent.ToggleEquip(itemEntity);
+            }
+
             itemEntity.X = Owner.X;
             itemEntity.Y = Owner.Y;
 

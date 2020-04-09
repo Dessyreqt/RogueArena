@@ -29,7 +29,9 @@
             ItemComponent itemComponent = null,
             InventoryComponent inventoryComponent = null,
             StairsComponent stairsComponent = null,
-            LevelComponent levelComponent = null)
+            LevelComponent levelComponent = null,
+            EquippableComponent equippableComponent = null,
+            EquipmentComponent equipmentComponent = null)
         {
             X = x;
             Y = y;
@@ -44,6 +46,8 @@
             InventoryComponent = inventoryComponent;
             StairsComponent = stairsComponent;
             LevelComponent = levelComponent;
+            EquippableComponent = equippableComponent;
+            EquipmentComponent = equipmentComponent;
 
             if (FighterComponent != null)
             {
@@ -74,6 +78,21 @@
             {
                 LevelComponent.Owner = this;
             }
+
+            if (EquippableComponent != null)
+            {
+                EquippableComponent.Owner = this;
+
+                if (ItemComponent == null)
+                {
+                    ItemComponent = new ItemComponent { Owner = this };
+                }
+            }
+
+            if (EquipmentComponent != null)
+            {
+                EquipmentComponent.Owner = this;
+            }
         }
 
         public int X { get; set; }
@@ -89,6 +108,8 @@
         public InventoryComponent InventoryComponent { get; set; }
         public StairsComponent StairsComponent { get; set; }
         public LevelComponent LevelComponent { get; set; }
+        public EquippableComponent EquippableComponent { get; set; }
+        public EquipmentComponent EquipmentComponent { get; set; }
 
         public static Entity GetBlockingEntityAtLocation(List<Entity> entities, int destX, int destY)
         {
