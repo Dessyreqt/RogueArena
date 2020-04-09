@@ -121,7 +121,7 @@
         private static void Update(GameTime gameTime)
         {
             if (_showMainMenu)
-            { 
+            {
                 _menuManager.ShowMainMenu(_defaultConsole, Constants.ScreenWidth, Constants.ScreenHeight);
                 _defaultConsole.Components.Add(_titleScreenBackground);
                 HandleMainMenu();
@@ -207,6 +207,11 @@
                         else if (_gameData.GameState == GameState.Targeting)
                         {
                             EventLog.Add(new TargetingCanceledEvent());
+                        }
+                        else if (_gameData.GameState == GameState.CharacterScreen)
+                        {
+                            _gameData.GameState = _previousGameState;
+                            _menuManager.HideCharacterScreen(_defaultConsole);
                         }
                         else
                         {
@@ -309,6 +314,12 @@
                         }
 
                         break;
+                    case ShowCharacterScreenCommand _:
+                        _previousGameState = _gameData.GameState;
+                        _gameData.GameState = GameState.CharacterScreen;
+                        _menuManager.ShowCharacterScreen(_defaultConsole, _gameData.Player, 30, 10, Constants.ScreenWidth, Constants.ScreenHeight);
+
+                        break;
                     case ShowInventoryCommand _:
                         _previousGameState = _gameData.GameState;
                         _gameData.GameState = GameState.ShowInventory;
@@ -401,7 +412,16 @@
                 _gameData.DungeonLevel.Map.ComputeFov(_gameData.Player.X, _gameData.Player.Y, Constants.FovRadius, Constants.FovLightWalls, Constants.FovAlgorithm);
             }
 
-            RenderFunctions.RenderAll(_defaultConsole, _panel, _gameData.Entities, _gameData.Player, _gameData.DungeonLevel.Map, _fovRecompute, _gameData.MessageLog, Constants.BarWidth, _mouse);
+            RenderFunctions.RenderAll(
+                _defaultConsole,
+                _panel,
+                _gameData.Entities,
+                _gameData.Player,
+                _gameData.DungeonLevel.Map,
+                _fovRecompute,
+                _gameData.MessageLog,
+                Constants.BarWidth,
+                _mouse);
             _fovRecompute = false;
         }
 

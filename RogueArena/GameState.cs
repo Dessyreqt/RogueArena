@@ -9,5 +9,6 @@
         DropInventory,
         Targeting,
         LevelUp,
+        CharacterScreen,
     }
 }

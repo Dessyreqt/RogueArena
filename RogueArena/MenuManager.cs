@@ -10,10 +10,11 @@
 
     public class MenuManager
     {
-        private Console _mainMenu = null;
-        private Console _inventoryMenu = null;
-        private Console _messageBox = null;
-        private Console _levelUpMenu = null;
+        private Console _mainMenu;
+        private Console _inventoryMenu;
+        private Console _messageBox;
+        private Console _levelUpMenu;
+        private Console _characterScreen = null;
 
         public void ShowMessageBox(Console console, string header, int width, int screenWidth, int screenHeight)
         {
@@ -98,6 +99,40 @@
             {
                 console.Children.Remove(_levelUpMenu);
                 _levelUpMenu = null;
+            }
+        }
+
+        public void ShowCharacterScreen(Console console, Entity player, int characterScreenWidth, int characterScreenHeight, int screenWidth, int screenHeight)
+        {
+            if (_characterScreen == null)
+            {
+                _characterScreen = new Console(characterScreenWidth, characterScreenHeight);
+                _characterScreen.DefaultBackground = Color.DarkGray;
+                _characterScreen.DefaultForeground = Color.White;
+
+                _characterScreen.Print(0, 1, "Character Information");
+                _characterScreen.Print(0, 2, $"Level: {player.LevelComponent.CurrentLevel}");
+                _characterScreen.Print(0, 3, $"Experience: {player.LevelComponent.CurrentXp}");
+                _characterScreen.Print(0, 4, $"Experience to Level: {player.LevelComponent.ExperienceToNextLevel}");
+                _characterScreen.Print(0, 6, $"Maximum HP: {player.FighterComponent.MaxHp}");
+                _characterScreen.Print(0, 7, $"Attack: {player.FighterComponent.Power}");
+                _characterScreen.Print(0, 8, $"Defense: {player.FighterComponent.Defense}");
+
+
+                var windowX = screenWidth / 2 - characterScreenWidth / 2;
+                var windowY = screenHeight / 2 - characterScreenHeight / 2;
+
+                _characterScreen.Position = new Point(windowX, windowY);
+                console.Children.Add(_characterScreen);
+            }
+        }
+
+        public void HideCharacterScreen(Console console)
+        {
+            if (_characterScreen != null)
+            {
+                console.Children.Remove(_characterScreen);
+                _characterScreen = null;
             }
         }
 

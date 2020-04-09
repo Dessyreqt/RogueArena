@@ -25,9 +25,30 @@
                     return HandleTargetingKeys(keys);
                 case GameState.LevelUp:
                     return HandleLevelUpKeys(keys);
+                case GameState.CharacterScreen:
+                    return HandleCharacterScreenKeys(keys);
                 default:
                     return null;
             }
+        }
+
+        private static Command HandleCharacterScreenKeys(ReadOnlyCollection<AsciiKey> keys)
+        {
+            if (keys.Count > 0)
+            {
+                var key = keys[0].Key;
+             
+                switch (key)
+                {
+                    case Keys.F5:
+                        Settings.ToggleFullScreen();
+                        return null;
+                    case Keys.Escape:
+                        return new ExitCommand();
+                }
+            }
+
+            return null;
         }
 
         public static Command HandleMainMenuKeys(ReadOnlyCollection<AsciiKey> keys)
@@ -179,6 +200,8 @@
                         return new DropInventoryCommand();
                     case Keys.S:
                         return new TakeStairsCommand();
+                    case Keys.C:
+                        return new ShowCharacterScreenCommand();
                 }
             }
 
