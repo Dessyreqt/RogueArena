@@ -52,7 +52,7 @@
                 "Player",
                 true,
                 RenderOrder.Actor,
-                new FighterComponent(30, 2, 5),
+                new FighterComponent(100, 1, 4),
                 inventoryComponent: new InventoryComponent(26),
                 levelComponent: new LevelComponent());
 
@@ -66,9 +66,7 @@
                 Constants.MapWidth,
                 Constants.MapHeight,
                 player,
-                gameData.DungeonLevel.Entities,
-                Constants.MaxMonstersPerRoom,
-                Constants.MaxItemsPerRoom);
+                gameData.DungeonLevel.Entities);
 
             gameData.Entities = gameData.DungeonLevel.Entities;
 

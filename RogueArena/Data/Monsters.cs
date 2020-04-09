@@ -18,11 +18,11 @@
             switch (monsterName)
             {
                 case Orc:
-                    fighterComponent = new FighterComponent(10, 0, 3, 35);
+                    fighterComponent = new FighterComponent(20, 0, 4, 35);
                     aiComponent = new BasicMonster();
                     return new Entity(x, y, 'o', Color.LightGreen, "Orc", true, RenderOrder.Actor, fighterComponent, aiComponent);
                 case Troll:
-                    fighterComponent = new FighterComponent(16, 1, 4, 100);
+                    fighterComponent = new FighterComponent(30, 2, 8, 100);
                     aiComponent = new BasicMonster();
                     return new Entity(x, y, 'T', Color.DarkGreen, "Troll", true, RenderOrder.Actor, fighterComponent, aiComponent);
                 default:

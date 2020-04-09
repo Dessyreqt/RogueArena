@@ -6,7 +6,6 @@
     using Microsoft.Xna.Framework;
     using RogueArena.Components;
     using RogueArena.Data;
-    using RogueArena.Events;
     using RogueArena.Rng;
 
     [Serializable]
@@ -47,16 +46,7 @@
             return tiles;
         }
 
-        public void MakeMap(
-            int maxRooms,
-            int minRoomSize,
-            int maxRoomSize,
-            int mapWidth,
-            int mapHeight,
-            Entity player,
-            List<Entity> entities,
-            int maxMonstersPerRoom,
-            int maxItemsPerRoom)
+        public void MakeMap(int maxRooms, int minRoomSize, int maxRoomSize, int mapWidth, int mapHeight, Entity player, List<Entity> entities)
         {
             var rooms = new List<Rectangle>();
             Point lastCenter = new Point(0, 0);
@@ -91,7 +81,14 @@
                     if (DungeonLevel > 1)
                     {
                         var upStairsComponent = new StairsComponent(DungeonLevel - 1);
-                        var upStairs = new Entity(lastCenter.X, lastCenter.Y, '<', Color.White, $"Stairs to Level {upStairsComponent.ToFloor}", renderOrder: RenderOrder.Stairs, stairsComponent: upStairsComponent);
+                        var upStairs = new Entity(
+                            lastCenter.X,
+                            lastCenter.Y,
+                            '<',
+                            Color.White,
+                            $"Stairs to Level {upStairsComponent.ToFloor}",
+                            renderOrder: RenderOrder.Stairs,
+                            stairsComponent: upStairsComponent);
                         entities.Add(upStairs);
                     }
                 }
@@ -111,12 +108,19 @@
                     }
                 }
 
-                PlaceEntities(newRoom, entities, maxMonstersPerRoom, maxItemsPerRoom);
+                PlaceEntities(newRoom, entities);
                 rooms.Add(newRoom);
             }
 
             var downStairsComponent = new StairsComponent(DungeonLevel + 1);
-            var downStairs = new Entity(lastCenter.X, lastCenter.Y, '>', Color.White, $"Stairs to Level {downStairsComponent.ToFloor}", renderOrder: RenderOrder.Stairs, stairsComponent: downStairsComponent);
+            var downStairs = new Entity(
+                lastCenter.X,
+                lastCenter.Y,
+                '>',
+                Color.White,
+                $"Stairs to Level {downStairsComponent.ToFloor}",
+                renderOrder: RenderOrder.Stairs,
+                stairsComponent: downStairsComponent);
             entities.Add(downStairs);
         }
 
@@ -147,10 +151,24 @@
             }
         }
 
-        private void PlaceEntities(Rectangle room, List<Entity> entities, int maxMonstersPerRoom, int maxItemsPerRoom)
+        private void PlaceEntities(Rectangle room, List<Entity> entities)
         {
+            var maxMonstersPerRoom = FromDungeonLevel(new Dictionary<int, int> { { 1, 2 }, { 4, 3 }, { 6, 5 } });
+            var maxItemsPerRoom = FromDungeonLevel(new Dictionary<int, int> { { 1, 1 }, { 4, 2 } });
             var numMonsters = Rng.Next(maxMonstersPerRoom);
             var numItems = Rng.Next(maxItemsPerRoom);
+
+            var monsterChances = new Dictionary<string, int>
+            {
+                { Monsters.Orc, 80 }, { Monsters.Troll, FromDungeonLevel(new Dictionary<int, int> { { 3, 15 }, { 5, 30 }, { 7, 60 } }) }
+            };
+            var itemChances = new Dictionary<string, int>
+            {
+                { Items.HealingPotion, 35 },
+                { Items.LightningScroll, FromDungeonLevel(new Dictionary<int, int> { { 4, 25 } }) },
+                { Items.FireballScroll, FromDungeonLevel(new Dictionary<int, int> { { 6, 25 } }) },
+                { Items.ConfusionScroll, FromDungeonLevel(new Dictionary<int, int> { { 2, 10 } }) }
+            };
 
             for (int i = 0; i < numMonsters; i++)
             {
@@ -159,17 +177,7 @@
 
                 if (!entities.Any(entity => entity.X == x && entity.Y == y))
                 {
-                    Entity monster;
-
-                    if (Rng.Next(100) < 80)
-                    {
-                        monster = Monsters.Get(Monsters.Orc, x, y);
-                    }
-                    else
-                    {
-                        monster = Monsters.Get(Monsters.Troll, x, y);
-                    }
-
+                    var monster = Monsters.Get(Rng.ChoiceFromDictionary(monsterChances), x, y);
                     entities.Add(monster);
                 }
             }
@@ -181,30 +189,22 @@
 
                 if (!entities.Any(entity => entity.X == x && entity.Y == y))
                 {
-                    var itemChance = Rng.Next(100);
-
-                    if (itemChance < 70)
-                    {
-                        var item = Items.Get(Items.HealingPotion, x, y);
-                        entities.Add(item);
-                    }
-                    else if (itemChance < 80)
-                    {
-                        var item = Items.Get(Items.FireballScroll, x, y);
-                        entities.Add(item);
-                    }
-                    else if (itemChance < 90)
-                    {
-                        var item = Items.Get(Items.ConfusionScroll, x, y);
-                        entities.Add(item);
-                    }
-                    else
-                    {
-                        var item = Items.Get(Items.LightningScroll, x, y);
-                        entities.Add(item);
-                    }
+                    var item = Items.Get(Rng.ChoiceFromDictionary(itemChances), x, y);
+                    entities.Add(item);
                 }
             }
+        }
+
+        private int FromDungeonLevel(Dictionary<int, int> chanceTable)
+        {
+            var keysLessThanLevel = chanceTable.Keys.Where(value => value <= DungeonLevel).ToList();
+            if (!keysLessThanLevel.Any())
+            {
+                return 0;
+            }
+
+            var maxKey = keysLessThanLevel.Max();
+            return chanceTable[maxKey];
         }
 
         private void ComputeFovCircularRaycasting(int playerX, int playerY, int maxRadius, bool lightWalls)

@@ -26,8 +26,5 @@
         public const int FovAlgorithm = DungeonMap.FovBasic;
         public const bool FovLightWalls = true;
         public const int FovRadius = 10;
-
-        public const int MaxMonstersPerRoom = 3;
-        public const int MaxItemsPerRoom = 2;
     }
 }

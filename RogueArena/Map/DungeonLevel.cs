@@ -43,9 +43,7 @@
                         Constants.MapWidth,
                         Constants.MapHeight,
                         player,
-                        NextFloor.Entities,
-                        Constants.MaxMonstersPerRoom,
-                        Constants.MaxItemsPerRoom);
+                        NextFloor.Entities);
                     NextFloor.PreviousFloor = this;
 
                     player.FighterComponent.Heal(player.FighterComponent.MaxHp / 2);

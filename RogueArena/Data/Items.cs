@@ -27,16 +27,16 @@
                     itemComponent = new ItemComponent(itemFunction, true, targetingMessage);
                     return new Entity(x, y, '#', Color.LightPink, "Confusion Scroll", renderOrder: RenderOrder.Item, itemComponent: itemComponent);
                 case FireballScroll:
-                    itemFunction = new CastFireballFunction(12, 3);
+                    itemFunction = new CastFireballFunction(25, 3);
                     targetingMessage = new Message("Left-click a target tile for the fireball, or right-click to cancel.", Color.LightCyan);
                     itemComponent = new ItemComponent(itemFunction, true, targetingMessage);
                     return new Entity(x, y, '#', Color.Red, "Fireball Scroll", renderOrder: RenderOrder.Item, itemComponent: itemComponent);
                 case HealingPotion:
-                    itemFunction = new HealFunction(4);
+                    itemFunction = new HealFunction(40);
                     itemComponent = new ItemComponent(itemFunction);
                     return new Entity(x, y, '!', Color.DarkViolet, "Healing Potion", renderOrder: RenderOrder.Item, itemComponent: itemComponent);
                 case LightningScroll:
-                    itemFunction = new CastLightningFunction(20, 5);
+                    itemFunction = new CastLightningFunction(40, 5);
                     itemComponent = new ItemComponent(itemFunction);
                     return new Entity(x, y, '#', Color.Yellow, "Lightning Scroll", renderOrder: RenderOrder.Item, itemComponent: itemComponent);
                 default:
