@@ -58,10 +58,10 @@
 
             for (int i = 0; i < maxRooms; i++)
             {
-                var width = Rng.Next(minRoomSize, maxRoomSize);
-                var height = Rng.Next(minRoomSize, maxRoomSize);
-                var x = Rng.Next(mapWidth - width - 1);
-                var y = Rng.Next(mapHeight - height - 1);
+                var width = Rng.Next(minRoomSize, maxRoomSize + 1);
+                var height = Rng.Next(minRoomSize, maxRoomSize + 1);
+                var x = Rng.Next(mapWidth - width);
+                var y = Rng.Next(mapHeight - height);
                 var newRoom = new Rectangle(x, y, width, height);
 
                 if (rooms.Any(room => newRoom.Intersects(room)))
@@ -174,8 +174,8 @@
 
             for (int i = 0; i < numMonsters; i++)
             {
-                var x = Rng.Next(room.X1 + 1, room.X2 - 1);
-                var y = Rng.Next(room.Y1 + 1, room.Y2 - 1);
+                var x = Rng.Next(room.X1 + 1, room.X2);
+                var y = Rng.Next(room.Y1 + 1, room.Y2);
 
                 if (!entities.Any(entity => entity.X == x && entity.Y == y))
                 {

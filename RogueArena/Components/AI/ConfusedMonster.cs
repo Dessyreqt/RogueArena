@@ -21,8 +21,8 @@
         {
             if (NumberOfTurns > 0)
             {
-                var randomX = Owner.X + Rng.Next(2) - 1;
-                var randomY = Owner.Y + Rng.Next(2) - 1;
+                var randomX = Owner.X + Rng.Next(3) - 1;
+                var randomY = Owner.Y + Rng.Next(3) - 1;
 
                 if (randomX != Owner.X && randomY != Owner.Y)
                 {
