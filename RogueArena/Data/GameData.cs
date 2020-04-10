@@ -5,8 +5,8 @@
     using Microsoft.Xna.Framework;
     using Newtonsoft.Json;
     using RogueArena.Components;
-    using RogueArena.Events;
     using RogueArena.Map;
+    using RogueArena.Messages;
 
     public class GameData
     {

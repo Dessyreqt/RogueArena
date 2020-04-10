@@ -1,7 +1,7 @@
 ﻿namespace RogueArena.Components
 {
-    using ItemFunctions;
-    using RogueArena.Events;
+    using RogueArena.Components.ItemFunctions;
+    using RogueArena.Messages;
 
     public class ItemComponent : Component
     {

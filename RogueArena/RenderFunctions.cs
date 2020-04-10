@@ -2,10 +2,10 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Events;
-    using Map;
     using Microsoft.Xna.Framework;
     using RogueArena.Data;
+    using RogueArena.Map;
+    using RogueArena.Messages;
     using SadConsole;
     using SadConsole.Input;
     using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -15,7 +15,7 @@
         Stairs,
         Corpse,
         Item,
-        Actor,
+        Actor
     }
 
     public static class RenderFunctions

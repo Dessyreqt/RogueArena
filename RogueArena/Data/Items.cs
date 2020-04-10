@@ -4,7 +4,7 @@
     using Microsoft.Xna.Framework;
     using RogueArena.Components;
     using RogueArena.Components.ItemFunctions;
-    using RogueArena.Events;
+    using RogueArena.Messages;
 
     public class Items
     {

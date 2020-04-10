@@ -1,4 +1,4 @@
-﻿namespace RogueArena.Events
+﻿namespace RogueArena.Messages
 {
     using Microsoft.Xna.Framework;
 

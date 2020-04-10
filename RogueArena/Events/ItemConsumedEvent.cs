@@ -1,6 +1,7 @@
 ﻿namespace RogueArena.Events
 {
     using Microsoft.Xna.Framework;
+    using RogueArena.Messages;
 
     public class ItemConsumedEvent : Event
     {

@@ -1,4 +1,4 @@
-﻿namespace RogueArena.Events
+﻿namespace RogueArena.Messages
 {
     using System;
     using System.Collections.Generic;
