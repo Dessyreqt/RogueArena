@@ -5,8 +5,6 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using RogueArena.Commands;
-    using RogueArena.Commands.Game;
-    using RogueArena.Commands.MainMenu;
     using RogueArena.Data;
     using RogueArena.Events;
     using RogueArena.Graphics;
@@ -19,12 +17,9 @@
     {
         private static ProgramData _data = new ProgramData();
 
-        private static Console _defaultConsole;
         private static Console _panel;
         private static Texture2D _titleScreenTexture;
         private static BackgroundComponent _titleScreenBackground;
-
-        private static MenuManager _menuManager;
 
         private static MouseEventArgs _mouse;
         private static Entity _targetingItem;
@@ -51,20 +46,20 @@
 
             LoadContent();
 
-            _defaultConsole = new Console(Constants.ScreenWidth, Constants.ScreenHeight);
-            _defaultConsole.DefaultForeground = Color.White;
-            _defaultConsole.DefaultBackground = Color.Transparent;
-            _defaultConsole.IsCursorDisabled = true;
-            _defaultConsole.MouseMove += Console_MouseMove;
+            _data.DefaultConsole = new Console(Constants.ScreenWidth, Constants.ScreenHeight);
+            _data.DefaultConsole.DefaultForeground = Color.White;
+            _data.DefaultConsole.DefaultBackground = Color.Transparent;
+            _data.DefaultConsole.IsCursorDisabled = true;
+            _data.DefaultConsole.MouseMove += Console_MouseMove;
 
             _panel = new Console(Constants.ScreenWidth, Constants.PanelHeight) { Position = new Point(0, Constants.PanelY) };
 
-            _defaultConsole.Children.Add(_panel);
+            _data.DefaultConsole.Children.Add(_panel);
 
-            _menuManager = new MenuManager();
+            _data.MenuManager = new MenuManager();
 
-            Global.CurrentScreen = _defaultConsole;
-            Global.FocusedConsoles.Set(_defaultConsole);
+            Global.CurrentScreen = _data.DefaultConsole;
+            Global.FocusedConsoles.Set(_data.DefaultConsole);
 
             _data.FovRecompute = true;
             _data.ShowMainMenu = true;
@@ -112,21 +107,21 @@
         {
             if (_data.ShowMainMenu)
             {
-                _menuManager.ShowMainMenu(_defaultConsole, Constants.ScreenWidth, Constants.ScreenHeight);
-                _defaultConsole.Components.Add(_titleScreenBackground);
+                _data.MenuManager.ShowMainMenu(_data.DefaultConsole, Constants.ScreenWidth, Constants.ScreenHeight);
+                _data.DefaultConsole.Components.Add(_titleScreenBackground);
                 HandleMainMenu();
             }
             else
             {
-                _defaultConsole.Components.Remove(_titleScreenBackground);
-                _menuManager.HideMainMenu(_defaultConsole);
-                _menuManager.HideMessageBox(_defaultConsole);
+                _data.DefaultConsole.Components.Remove(_titleScreenBackground);
+                _data.MenuManager.HideMainMenu(_data.DefaultConsole);
+                _data.MenuManager.HideMessageBox(_data.DefaultConsole);
                 PlayGame();
             }
 
             if (_data.ShowLoadErrorMessage)
             {
-                _menuManager.ShowMessageBox(_defaultConsole, "No save game to load", 50, Constants.ScreenWidth, Constants.ScreenHeight);
+                _data.MenuManager.ShowMessageBox(_data.DefaultConsole, "No save game to load", 50, Constants.ScreenWidth, Constants.ScreenHeight);
             }
         }
 
@@ -139,26 +134,26 @@
                 _data.ShowLoadErrorMessage = false;
             }
 
-            HandleCommand(command);
+            Command.Run(command, _data);
             ProcessEvents();
         }
 
         private static void PlayGame()
         {
-            RenderFunctions.ClearAll(_defaultConsole, _data.GameData.Entities);
+            RenderFunctions.ClearAll(_data.DefaultConsole, _data.GameData.Entities);
 
             if (Global.KeyboardState.KeysPressed.Count > 0)
             {
                 var command = InputHandler.HandleGameKeys(Global.KeyboardState.KeysPressed, _data.GameData.GameState);
 
-                HandleCommand(command);
+                Command.Run(command, _data);
                 ProcessEvents();
             }
 
             if (_data.GameData.GameState == GameState.EnemyTurn)
             {
-                _menuManager.HideInventoryMenu(_defaultConsole);
-                _defaultConsole.Clear(0, 46, 80);
+                _data.MenuManager.HideInventoryMenu(_data.DefaultConsole);
+                _data.DefaultConsole.Clear(0, 46, 80);
 
                 foreach (var entity in _data.GameData.Entities)
                 {
@@ -184,7 +179,7 @@
 
             if (_data.GameData.GameState == GameState.Targeting)
             {
-                _menuManager.HideInventoryMenu(_defaultConsole);
+                _data.MenuManager.HideInventoryMenu(_data.DefaultConsole);
 
                 if (Global.MouseState.LeftClicked)
                 {
@@ -206,7 +201,7 @@
             }
 
             RenderFunctions.RenderAll(
-                _defaultConsole,
+                _data.DefaultConsole,
                 _panel,
                 _data.GameData.Entities,
                 _data.GameData.Player,
@@ -216,206 +211,6 @@
                 Constants.BarWidth,
                 _mouse);
             _data.FovRecompute = false;
-        }
-
-        private static void HandleCommand(Command command)
-        {
-            switch (command)
-            {
-                case NewGameCommand _:
-                    _data.GameData = GameData.New();
-                    _data.PreviousGameState = _data.GameData.GameState;
-                    _data.ShowMainMenu = false;
-                    break;
-                case LoadSavedGameCommand _:
-                    _data.GameData = GameData.Load();
-
-                    if (_data.GameData == null)
-                    {
-                        _data.ShowLoadErrorMessage = true;
-                    }
-                    else
-                    {
-                        _data.PreviousGameState = _data.GameData.GameState;
-                        _data.ShowMainMenu = false;
-                    }
-
-                    break;
-                case ExitGameCommand _:
-                    Game.Instance.Exit();
-                    break;
-                case DropInventoryCommand _:
-                    _data.PreviousGameState = _data.GameData.GameState;
-                    _data.GameData.GameState = GameState.DropInventory;
-                    _menuManager.ShowInventoryMenu(
-                        _defaultConsole,
-                        "Press the key next to an item to drop it, or Esc to cancel.",
-                        _data.GameData.Player,
-                        50,
-                        Constants.ScreenWidth,
-                        Constants.ScreenHeight);
-
-                    break;
-                case ExitCommand _:
-                    if (_data.GameData.GameState == GameState.ShowInventory || _data.GameData.GameState == GameState.DropInventory)
-                    {
-                        _data.GameData.GameState = _data.PreviousGameState;
-                        _menuManager.HideInventoryMenu(_defaultConsole);
-                    }
-                    else if (_data.GameData.GameState == GameState.Targeting)
-                    {
-                        EventLog.Add(new TargetingCanceledEvent());
-                    }
-                    else if (_data.GameData.GameState == GameState.CharacterScreen)
-                    {
-                        _data.GameData.GameState = _data.PreviousGameState;
-                        _menuManager.HideCharacterScreen(_defaultConsole);
-                    }
-                    else
-                    {
-                        _data.GameData.Save();
-                        Game.Instance.Exit();
-                    }
-
-                    break;
-                case InventoryIndexCommand inv:
-                    if (_data.PreviousGameState != GameState.PlayerDead && inv.Index < _data.GameData.Player.InventoryComponent.Items.Count)
-                    {
-                        var item = _data.GameData.Player.InventoryComponent.Items[inv.Index];
-
-                        if (_data.GameData.GameState == GameState.ShowInventory)
-                        {
-                            _data.GameData.Player.InventoryComponent.Use(item, _data.GameData.Entities, _data.GameData.DungeonLevel.Map);
-                        }
-                        else if (_data.GameData.GameState == GameState.DropInventory)
-                        {
-                            _data.GameData.Player.InventoryComponent.Drop(item);
-                        }
-                    }
-
-                    break;
-                case LevelUpCommand levelUp:
-                    switch (levelUp.LevelUpType)
-                    {
-                        case LevelUpType.Hp:
-                            _data.GameData.Player.FighterComponent.BaseMaxHp += 20;
-                            _data.GameData.Player.FighterComponent.Hp += 20;
-                            break;
-                        case LevelUpType.Str:
-                            _data.GameData.Player.FighterComponent.BasePower += 1;
-                            break;
-                        case LevelUpType.Def:
-                            _data.GameData.Player.FighterComponent.BaseDefense += 1;
-                            break;
-                    }
-
-                    _data.GameData.GameState = _data.PreviousGameState;
-                    _menuManager.HideLevelUpMenu(_defaultConsole);
-                    break;
-                case MoveCommand move:
-                    _defaultConsole.Clear(0, 45, 80);
-
-                    if (_data.GameData.GameState == GameState.PlayersTurn)
-                    {
-                        var destX = _data.GameData.Player.X + move.X;
-                        var destY = _data.GameData.Player.Y + move.Y;
-
-                        if (!_data.GameData.DungeonLevel.Map.IsBlocked(destX, destY))
-                        {
-                            var target = Entity.GetBlockingEntityAtLocation(_data.GameData.Entities, destX, destY);
-
-                            if (target != null)
-                            {
-                                _data.GameData.Player.FighterComponent.Attack(target);
-                            }
-                            else
-                            {
-                                _data.GameData.Player.Move(move.X, move.Y);
-                                _data.FovRecompute = true;
-                            }
-
-                            _data.GameData.GameState = GameState.EnemyTurn;
-                        }
-                    }
-
-                    break;
-                case PickupCommand _:
-                    if (_data.GameData.GameState == GameState.PlayersTurn)
-                    {
-                        Entity itemEntity = null;
-
-                        foreach (var entity in _data.GameData.Entities)
-                        {
-                            if (entity.ItemComponent != null && entity.X == _data.GameData.Player.X && entity.Y == _data.GameData.Player.Y)
-                            {
-                                _data.GameData.Player.InventoryComponent.AddItem(entity);
-                                itemEntity = entity;
-                                break;
-                            }
-                        }
-
-                        if (itemEntity != null)
-                        {
-                            _data.GameData.GameState = GameState.EnemyTurn;
-                        }
-                        else
-                        {
-                            EventLog.Add(new MessageEvent("There is nothing here to pick up.", Color.Yellow));
-                        }
-                    }
-
-                    break;
-                case RestCommand _:
-                    if (_data.GameData.GameState == GameState.PlayersTurn)
-                    {
-                        _data.GameData.GameState = GameState.EnemyTurn;
-                    }
-
-                    break;
-                case ShowCharacterScreenCommand _:
-                    _data.PreviousGameState = _data.GameData.GameState;
-                    _data.GameData.GameState = GameState.CharacterScreen;
-                    _menuManager.ShowCharacterScreen(_defaultConsole, _data.GameData.Player, 30, 10, Constants.ScreenWidth, Constants.ScreenHeight);
-
-                    break;
-                case ShowInventoryCommand _:
-                    _data.PreviousGameState = _data.GameData.GameState;
-                    _data.GameData.GameState = GameState.ShowInventory;
-                    _menuManager.ShowInventoryMenu(
-                        _defaultConsole,
-                        "Press the key next to an item to use it, or Esc to cancel.",
-                        _data.GameData.Player,
-                        50,
-                        Constants.ScreenWidth,
-                        Constants.ScreenHeight);
-
-                    break;
-                case TakeStairsCommand _:
-                    Entity stairsEntity = null;
-
-                    foreach (var entity in _data.GameData.Entities)
-                    {
-                        if (entity.StairsComponent != null && entity.X == _data.GameData.Player.X && entity.Y == _data.GameData.Player.Y)
-                        {
-                            stairsEntity = entity;
-                            break;
-                        }
-                    }
-
-                    if (stairsEntity != null)
-                    {
-                        _data.GameData.DungeonLevel = _data.GameData.DungeonLevel.GoToFloor(stairsEntity.StairsComponent.ToFloor, _data.GameData.Player, _data.GameData.MessageLog);
-                        _data.GameData.Entities = _data.GameData.DungeonLevel.Entities;
-                        _data.FovRecompute = true;
-                        _defaultConsole.Clear();
-                    }
-                    else
-                    {
-                        EventLog.Add(new MessageEvent("There are no stairs here.", Color.Yellow));
-                    }
-
-                    break;
-            }
         }
 
         private static void ProcessEvents()
@@ -510,10 +305,18 @@
 
                         if (leveledUp)
                         {
-                            _data.GameData.MessageLog.AddMessage($"Your battle skills grow stronger! You reached level {_data.GameData.Player.LevelComponent.CurrentLevel}!", Color.Yellow);
+                            _data.GameData.MessageLog.AddMessage(
+                                $"Your battle skills grow stronger! You reached level {_data.GameData.Player.LevelComponent.CurrentLevel}!",
+                                Color.Yellow);
                             _data.PreviousGameState = _data.GameData.GameState;
                             _data.GameData.GameState = GameState.LevelUp;
-                            _menuManager.ShowLevelUpMenu(_defaultConsole, "Level up! Choose a stat to raise:", _data.GameData.Player, 40, Constants.ScreenWidth, Constants.ScreenHeight);
+                            _data.MenuManager.ShowLevelUpMenu(
+                                _data.DefaultConsole,
+                                "Level up! Choose a stat to raise:",
+                                _data.GameData.Player,
+                                40,
+                                Constants.ScreenWidth,
+                                Constants.ScreenHeight);
                         }
 
                         break;

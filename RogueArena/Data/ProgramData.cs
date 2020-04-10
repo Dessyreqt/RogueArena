@@ -1,5 +1,7 @@
 ﻿namespace RogueArena.Data
 {
+    using SadConsole;
+
     public class ProgramData
     {
         public GameData GameData { get; set; }
@@ -7,5 +9,7 @@
         public bool ShowLoadErrorMessage { get; set; }
         public bool FovRecompute { get; set; }
         public GameState PreviousGameState { get; set; }
+        public MenuManager MenuManager { get; set; }
+        public Console DefaultConsole { get; set; }
     }
 }
