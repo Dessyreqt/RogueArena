@@ -6,7 +6,7 @@
     {
         protected override void Handle(ProgramData data)
         {
-            data.GameData = GameData.New();
+            data.GameData = GameData.New(data);
             data.PreviousGameState = data.GameData.GameState;
             data.ShowMainMenu = false;
         }

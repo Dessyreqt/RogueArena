@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
+    using RogueArena.Data;
     using RogueArena.Events;
     using RogueArena.Map;
 
@@ -43,7 +44,7 @@
             if (Target != null)
             {
                 events.Add(new ItemConsumedEvent($"A lighting bolt strikes the {Target.Name} with a loud thunder! The damage is {Damage}", Target));
-                Target.FighterComponent.TakeDamage(Damage);
+                Target.FighterComponent.TakeDamage(Damage, events);
             }
             else
             {

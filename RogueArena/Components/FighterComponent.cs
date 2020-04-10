@@ -1,6 +1,8 @@
 ﻿namespace RogueArena.Components
 {
+    using System.Collections.Generic;
     using Events;
+    using RogueArena.Data;
 
     public class FighterComponent : Component
     {
@@ -27,30 +29,30 @@
         public int Power => BasePower + (Owner.EquipmentComponent?.PowerBonus ?? 0);
         public int Xp { get; set; }
 
-        public void TakeDamage(int amount)
+        public void TakeDamage(int amount, List<Event> events)
         {
             Hp -= amount;
 
             if (Hp <= 0)
             {
                 Hp = 0;
-                EventLog.Add(new DeadEvent(Owner));
-                EventLog.Add(new XpEvent(Xp));
+                events.Add(new DeadEvent(Owner));
+                events.Add(new XpEvent(Xp));
             }
         }
 
-        public void Attack(Entity target)
+        public void Attack(Entity target, List<Event> events)
         {
             var damage = Power - target.FighterComponent.Defense;
 
             if (damage > 0)
             {
-                target.FighterComponent.TakeDamage(damage);
-                EventLog.Add(new MessageEvent($"{Owner.Name} attacks {target.Name} for {damage} hit points."));
+                target.FighterComponent.TakeDamage(damage, events);
+                events.Add(new MessageEvent($"{Owner.Name} attacks {target.Name} for {damage} hit points."));
             }
             else
             {
-                EventLog.Add(new MessageEvent($"{Owner.Name} attacks {target.Name} but does no damage."));
+                events.Add(new MessageEvent($"{Owner.Name} attacks {target.Name} but does no damage."));
             }
         }
 

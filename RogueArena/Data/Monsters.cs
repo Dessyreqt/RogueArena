@@ -12,8 +12,8 @@
 
         public static Entity Get(string monsterName, int x, int y)
         {
-            FighterComponent fighterComponent = null;
-            AiComponent aiComponent = null;
+            FighterComponent fighterComponent;
+            AiComponent aiComponent;
 
             switch (monsterName)
             {

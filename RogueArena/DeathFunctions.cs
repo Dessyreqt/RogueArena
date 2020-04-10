@@ -2,20 +2,21 @@
 {
     using Events;
     using Microsoft.Xna.Framework;
+    using RogueArena.Data;
 
     public static class DeathFunctions
     {
-        public static void KillPlayer(Entity player)
+        public static void KillPlayer(Entity player, ProgramData data)
         {
             player.Character = '%';
             player.Color = Color.DarkRed;
 
-            EventLog.Add(new MessageEvent("You died!", Color.Red));
+            data.Events.Add(new MessageEvent("You died!", Color.Red));
         }
 
-        public static void KillMonster(Entity monster)
+        public static void KillMonster(Entity monster, ProgramData data)
         {
-            EventLog.Add(new MessageEvent($"{monster.Name} is dead!", Color.Orange));
+            data.Events.Add(new MessageEvent($"{monster.Name} is dead!", Color.Orange));
 
             monster.Character = '%';
             monster.Color = Color.DarkRed;

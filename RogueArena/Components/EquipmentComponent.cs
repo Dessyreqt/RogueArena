@@ -11,7 +11,7 @@
         public Entity MainHand { get; set; }
         public Entity OffHand { get; set; }
 
-        public void ToggleEquip(Entity equippableEntity)
+        public void ToggleEquip(Entity equippableEntity, ProgramData data)
         {
             if (equippableEntity.EquippableComponent == null)
             {
@@ -25,17 +25,17 @@
                     if (MainHand == equippableEntity)
                     {
                         MainHand = null;
-                        EventLog.Add(new UnequippedEvent { UnequippedEntity = equippableEntity });
+                        data.Events.Add(new UnequippedEvent { UnequippedEntity = equippableEntity });
                     }
                     else
                     {
                         if (MainHand != null)
                         {
-                            EventLog.Add(new UnequippedEvent { UnequippedEntity = MainHand });
+                            data.Events.Add(new UnequippedEvent { UnequippedEntity = MainHand });
                         }
 
                         MainHand = equippableEntity;
-                        EventLog.Add(new EquippedEvent { EquippedEntity = equippableEntity });
+                        data.Events.Add(new EquippedEvent { EquippedEntity = equippableEntity });
                     }
 
                     break;
@@ -43,17 +43,17 @@
                     if (OffHand == equippableEntity)
                     {
                         OffHand = null;
-                        EventLog.Add(new UnequippedEvent { UnequippedEntity = equippableEntity });
+                        data.Events.Add(new UnequippedEvent { UnequippedEntity = equippableEntity });
                     }
                     else
                     {
                         if (OffHand != null)
                         {
-                            EventLog.Add(new UnequippedEvent { UnequippedEntity = OffHand });
+                            data.Events.Add(new UnequippedEvent { UnequippedEntity = OffHand });
                         }
 
                         OffHand = equippableEntity;
-                        EventLog.Add(new EquippedEvent { EquippedEntity = equippableEntity });
+                        data.Events.Add(new EquippedEvent { EquippedEntity = equippableEntity });
                     }
 
                     break;

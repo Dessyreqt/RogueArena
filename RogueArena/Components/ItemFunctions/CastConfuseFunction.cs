@@ -4,6 +4,7 @@
     using System.Linq;
     using Microsoft.Xna.Framework;
     using RogueArena.Components.AI;
+    using RogueArena.Data;
     using RogueArena.Events;
 
     public class CastConfuseFunction : ItemFunction

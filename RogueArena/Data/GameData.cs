@@ -38,7 +38,7 @@
 
         public GameState GameState { get; set; }
 
-        public static GameData New()
+        public static GameData New(ProgramData data)
         {
             var gameData = new GameData();
 
@@ -61,8 +61,8 @@
             gameData.Player = player;
 
             var dagger = Items.Get(Items.Dagger, 0, 0);
-            gameData.Player.InventoryComponent.AddItem(dagger);
-            gameData.Player.EquipmentComponent.ToggleEquip(dagger);
+            gameData.Player.InventoryComponent.AddItem(dagger, data);
+            gameData.Player.EquipmentComponent.ToggleEquip(dagger, data);
 
             gameData.DungeonLevel.Map.MakeMap(
                 Constants.MaxRooms,

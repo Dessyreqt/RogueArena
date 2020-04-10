@@ -1,9 +1,8 @@
 ﻿namespace RogueArena.Components.AI
 {
-    using System.Collections.Generic;
     using Microsoft.Xna.Framework;
+    using RogueArena.Data;
     using RogueArena.Events;
-    using RogueArena.Map;
     using RogueArena.Rng;
 
     public class ConfusedMonster : AiComponent
@@ -17,7 +16,7 @@
         public AiComponent PreviousAi { get; set; }
         public int NumberOfTurns { get; set; }
 
-        public override void TakeTurn(Entity target, DungeonMap dungeonMap, List<Entity> entities)
+        public override void TakeTurn(Entity target, ProgramData data)
         {
             if (NumberOfTurns > 0)
             {
@@ -26,7 +25,7 @@
 
                 if (randomX != Owner.X && randomY != Owner.Y)
                 {
-                    Owner.MoveTowards(randomX, randomY, dungeonMap, entities);
+                    Owner.MoveTowards(randomX, randomY, data.GameData.DungeonLevel.Map, data.GameData.Entities);
                 }
 
                 NumberOfTurns -= 1;
@@ -34,7 +33,7 @@
             else
             {
                 Owner.AiComponent = PreviousAi;
-                EventLog.Add(new MessageEvent($"The {Owner.Name} is no longer confused!", Color.Red));
+                data.Events.Add(new MessageEvent($"The {Owner.Name} is no longer confused!", Color.Red));
             }
         }
     }

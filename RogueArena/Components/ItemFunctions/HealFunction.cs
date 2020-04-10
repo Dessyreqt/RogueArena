@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Events;
     using Microsoft.Xna.Framework;
+    using RogueArena.Data;
 
     public class HealFunction : ItemFunction
     {

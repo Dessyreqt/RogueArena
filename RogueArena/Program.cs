@@ -159,7 +159,7 @@
                 {
                     if (entity.AiComponent != null)
                     {
-                        entity.AiComponent.TakeTurn(_data.GameData.Player, _data.GameData.DungeonLevel.Map, _data.GameData.Entities);
+                        entity.AiComponent.TakeTurn(_data.GameData.Player, _data);
                         ProcessEvents();
 
                         if (_data.GameData.GameState == GameState.PlayerDead)
@@ -185,12 +185,12 @@
                 {
                     var targetPos = _mouse.MouseState.CellPosition;
 
-                    _data.GameData.Player.InventoryComponent.Use(_targetingItem, _data.GameData.Entities, _data.GameData.DungeonLevel.Map, targetPos.X, targetPos.Y);
+                    _data.GameData.Player.InventoryComponent.Use(_targetingItem, _data, targetPos.X, targetPos.Y);
                     ProcessEvents();
                 }
                 else if (Global.MouseState.RightButtonDown)
                 {
-                    EventLog.Add(new TargetingCanceledEvent());
+                    _data.Events.Add(new TargetingCanceledEvent());
                     ProcessEvents();
                 }
             }
@@ -215,21 +215,21 @@
 
         private static void ProcessEvents()
         {
-            for (var index = 0; index < EventLog.Count; index++)
+            for (var index = 0; index < _data.Events.Count; index++)
             {
-                var @event = EventLog.Event(index);
+                var @event = _data.Events[index];
 
                 switch (@event)
                 {
                     case DeadEvent dead:
                         if (dead.Entity == _data.GameData.Player)
                         {
-                            DeathFunctions.KillPlayer(dead.Entity);
+                            DeathFunctions.KillPlayer(dead.Entity, _data);
                             _data.GameData.GameState = GameState.PlayerDead;
                         }
                         else
                         {
-                            DeathFunctions.KillMonster(dead.Entity);
+                            DeathFunctions.KillMonster(dead.Entity, _data);
                         }
 
                         break;
@@ -293,7 +293,7 @@
                         _data.GameData.MessageLog.AddMessage(_targetingItem.ItemComponent.TargetingMessage);
                         break;
                     case ToggleEquipEvent equip:
-                        _data.GameData.Player.EquipmentComponent.ToggleEquip(equip.EquippableEntity);
+                        _data.GameData.Player.EquipmentComponent.ToggleEquip(equip.EquippableEntity, _data);
                         _data.GameData.GameState = GameState.EnemyTurn;
                         break;
                     case UnequippedEvent unequipped:
@@ -323,7 +323,7 @@
                 }
             }
 
-            EventLog.Clear();
+            _data.Events.Clear();
         }
     }
 }

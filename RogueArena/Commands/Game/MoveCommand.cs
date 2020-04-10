@@ -28,7 +28,7 @@
 
                     if (target != null)
                     {
-                        data.GameData.Player.FighterComponent.Attack(target);
+                        data.GameData.Player.FighterComponent.Attack(target, data.Events);
                     }
                     else
                     {

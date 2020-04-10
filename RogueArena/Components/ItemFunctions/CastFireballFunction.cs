@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
+    using RogueArena.Data;
     using RogueArena.Events;
 
     public class CastFireballFunction : ItemFunction
@@ -41,7 +42,7 @@
                 if (entity.DistanceTo(x, y) <= Radius && entity.FighterComponent != null)
                 {
                     events.Add(new MessageEvent($"The {entity.Name} gets burned for {Damage} hit points.", Color.Orange));
-                    entity.FighterComponent.TakeDamage(Damage);
+                    entity.FighterComponent.TakeDamage(Damage, events);
                 }
             }
 

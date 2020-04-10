@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Events;
     using Microsoft.Xna.Framework;
+    using RogueArena.Data;
     using RogueArena.Map;
 
     public class InventoryComponent : Component
@@ -21,15 +22,15 @@
         public int Capacity { get; set; }
         public List<Entity> Items { get; set; }
 
-        public void AddItem(Entity entity)
+        public void AddItem(Entity entity, ProgramData data)
         {
             if (Items.Count >= Capacity)
             {
-                EventLog.Add(new MessageEvent("You cannot carry any more, your inventory is full.", Color.Yellow));
+                data.Events.Add(new MessageEvent("You cannot carry any more, your inventory is full.", Color.Yellow));
             }
             else
             {
-                EventLog.Add(new ItemPickupEvent(Owner, entity));
+                data.Events.Add(new ItemPickupEvent(Owner, entity));
                 Items.Add(entity);
             }
         }
@@ -39,7 +40,7 @@
             Items.Remove(entity);
         }
 
-        public void Use(Entity itemEntity, List<Entity> entities, DungeonMap dungeonMap, int? targetX = null, int? targetY = null)
+        public void Use(Entity itemEntity, ProgramData data, int? targetX = null, int? targetY = null)
         {
             var item = itemEntity?.ItemComponent;
 
@@ -52,24 +53,24 @@
             {
                 if (itemEntity.EquippableComponent != null)
                 {
-                    EventLog.Add(new ToggleEquipEvent(itemEntity));
+                    data.Events.Add(new ToggleEquipEvent(itemEntity));
                 }
                 else
                 {
-                    EventLog.Add(new MessageEvent($"The {itemEntity.Name} cannot be used", Color.Yellow));
+                    data.Events.Add(new MessageEvent($"The {itemEntity.Name} cannot be used", Color.Yellow));
                 }
             }
             else
             {
                 if (item.Targeting && (targetX == null || targetY == null))
                 {
-                    EventLog.Add(new TargetingStartEvent(itemEntity));
+                    data.Events.Add(new TargetingStartEvent(itemEntity));
                 }
                 else
                 {
                     item.ItemFunction.Target = Owner;
-                    item.ItemFunction.Entities = entities;
-                    item.ItemFunction.DungeonMap = dungeonMap;
+                    item.ItemFunction.Entities = data.GameData.Entities;
+                    item.ItemFunction.DungeonMap = data.GameData.DungeonLevel.Map;
                     item.ItemFunction.TargetX = targetX;
                     item.ItemFunction.TargetY = targetY;
 
@@ -82,24 +83,24 @@
                             Items.Remove(itemEntity);
                         }
 
-                        EventLog.Add(@event);
+                        data.Events.Add(@event);
                     }
                 }
             }
         }
 
-        public void Drop(Entity itemEntity)
+        public void Drop(Entity itemEntity, ProgramData data)
         {
             if (Owner.EquipmentComponent.MainHand == itemEntity || Owner.EquipmentComponent.OffHand == itemEntity)
             {
-                Owner.EquipmentComponent.ToggleEquip(itemEntity);
+                Owner.EquipmentComponent.ToggleEquip(itemEntity, data);
             }
 
             itemEntity.X = Owner.X;
             itemEntity.Y = Owner.Y;
 
             RemoveItem(itemEntity);
-            EventLog.Add(new ItemDroppedEvent(Owner, itemEntity));
+            data.Events.Add(new ItemDroppedEvent(Owner, itemEntity));
         }
     }
 }

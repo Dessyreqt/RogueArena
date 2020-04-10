@@ -1,21 +1,20 @@
 ﻿namespace RogueArena.Components.AI
 {
-    using System.Collections.Generic;
-    using RogueArena.Map;
+    using RogueArena.Data;
 
     public class BasicMonster : AiComponent
     {
-        public override void TakeTurn(Entity target, DungeonMap dungeonMap, List<Entity> entities)
+        public override void TakeTurn(Entity target, ProgramData data)
         {
-            if (dungeonMap.Tiles[Owner.X, Owner.Y].InView)
+            if (data.GameData.DungeonLevel.Map.Tiles[Owner.X, Owner.Y].InView)
             {
                 if (Owner.DistanceTo(target) >= 2)
                 {
-                    Owner.MoveAstar(target, dungeonMap, entities);
+                    Owner.MoveAstar(target, data.GameData.DungeonLevel.Map, data.GameData.Entities);
                 }
                 else if (target.FighterComponent.Hp > 0)
                 {
-                    Owner.FighterComponent.Attack(target);
+                    Owner.FighterComponent.Attack(target, data.Events);
                 }
             }
         }

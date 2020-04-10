@@ -28,7 +28,7 @@
             }
             else
             {
-                EventLog.Add(new MessageEvent("There are no stairs here.", Color.Yellow));
+                data.Events.Add(new MessageEvent("There are no stairs here.", Color.Yellow));
             }
         }
     }

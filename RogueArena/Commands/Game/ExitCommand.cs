@@ -15,7 +15,7 @@
             }
             else if (data.GameData.GameState == GameState.Targeting)
             {
-                EventLog.Add(new TargetingCanceledEvent());
+                data.Events.Add(new TargetingCanceledEvent());
             }
             else if (data.GameData.GameState == GameState.CharacterScreen)
             {

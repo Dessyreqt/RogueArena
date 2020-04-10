@@ -19,11 +19,11 @@
 
                 if (data.GameData.GameState == GameState.ShowInventory)
                 {
-                    data.GameData.Player.InventoryComponent.Use(item, data.GameData.Entities, data.GameData.DungeonLevel.Map);
+                    data.GameData.Player.InventoryComponent.Use(item, data);
                 }
                 else if (data.GameData.GameState == GameState.DropInventory)
                 {
-                    data.GameData.Player.InventoryComponent.Drop(item);
+                    data.GameData.Player.InventoryComponent.Drop(item, data);
                 }
             }
         }
