@@ -1,5 +1,6 @@
 ﻿namespace RogueArena.Events
 {
+    using Microsoft.Xna.Framework;
     using RogueArena.Data;
 
     public class DeadEvent : Event
@@ -15,12 +16,22 @@
         {
             if (_entity == data.GameData.Player)
             {
-                DeathFunctions.KillPlayer(_entity, data);
+                _entity.Character = '%';
+                _entity.Color = Color.DarkRed;
+                data.Events.Add(new MessageEvent("You died!", Color.Red));
                 data.GameData.GameState = GameState.PlayerDead;
             }
             else
             {
-                DeathFunctions.KillMonster(_entity, data);
+                data.Events.Add(new MessageEvent($"{_entity.Name} is dead!", Color.Orange));
+
+                _entity.Character = '%';
+                _entity.Color = Color.DarkRed;
+                _entity.Blocks = false;
+                _entity.FighterComponent = null;
+                _entity.AiComponent = null;
+                _entity.Name = $"remains of {_entity.Name}";
+                _entity.RenderOrder = RenderOrder.Corpse;
             }
         }
     }
