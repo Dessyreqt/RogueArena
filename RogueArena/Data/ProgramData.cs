@@ -19,5 +19,6 @@
         public MenuManager MenuManager { get; set; }
         public Console DefaultConsole { get; set; }
         public List<Event> Events { get; set; }
+        public Entity TargetingItem { get; set; }
     }
 }

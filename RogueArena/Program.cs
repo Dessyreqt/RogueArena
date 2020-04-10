@@ -22,7 +22,6 @@
         private static BackgroundComponent _titleScreenBackground;
 
         private static MouseEventArgs _mouse;
-        private static Entity _targetingItem;
 
         static void Main(string[] args)
         {
@@ -185,7 +184,7 @@
                 {
                     var targetPos = _mouse.MouseState.CellPosition;
 
-                    _data.GameData.Player.InventoryComponent.Use(_targetingItem, _data, targetPos.X, targetPos.Y);
+                    _data.GameData.Player.InventoryComponent.Use(_data.TargetingItem, _data, targetPos.X, targetPos.Y);
                     ProcessEvents();
                 }
                 else if (Global.MouseState.RightButtonDown)
@@ -218,109 +217,7 @@
             for (var index = 0; index < _data.Events.Count; index++)
             {
                 var @event = _data.Events[index];
-
-                switch (@event)
-                {
-                    case DeadEvent dead:
-                        if (dead.Entity == _data.GameData.Player)
-                        {
-                            DeathFunctions.KillPlayer(dead.Entity, _data);
-                            _data.GameData.GameState = GameState.PlayerDead;
-                        }
-                        else
-                        {
-                            DeathFunctions.KillMonster(dead.Entity, _data);
-                        }
-
-                        break;
-                    case EquippedEvent equipped:
-                        _data.GameData.MessageLog.AddMessage($"You equipped the {equipped.EquippedEntity.Name}.");
-                        break;
-                    case ItemConsumedEvent consumed:
-                        if (_data.GameData.GameState == GameState.LevelUp)
-                        {
-                            _data.PreviousGameState = GameState.EnemyTurn;
-                        }
-                        else
-                        {
-                            _data.GameData.GameState = GameState.EnemyTurn;
-                        }
-
-                        _data.GameData.MessageLog.AddMessage(consumed.Message);
-
-                        break;
-                    case ItemDroppedEvent dropped:
-                        _data.GameData.Entities.Add(dropped.Item);
-
-                        if (dropped.Entity == _data.GameData.Player)
-                        {
-                            _data.GameData.MessageLog.AddMessage($"You dropped the {dropped.Item.Name}!", Color.Yellow);
-                        }
-                        else
-                        {
-                            _data.GameData.MessageLog.AddMessage($"The {dropped.Entity.Name} dropped the {dropped.Item.Name}.", Color.Beige);
-                        }
-
-                        _data.GameData.GameState = GameState.EnemyTurn;
-
-                        break;
-                    case ItemPickupEvent pickup:
-                        _data.GameData.Entities.Remove(pickup.Item);
-
-                        if (pickup.Entity == _data.GameData.Player)
-                        {
-                            _data.GameData.MessageLog.AddMessage($"You pick up the {pickup.Item.Name}!", Color.Blue);
-                        }
-                        else
-                        {
-                            _data.GameData.MessageLog.AddMessage($"The {pickup.Entity.Name} picks up the {pickup.Item.Name}.", Color.Beige);
-                        }
-
-                        break;
-                    case MessageEvent message:
-                        _data.GameData.MessageLog.AddMessage(message.Message);
-                        break;
-                    case TargetingCanceledEvent _:
-                        _data.GameData.GameState = _data.PreviousGameState;
-                        _data.GameData.MessageLog.AddMessage("Targeting canceled.");
-                        break;
-                    case TargetingStartEvent targeting:
-                        _data.PreviousGameState = GameState.PlayersTurn;
-                        _data.GameData.GameState = GameState.Targeting;
-
-                        _targetingItem = targeting.ItemEntity;
-
-                        _data.GameData.MessageLog.AddMessage(_targetingItem.ItemComponent.TargetingMessage);
-                        break;
-                    case ToggleEquipEvent equip:
-                        _data.GameData.Player.EquipmentComponent.ToggleEquip(equip.EquippableEntity, _data);
-                        _data.GameData.GameState = GameState.EnemyTurn;
-                        break;
-                    case UnequippedEvent unequipped:
-                        _data.GameData.MessageLog.AddMessage($"You unequipped the {unequipped.UnequippedEntity.Name}.");
-                        break;
-                    case XpEvent xp:
-                        var leveledUp = _data.GameData.Player.LevelComponent.AddXp(xp.Xp);
-                        _data.GameData.MessageLog.AddMessage($"You gain {xp.Xp} experience points.");
-
-                        if (leveledUp)
-                        {
-                            _data.GameData.MessageLog.AddMessage(
-                                $"Your battle skills grow stronger! You reached level {_data.GameData.Player.LevelComponent.CurrentLevel}!",
-                                Color.Yellow);
-                            _data.PreviousGameState = _data.GameData.GameState;
-                            _data.GameData.GameState = GameState.LevelUp;
-                            _data.MenuManager.ShowLevelUpMenu(
-                                _data.DefaultConsole,
-                                "Level up! Choose a stat to raise:",
-                                _data.GameData.Player,
-                                40,
-                                Constants.ScreenWidth,
-                                Constants.ScreenHeight);
-                        }
-
-                        break;
-                }
+                Event.Process(@event, _data);
             }
 
             _data.Events.Clear();

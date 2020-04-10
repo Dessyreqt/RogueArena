@@ -1,12 +1,20 @@
 ﻿namespace RogueArena.Events
 {
+    using RogueArena.Data;
+
     public class ToggleEquipEvent : Event
     {
+        private readonly Entity _equippableEntity;
+
         public ToggleEquipEvent(Entity equippableEntity)
         {
-            EquippableEntity = equippableEntity;
+            _equippableEntity = equippableEntity;
         }
 
-        public Entity EquippableEntity { get; set; }
+        protected override void Handle(ProgramData data)
+        {
+            data.GameData.Player.EquipmentComponent.ToggleEquip(_equippableEntity, data);
+            data.GameData.GameState = GameState.EnemyTurn;
+        }
     }
 }

@@ -1,10 +1,13 @@
 ﻿namespace RogueArena.Events
 {
     using Microsoft.Xna.Framework;
+    using RogueArena.Data;
     using RogueArena.Messages;
 
     public class MessageEvent : Event
     {
+        private readonly Message _message;
+
         public MessageEvent(string message)
             : this(message, Color.White)
         {
@@ -12,14 +15,17 @@
 
         public MessageEvent(string message, Color color)
         {
-            Message = new Message(message, color);
+            _message = new Message(message, color);
         }
 
         public MessageEvent(Message message)
         {
-            Message = message;
+            _message = message;
         }
 
-        public Message Message { get; }
+        protected override void Handle(ProgramData data)
+        {
+            data.GameData.MessageLog.AddMessage(_message);
+        }
     }
 }

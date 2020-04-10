@@ -25,17 +25,17 @@
                     if (MainHand == equippableEntity)
                     {
                         MainHand = null;
-                        data.Events.Add(new UnequippedEvent { UnequippedEntity = equippableEntity });
+                        data.Events.Add(new UnequippedEvent(equippableEntity));
                     }
                     else
                     {
                         if (MainHand != null)
                         {
-                            data.Events.Add(new UnequippedEvent { UnequippedEntity = MainHand });
+                            data.Events.Add(new UnequippedEvent(MainHand));
                         }
 
                         MainHand = equippableEntity;
-                        data.Events.Add(new EquippedEvent { EquippedEntity = equippableEntity });
+                        data.Events.Add(new EquippedEvent(equippableEntity));
                     }
 
                     break;
@@ -43,17 +43,17 @@
                     if (OffHand == equippableEntity)
                     {
                         OffHand = null;
-                        data.Events.Add(new UnequippedEvent { UnequippedEntity = equippableEntity });
+                        data.Events.Add(new UnequippedEvent(equippableEntity));
                     }
                     else
                     {
                         if (OffHand != null)
                         {
-                            data.Events.Add(new UnequippedEvent { UnequippedEntity = OffHand });
+                            data.Events.Add(new UnequippedEvent(OffHand));
                         }
 
                         OffHand = equippableEntity;
-                        data.Events.Add(new EquippedEvent { EquippedEntity = equippableEntity });
+                        data.Events.Add(new EquippedEvent(equippableEntity));
                     }
 
                     break;

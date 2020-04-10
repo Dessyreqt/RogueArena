@@ -15,7 +15,7 @@
         Stairs,
         Corpse,
         Item,
-        Actor
+        Actor,
     }
 
     public static class RenderFunctions
