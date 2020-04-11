@@ -18,12 +18,12 @@
             {
                 _entity.Character = '%';
                 _entity.Color = Color.DarkRed;
-                data.Events.Add(new MessageEvent("You died!", Color.Red));
+                data.GameData.MessageLog.AddMessage("You died!", Color.Red);
                 data.GameData.GameState = GameState.PlayerDead;
             }
             else
             {
-                data.Events.Add(new MessageEvent($"{_entity.Name} is dead!", Color.Orange));
+                data.GameData.MessageLog.AddMessage($"{_entity.Name} is dead!", Color.Orange);
 
                 _entity.Character = '%';
                 _entity.Color = Color.DarkRed;

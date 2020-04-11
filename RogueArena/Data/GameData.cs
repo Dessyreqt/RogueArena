@@ -93,6 +93,8 @@
 
         public void Save()
         {
+            File.Delete(_saveLocation);
+
             using (var file = new FileStream(_saveLocation, FileMode.OpenOrCreate))
             {
                 var json = JsonConvert.SerializeObject(this, _serializerSettings);
