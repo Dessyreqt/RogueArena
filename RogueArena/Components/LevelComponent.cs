@@ -2,19 +2,14 @@
 {
     public class LevelComponent : Component
     {
-        public LevelComponent() : this(1)
+        public LevelComponent()
         {
-            
-        }
-
-        public LevelComponent(int currentLevel = 1, int currentXp = 0, int levelUpBase = 200, int levelUpFactor = 150)
-        {
-            CurrentLevel = currentLevel;
-            CurrentXp = currentXp;
-            LevelUpBase = levelUpBase;
-            LevelUpFactor = levelUpFactor;
-        }
-
+            CurrentLevel = 1;
+            CurrentXp = 0;
+            LevelUpBase = 200;
+            LevelUpFactor = 150;
+        } 
+        
         public int CurrentLevel { get; set; }
         public int CurrentXp { get; set; }
         public int LevelUpBase { get; set; }

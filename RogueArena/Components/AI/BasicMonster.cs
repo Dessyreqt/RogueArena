@@ -4,17 +4,23 @@
 
     public class BasicMonster : AiComponent
     {
-        private int lastPlayerX = -1;
-        private int lastPlayerY = -1;
+        public BasicMonster()
+        {
+            LastPlayerX = -1;
+            LastPlayerY = -1;
+        }
+
+        public int LastPlayerX { get; set; }
+        public int LastPlayerY { get; set; }
 
         public override void TakeTurn(Entity target, ProgramData data)
         {
-            if (data.GameData.DungeonLevel.Map.Tiles[Owner.X, Owner.Y].InView || (lastPlayerX > -1 && lastPlayerY > -1))
+            if (data.GameData.DungeonLevel.Map.Tiles[Owner.X, Owner.Y].InView || (LastPlayerX > -1 && LastPlayerY > -1))
             {
                 if (data.GameData.DungeonLevel.Map.Tiles[Owner.X, Owner.Y].InView)
                 {
-                    lastPlayerX = target.X;
-                    lastPlayerY = target.Y;
+                    LastPlayerX = target.X;
+                    LastPlayerY = target.Y;
                 }
 
                 if (Owner.DistanceTo(target) >= 2)

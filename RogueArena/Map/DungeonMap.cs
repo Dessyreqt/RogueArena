@@ -80,7 +80,7 @@
 
                     if (DungeonLevel > 1)
                     {
-                        var upStairsComponent = new StairsComponent(DungeonLevel - 1);
+                        var upStairsComponent = new StairsComponent { ToFloor =  DungeonLevel - 1 };
                         var upStairs = new Entity {
                             X = lastCenter.X,
                             Y = lastCenter.Y,
@@ -113,7 +113,7 @@
                 rooms.Add(newRoom);
             }
 
-            var downStairsComponent = new StairsComponent(DungeonLevel + 1);
+            var downStairsComponent = new StairsComponent { ToFloor =  DungeonLevel + 1 };
             var downStairs = new Entity
             {
                 X = lastCenter.X,

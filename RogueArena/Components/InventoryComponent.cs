@@ -10,12 +10,6 @@
     {
         public InventoryComponent()
         {
-            // here for deserialization purposes
-        }
-
-        public InventoryComponent(int capacity)
-        {
-            Capacity = capacity;
             Items = new List<Entity>();
         }
 

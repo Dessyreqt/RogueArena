@@ -7,16 +7,9 @@
 
     public class CastLightningFunction : ItemFunction
     {
-        public CastLightningFunction(int damage, int maximumRange)
-        {
-            Damage = damage;
-            MaximumRange = maximumRange;
-        }
-
         public Entity Caster { get; set; }
         public int Damage { get; set; }
         public int MaximumRange { get; set; }
-
 
         public override List<Event> Execute(ProgramData data)
         {

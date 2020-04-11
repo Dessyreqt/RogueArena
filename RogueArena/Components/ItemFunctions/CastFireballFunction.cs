@@ -7,12 +7,6 @@
 
     public class CastFireballFunction : ItemFunction
     {
-        public CastFireballFunction(int damage, int radius)
-        {
-            Damage = damage;
-            Radius = radius;
-        }
-
         public int Damage { get; set; }
         public int Radius { get; set; }
 

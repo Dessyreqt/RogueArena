@@ -19,14 +19,14 @@
             switch (monsterName)
             {
                 case Orc:
-                    fighterComponent = new FighterComponent(20, 0, 4, 35);
+                    fighterComponent = new FighterComponent { BaseMaxHp = 20, Hp = 20, BaseDefense = 0, BasePower = 4, Xp = 35 };
                     aiComponent = new BasicMonster();
                     entity = new Entity { X = x, Y = y, Character = 'o', Color = Color.LightGreen, Name = "Orc", Blocks = true, RenderOrder = RenderOrder.Actor };
                     entity.Add(fighterComponent);
                     entity.Add(aiComponent);
                     return entity;
                 case Troll:
-                    fighterComponent = new FighterComponent(30, 2, 8, 100);
+                    fighterComponent = new FighterComponent { BaseMaxHp = 30, Hp = 30, BaseDefense = 2, BasePower = 8, Xp = 100 };
                     aiComponent = new BasicMonster();
                     entity = new Entity { X = x, Y = y, Character = 'T', Color = Color.DarkGreen, Name = "Troll", Blocks = true, RenderOrder = RenderOrder.Actor};
                     entity.Add(fighterComponent);

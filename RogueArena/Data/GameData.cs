@@ -41,10 +41,10 @@
         public static GameData New(ProgramData data)
         {
             var player = new Entity { X = 0, Y = 0, Character = '@', Color = Color.White, Name = "Player", Blocks = true, RenderOrder = RenderOrder.Actor };
-            player.Add(new InventoryComponent(26));
+            player.Add(new InventoryComponent { Capacity = 26 });
             player.Add(new LevelComponent());
             player.Add(new EquipmentComponent());
-            player.Add(new FighterComponent(100, 1, 2));
+            player.Add(new FighterComponent { BaseMaxHp = 100, Hp = 100, BaseDefense = 1, BasePower = 2 });
 
             var gameData = new GameData
             {

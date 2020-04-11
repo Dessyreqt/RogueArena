@@ -3,7 +3,6 @@
     using Microsoft.Xna.Framework;
     using RogueArena.Components;
     using RogueArena.Data;
-    using RogueArena.Events;
 
     public class TakeStairsCommand : Command
     {

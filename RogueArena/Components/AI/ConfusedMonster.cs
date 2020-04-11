@@ -7,12 +7,6 @@
 
     public class ConfusedMonster : AiComponent
     {
-        public ConfusedMonster(AiComponent previousAi, int numberOfTurns)
-        {
-            PreviousAi = previousAi;
-            NumberOfTurns = numberOfTurns;
-        }
-
         public AiComponent PreviousAi { get; set; }
         public int NumberOfTurns { get; set; }
 

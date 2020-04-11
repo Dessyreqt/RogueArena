@@ -6,20 +6,6 @@
 
     public class FighterComponent : Component
     {
-        public FighterComponent()
-        {
-            // here for deserialization purposes
-        }
-
-        public FighterComponent(int hp, int defense, int power, int xp = 0)
-        {
-            BaseMaxHp = hp;
-            Hp = hp;
-            BaseDefense = defense;
-            BasePower = power;
-            Xp = xp;
-        }
-
         public int BaseMaxHp { get; set; }
         public int BaseDefense { get; set; }
         public int BasePower { get; set; }
@@ -37,7 +23,11 @@
             {
                 Hp = 0;
                 data.Events.Add(new DeadEvent(Owner));
-                data.Events.Add(new XpEvent(Xp));
+
+                if (Owner != data.GameData.Player)
+                {
+                    data.Events.Add(new XpEvent(Xp));
+                }
             }
         }
 

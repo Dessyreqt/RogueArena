@@ -36,11 +36,8 @@
             }
             else
             {
-                var confusedAi = new ConfusedMonster(targetedEntity.Get<AiComponent>(), 10);
-
-                confusedAi.Owner = targetedEntity;
+                var confusedAi = new ConfusedMonster { PreviousAi = targetedEntity.Get<AiComponent>(), NumberOfTurns = 10, Owner = targetedEntity };
                 targetedEntity.Add(confusedAi);
-
                 data.GameData.MessageLog.AddMessage($"The eyes of the {targetedEntity.Name} look vacant, as he starts to stumble around!", Color.LightGreen);
                 events.Add(new ItemConsumedEvent());
             }
