@@ -28,7 +28,7 @@
                 return events;
             }
 
-            var targetedEntity = Entities.FirstOrDefault(entity => entity.X == x && entity.Y == y && entity.AiComponent != null);
+            var targetedEntity = Entities.FirstOrDefault(entity => entity.X == x && entity.Y == y && entity.Get<AiComponent>() != null);
 
             if (targetedEntity == null)
             {
@@ -36,10 +36,10 @@
             }
             else
             {
-                var confusedAi = new ConfusedMonster(targetedEntity.AiComponent, 10);
+                var confusedAi = new ConfusedMonster(targetedEntity.Get<AiComponent>(), 10);
 
                 confusedAi.Owner = targetedEntity;
-                targetedEntity.AiComponent = confusedAi;
+                targetedEntity.Add(confusedAi);
 
                 events.Add(new ItemConsumedEvent($"The eyes of the {targetedEntity.Name} look vacant, as he starts to stumble around!", Color.LightGreen));
             }

@@ -1,6 +1,7 @@
 ﻿namespace RogueArena.Events
 {
     using Microsoft.Xna.Framework;
+    using RogueArena.Components;
     using RogueArena.Data;
 
     public class DeadEvent : Event
@@ -28,8 +29,8 @@
                 _entity.Character = '%';
                 _entity.Color = Color.DarkRed;
                 _entity.Blocks = false;
-                _entity.FighterComponent = null;
-                _entity.AiComponent = null;
+                _entity.Remove<FighterComponent>();
+                _entity.Remove<AiComponent>();
                 _entity.Name = $"remains of {_entity.Name}";
                 _entity.RenderOrder = RenderOrder.Corpse;
             }

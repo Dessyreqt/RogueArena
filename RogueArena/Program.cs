@@ -5,6 +5,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using RogueArena.Commands;
+    using RogueArena.Components;
     using RogueArena.Data;
     using RogueArena.Events;
     using RogueArena.Graphics;
@@ -156,9 +157,9 @@
 
                 foreach (var entity in _data.GameData.Entities)
                 {
-                    if (entity.AiComponent != null)
+                    if (entity.Get<AiComponent>() != null)
                     {
-                        entity.AiComponent.TakeTurn(_data.GameData.Player, _data);
+                        entity.Get<AiComponent>().TakeTurn(_data.GameData.Player, _data);
                         ProcessEvents();
 
                         if (_data.GameData.GameState == GameState.PlayerDead)
@@ -184,7 +185,7 @@
                 {
                     var targetPos = _mouse.MouseState.CellPosition;
 
-                    _data.GameData.Player.InventoryComponent.Use(_data.TargetingItem, _data, targetPos.X, targetPos.Y);
+                    _data.GameData.Player.Get<InventoryComponent>().Use(_data.TargetingItem, _data, targetPos.X, targetPos.Y);
                     ProcessEvents();
                 }
                 else if (Global.MouseState.RightButtonDown)

@@ -1,6 +1,7 @@
 ﻿namespace RogueArena.Commands.Game
 {
     using Microsoft.Xna.Framework;
+    using RogueArena.Components;
     using RogueArena.Data;
     using RogueArena.Events;
 
@@ -14,9 +15,9 @@
 
                 foreach (var entity in data.GameData.Entities)
                 {
-                    if (entity.ItemComponent != null && entity.X == data.GameData.Player.X && entity.Y == data.GameData.Player.Y)
+                    if (entity.Get<ItemComponent>() != null && entity.X == data.GameData.Player.X && entity.Y == data.GameData.Player.Y)
                     {
-                        data.GameData.Player.InventoryComponent.AddItem(entity, data);
+                        data.GameData.Player.Get<InventoryComponent>().AddItem(entity, data);
                         itemEntity = entity;
                         break;
                     }

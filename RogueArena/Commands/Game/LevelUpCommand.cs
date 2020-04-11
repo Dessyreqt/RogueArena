@@ -1,5 +1,6 @@
 ﻿namespace RogueArena.Commands.Game
 {
+    using RogueArena.Components;
     using RogueArena.Data;
 
     public enum LevelUpType
@@ -20,17 +21,19 @@
 
         protected override void Handle(ProgramData data)
         {
+            var fighter = data.GameData.Player.Get<FighterComponent>();
+
             switch (_levelUpType)
             {
                 case LevelUpType.Hp:
-                    data.GameData.Player.FighterComponent.BaseMaxHp += 20;
-                    data.GameData.Player.FighterComponent.Hp += 20;
+                    fighter.BaseMaxHp += 20;
+                    fighter.Hp += 20;
                     break;
                 case LevelUpType.Str:
-                    data.GameData.Player.FighterComponent.BasePower += 1;
+                    fighter.BasePower += 1;
                     break;
                 case LevelUpType.Def:
-                    data.GameData.Player.FighterComponent.BaseDefense += 1;
+                    fighter.BaseDefense += 1;
                     break;
             }
 

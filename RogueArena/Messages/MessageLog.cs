@@ -9,15 +9,7 @@
     {
         public MessageLog()
         {
-            // here for deserialization purposes
-        }
-
-        public MessageLog(int x, int width, int height)
-        {
             Messages = new List<Message>();
-            X = x;
-            Width = width;
-            Height = height;
         }
 
         public List<Message> Messages { get; set; }

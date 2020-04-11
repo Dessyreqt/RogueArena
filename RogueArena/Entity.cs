@@ -3,96 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Components;
-    using Map;
     using Microsoft.Xna.Framework;
-    using Util;
+    using RogueArena.Components;
+    using RogueArena.Map;
+    using RogueArena.Util;
 
     [Serializable]
     public class Entity
     {
         public Entity()
         {
-            // here for deserialization purposes
-        }
-
-        public Entity(
-            int x,
-            int y,
-            char character,
-            Color color,
-            string name,
-            bool blocks = false,
-            RenderOrder renderOrder = RenderOrder.Corpse,
-            FighterComponent fighterComponent = null,
-            AiComponent aiComponent = null,
-            ItemComponent itemComponent = null,
-            InventoryComponent inventoryComponent = null,
-            StairsComponent stairsComponent = null,
-            LevelComponent levelComponent = null,
-            EquippableComponent equippableComponent = null,
-            EquipmentComponent equipmentComponent = null)
-        {
-            X = x;
-            Y = y;
-            Character = character;
-            Color = color;
-            Name = name;
-            Blocks = blocks;
-            RenderOrder = renderOrder;
-            FighterComponent = fighterComponent;
-            AiComponent = aiComponent;
-            ItemComponent = itemComponent;
-            InventoryComponent = inventoryComponent;
-            StairsComponent = stairsComponent;
-            LevelComponent = levelComponent;
-            EquippableComponent = equippableComponent;
-            EquipmentComponent = equipmentComponent;
-
-            if (FighterComponent != null)
-            {
-                FighterComponent.Owner = this;
-            }
-
-            if (AiComponent != null)
-            {
-                AiComponent.Owner = this;
-            }
-
-            if (ItemComponent != null)
-            {
-                ItemComponent.Owner = this;
-            }
-
-            if (InventoryComponent != null)
-            {
-                InventoryComponent.Owner = this;
-            }
-
-            if (StairsComponent != null)
-            {
-                StairsComponent.Owner = this;
-            }
-
-            if (LevelComponent != null)
-            {
-                LevelComponent.Owner = this;
-            }
-
-            if (EquippableComponent != null)
-            {
-                EquippableComponent.Owner = this;
-
-                if (ItemComponent == null)
-                {
-                    ItemComponent = new ItemComponent { Owner = this };
-                }
-            }
-
-            if (EquipmentComponent != null)
-            {
-                EquipmentComponent.Owner = this;
-            }
+            Components = new Dictionary<Type, Component>();
         }
 
         public int X { get; set; }
@@ -102,18 +23,35 @@
         public string Name { get; set; }
         public bool Blocks { get; set; }
         public RenderOrder RenderOrder { get; set; }
-        public FighterComponent FighterComponent { get; set; }
-        public AiComponent AiComponent { get; set; }
-        public ItemComponent ItemComponent { get; set; }
-        public InventoryComponent InventoryComponent { get; set; }
-        public StairsComponent StairsComponent { get; set; }
-        public LevelComponent LevelComponent { get; set; }
-        public EquippableComponent EquippableComponent { get; set; }
-        public EquipmentComponent EquipmentComponent { get; set; }
+        public Dictionary<Type, Component> Components { get; set; }
 
         public static Entity GetBlockingEntityAtLocation(List<Entity> entities, int destX, int destY)
         {
             return entities.FirstOrDefault(entity => entity.Blocks && entity.X == destX && entity.Y == destY);
+        }
+
+        public T Get<T>() where T : Component
+        {
+            var componentType = typeof(T).GetBaseComponentType();
+
+            if (Components.ContainsKey(componentType))
+            {
+                return (T)Components[componentType];
+            }
+
+            return null;
+        }
+
+        public object Get(Type type)
+        {
+            var componentType = type.GetBaseComponentType();
+
+            if (Components.ContainsKey(componentType))
+            {
+                return Components[componentType];
+            }
+
+            return null;
         }
 
         public void Move(int xDelta, int yDelta)

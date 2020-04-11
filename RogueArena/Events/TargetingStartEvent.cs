@@ -1,5 +1,6 @@
 ﻿namespace RogueArena.Events
 {
+    using RogueArena.Components;
     using RogueArena.Data;
 
     public class TargetingStartEvent : Event
@@ -15,7 +16,7 @@
             data.PreviousGameState = GameState.PlayersTurn;
             data.GameData.GameState = GameState.Targeting;
             data.TargetingItem = ItemEntity;
-            data.GameData.MessageLog.AddMessage(data.TargetingItem.ItemComponent.TargetingMessage);
+            data.GameData.MessageLog.AddMessage(data.TargetingItem.Get<ItemComponent>().TargetingMessage);
         }
     }
 }

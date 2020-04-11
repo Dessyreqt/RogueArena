@@ -39,10 +39,10 @@
 
             foreach (var entity in Entities)
             {
-                if (entity.DistanceTo(x, y) <= Radius && entity.FighterComponent != null)
+                if (entity.DistanceTo(x, y) <= Radius && entity.Get<FighterComponent>() != null)
                 {
                     events.Add(new MessageEvent($"The {entity.Name} gets burned for {Damage} hit points.", Color.Orange));
-                    entity.FighterComponent.TakeDamage(Damage, events);
+                    entity.Get<FighterComponent>().TakeDamage(Damage, events);
                 }
             }
 

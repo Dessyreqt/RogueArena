@@ -32,7 +32,7 @@
             }
             else
             {
-                Owner.AiComponent = PreviousAi;
+                Owner.Add(PreviousAi);
                 data.Events.Add(new MessageEvent($"The {Owner.Name} is no longer confused!", Color.Red));
             }
         }

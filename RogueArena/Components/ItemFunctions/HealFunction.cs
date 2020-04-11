@@ -23,18 +23,18 @@
         {
             var events = new List<Event>();
 
-            if (Target?.FighterComponent == null)
+            if (Target?.Get<FighterComponent>() == null)
             {
                 return events;
             }
 
-            if (Target.FighterComponent.Hp == Target.FighterComponent.MaxHp)
+            if (Target.Get<FighterComponent>().Hp == Target.Get<FighterComponent>().MaxHp)
             {
                 events.Add(new MessageEvent("You are already at full health", Color.Yellow));
             }
             else
             {
-                Target.FighterComponent.Heal(Amount);
+                Target.Get<FighterComponent>().Heal(Amount);
                 events.Add(new ItemConsumedEvent("Your wounds start to feel better!", Color.Green));
             }
 

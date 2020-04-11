@@ -14,17 +14,24 @@
         {
             FighterComponent fighterComponent;
             AiComponent aiComponent;
+            Entity entity;
 
             switch (monsterName)
             {
                 case Orc:
                     fighterComponent = new FighterComponent(20, 0, 4, 35);
                     aiComponent = new BasicMonster();
-                    return new Entity(x, y, 'o', Color.LightGreen, "Orc", true, RenderOrder.Actor, fighterComponent, aiComponent);
+                    entity = new Entity { X = x, Y = y, Character = 'o', Color = Color.LightGreen, Name = "Orc", Blocks = true, RenderOrder = RenderOrder.Actor };
+                    entity.Add(fighterComponent);
+                    entity.Add(aiComponent);
+                    return entity;
                 case Troll:
                     fighterComponent = new FighterComponent(30, 2, 8, 100);
                     aiComponent = new BasicMonster();
-                    return new Entity(x, y, 'T', Color.DarkGreen, "Troll", true, RenderOrder.Actor, fighterComponent, aiComponent);
+                    entity = new Entity { X = x, Y = y, Character = 'T', Color = Color.DarkGreen, Name = "Troll", Blocks = true, RenderOrder = RenderOrder.Actor};
+                    entity.Add(fighterComponent);
+                    entity.Add(aiComponent);
+                    return entity;
                 default:
                     throw new ArgumentException($"{monsterName} is not a valid monster type.", nameof(monsterName));
             }

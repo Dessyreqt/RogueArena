@@ -6,6 +6,7 @@
     {
         private int lastPlayerX = -1;
         private int lastPlayerY = -1;
+
         public override void TakeTurn(Entity target, ProgramData data)
         {
             if (data.GameData.DungeonLevel.Map.Tiles[Owner.X, Owner.Y].InView || (lastPlayerX > -1 && lastPlayerY > -1))
@@ -20,9 +21,9 @@
                 {
                     Owner.MoveAstar(target, data.GameData.DungeonLevel.Map, data.GameData.Entities);
                 }
-                else if (target.FighterComponent.Hp > 0)
+                else if (target.Get<FighterComponent>().Hp > 0)
                 {
-                    Owner.FighterComponent.Attack(target, data.Events);
+                    Owner.Get<FighterComponent>().Attack(target, data.Events);
                 }
             }
         }

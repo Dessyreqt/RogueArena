@@ -42,7 +42,7 @@
 
         public void Use(Entity itemEntity, ProgramData data, int? targetX = null, int? targetY = null)
         {
-            var item = itemEntity?.ItemComponent;
+            var item = itemEntity?.Get<ItemComponent>();
 
             if (item == null)
             {
@@ -51,7 +51,7 @@
 
             if (item.ItemFunction == null)
             {
-                if (itemEntity.EquippableComponent != null)
+                if (itemEntity.Get<EquippableComponent>() != null)
                 {
                     data.Events.Add(new ToggleEquipEvent(itemEntity));
                 }
@@ -91,9 +91,9 @@
 
         public void Drop(Entity itemEntity, ProgramData data)
         {
-            if (Owner.EquipmentComponent.MainHand == itemEntity || Owner.EquipmentComponent.OffHand == itemEntity)
+            if (Owner.Get<EquipmentComponent>().MainHand == itemEntity || Owner.Get<EquipmentComponent>().OffHand == itemEntity)
             {
-                Owner.EquipmentComponent.ToggleEquip(itemEntity, data);
+                Owner.Get<EquipmentComponent>().ToggleEquip(itemEntity, data);
             }
 
             itemEntity.X = Owner.X;

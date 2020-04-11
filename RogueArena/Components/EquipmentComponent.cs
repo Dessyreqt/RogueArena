@@ -5,20 +5,20 @@
 
     public class EquipmentComponent : Component
     {
-        public int MaxHpBonus => (MainHand?.EquippableComponent?.MaxHpBonus ?? 0) + (OffHand?.EquippableComponent?.MaxHpBonus ?? 0);
-        public int PowerBonus => (MainHand?.EquippableComponent?.PowerBonus ?? 0) + (OffHand?.EquippableComponent?.PowerBonus ?? 0);
-        public int DefenseBonus => (MainHand?.EquippableComponent?.DefenseBonus ?? 0) + (OffHand?.EquippableComponent?.DefenseBonus ?? 0);
+        public int MaxHpBonus => (MainHand?.Get<EquippableComponent>()?.MaxHpBonus ?? 0) + (OffHand?.Get<EquippableComponent>()?.MaxHpBonus ?? 0);
+        public int PowerBonus => (MainHand?.Get<EquippableComponent>()?.PowerBonus ?? 0) + (OffHand?.Get<EquippableComponent>()?.PowerBonus ?? 0);
+        public int DefenseBonus => (MainHand?.Get<EquippableComponent>()?.DefenseBonus ?? 0) + (OffHand?.Get<EquippableComponent>()?.DefenseBonus ?? 0);
         public Entity MainHand { get; set; }
         public Entity OffHand { get; set; }
 
         public void ToggleEquip(Entity equippableEntity, ProgramData data)
         {
-            if (equippableEntity.EquippableComponent == null)
+            if (equippableEntity.Get<EquippableComponent>() == null)
             {
                 return;
             }
 
-            var slot = equippableEntity.EquippableComponent.Slot;
+            var slot = equippableEntity.Get<EquippableComponent>().Slot;
             switch (slot)
             {
                 case EquipmentSlot.MainHand:

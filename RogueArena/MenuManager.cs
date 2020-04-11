@@ -39,20 +39,20 @@
             {
                 List<string> options;
 
-                if (player.InventoryComponent.Items.Count == 0)
+                if (player.Get<InventoryComponent>().Items.Count == 0)
                 {
                     options = new List<string> { "Inventory is empty." };
                 }
                 else
                 {
-                    options = player.InventoryComponent.Items.Select(x =>
+                    options = player.Get<InventoryComponent>().Items.Select(x =>
                     {
-                        if (player.EquipmentComponent.MainHand == x)
+                        if (player.Get<EquipmentComponent>().MainHand == x)
                         {
                             return $"{x.Name} (in main hand)";
                         }
 
-                        if (player.EquipmentComponent.OffHand == x)
+                        if (player.Get<EquipmentComponent>().OffHand == x)
                         {
                             return $"{x.Name} (in off hand)";
                         }
@@ -97,9 +97,9 @@
             {
                 var options = new List<string>
                 {
-                    $"Constitution (+20 HP, from {player.FighterComponent.MaxHp})",
-                    $"Strength (+1 attack, from {player.FighterComponent.Power})",
-                    $"Agility (+1 defense, from {player.FighterComponent.Defense})"
+                    $"Constitution (+20 HP, from {player.Get<FighterComponent>().MaxHp})",
+                    $"Strength (+1 attack, from {player.Get<FighterComponent>().Power})",
+                    $"Agility (+1 defense, from {player.Get<FighterComponent>().Defense})"
                 };
 
                 _levelUpMenu = ShowMenu(console, header, options, width, screenWidth, screenHeight, Color.DarkGreen);
@@ -124,12 +124,12 @@
                 _characterScreen.DefaultForeground = Color.White;
 
                 _characterScreen.Print(0, 1, "Character Information");
-                _characterScreen.Print(0, 2, $"Level: {player.LevelComponent.CurrentLevel}");
-                _characterScreen.Print(0, 3, $"Experience: {player.LevelComponent.CurrentXp}");
-                _characterScreen.Print(0, 4, $"Experience to Level: {player.LevelComponent.ExperienceToNextLevel}");
-                _characterScreen.Print(0, 6, $"Maximum HP: {player.FighterComponent.MaxHp}");
-                _characterScreen.Print(0, 7, $"Attack: {player.FighterComponent.Power}");
-                _characterScreen.Print(0, 8, $"Defense: {player.FighterComponent.Defense}");
+                _characterScreen.Print(0, 2, $"Level: {player.Get<LevelComponent>().CurrentLevel}");
+                _characterScreen.Print(0, 3, $"Experience: {player.Get<LevelComponent>().CurrentXp}");
+                _characterScreen.Print(0, 4, $"Experience to Level: {player.Get<LevelComponent>().ExperienceToNextLevel}");
+                _characterScreen.Print(0, 6, $"Maximum HP: {player.Get<FighterComponent>().MaxHp}");
+                _characterScreen.Print(0, 7, $"Attack: {player.Get<FighterComponent>().Power}");
+                _characterScreen.Print(0, 8, $"Defense: {player.Get<FighterComponent>().Defense}");
 
 
                 var windowX = screenWidth / 2 - characterScreenWidth / 2;

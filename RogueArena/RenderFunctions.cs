@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework;
+    using RogueArena.Components;
     using RogueArena.Data;
     using RogueArena.Map;
     using RogueArena.Messages;
@@ -98,7 +99,7 @@
                 panelY++;
             }
 
-            RenderBar(panel, 1, 1, barWidth, "HP", player.FighterComponent.Hp, player.FighterComponent.MaxHp, Color.Red, Color.DarkRed);
+            RenderBar(panel, 1, 1, barWidth, "HP", player.Get<FighterComponent>().Hp, player.Get<FighterComponent>().MaxHp, Color.Red, Color.DarkRed);
             panel.Print(1, 3, $"Dungeon level: {dungeonMap.DungeonLevel}");
 
             panel.Print(1, 0, GetNamesUnderMouse(mouse, entities, dungeonMap));
@@ -122,7 +123,7 @@
 
         private static void DrawEntity(Console console, Entity entity, DungeonMap dungeonMap)
         {
-            if (dungeonMap.Tiles[entity.X, entity.Y].InView || (entity.StairsComponent != null && dungeonMap.Tiles[entity.X, entity.Y].Explored))
+            if (dungeonMap.Tiles[entity.X, entity.Y].InView || (entity.Get<StairsComponent>() != null && dungeonMap.Tiles[entity.X, entity.Y].Explored))
             {
                 console.Print(entity.X, entity.Y, $"{entity.Character}", entity.Color);
             }

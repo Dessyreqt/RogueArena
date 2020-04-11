@@ -23,10 +23,10 @@
         public int BaseMaxHp { get; set; }
         public int BaseDefense { get; set; }
         public int BasePower { get; set; }
-        public int MaxHp => BaseMaxHp + (Owner.EquipmentComponent?.MaxHpBonus ?? 0);
+        public int MaxHp => BaseMaxHp + (Owner.Get<EquipmentComponent>()?.MaxHpBonus ?? 0);
         public int Hp { get; set; }
-        public int Defense => BaseDefense + (Owner.EquipmentComponent?.DefenseBonus ?? 0);
-        public int Power => BasePower + (Owner.EquipmentComponent?.PowerBonus ?? 0);
+        public int Defense => BaseDefense + (Owner.Get<EquipmentComponent>()?.DefenseBonus ?? 0);
+        public int Power => BasePower + (Owner.Get<EquipmentComponent>()?.PowerBonus ?? 0);
         public int Xp { get; set; }
 
         public void TakeDamage(int amount, List<Event> events)
@@ -43,11 +43,11 @@
 
         public void Attack(Entity target, List<Event> events)
         {
-            var damage = Power - target.FighterComponent.Defense;
+            var damage = Power - target.Get<FighterComponent>().Defense;
 
             if (damage > 0)
             {
-                target.FighterComponent.TakeDamage(damage, events);
+                target.Get<FighterComponent>().TakeDamage(damage, events);
                 events.Add(new MessageEvent($"{Owner.Name} attacks {target.Name} for {damage} hit points."));
             }
             else

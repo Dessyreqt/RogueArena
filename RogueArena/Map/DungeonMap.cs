@@ -81,14 +81,15 @@
                     if (DungeonLevel > 1)
                     {
                         var upStairsComponent = new StairsComponent(DungeonLevel - 1);
-                        var upStairs = new Entity(
-                            lastCenter.X,
-                            lastCenter.Y,
-                            '<',
-                            Color.White,
-                            $"Stairs to Level {upStairsComponent.ToFloor}",
-                            renderOrder: RenderOrder.Stairs,
-                            stairsComponent: upStairsComponent);
+                        var upStairs = new Entity {
+                            X = lastCenter.X,
+                            Y = lastCenter.Y,
+                            Character = '<',
+                            Color = Color.White,
+                            Name = $"Stairs to Level {upStairsComponent.ToFloor}",
+                            RenderOrder = RenderOrder.Stairs
+                        };
+                        upStairs.Add(upStairsComponent);
                         entities.Add(upStairs);
                     }
                 }
@@ -113,14 +114,17 @@
             }
 
             var downStairsComponent = new StairsComponent(DungeonLevel + 1);
-            var downStairs = new Entity(
-                lastCenter.X,
-                lastCenter.Y,
-                '>',
-                Color.White,
-                $"Stairs to Level {downStairsComponent.ToFloor}",
-                renderOrder: RenderOrder.Stairs,
-                stairsComponent: downStairsComponent);
+            var downStairs = new Entity
+            {
+                X = lastCenter.X,
+                Y = lastCenter.Y,
+                Character = '>',
+                Color = Color.White,
+                Name = $"Stairs to Level {downStairsComponent.ToFloor}",
+                RenderOrder = RenderOrder.Stairs
+            };
+
+            downStairs.Add(downStairsComponent);
             entities.Add(downStairs);
         }
 
@@ -169,7 +173,7 @@
                 { Items.FireballScroll, FromDungeonLevel(new Dictionary<int, int> { { 6, 25 } }) },
                 { Items.ConfusionScroll, FromDungeonLevel(new Dictionary<int, int> { { 2, 10 } }) },
                 { Items.Sword, FromDungeonLevel(new Dictionary<int, int> { { 4, 5 } }) },
-                { Items.Shield, FromDungeonLevel(new Dictionary<int, int> { { 8, 15 } }) },
+                { Items.Shield, FromDungeonLevel(new Dictionary<int, int> { { 8, 15 } }) }
             };
 
             for (int i = 0; i < numMonsters; i++)

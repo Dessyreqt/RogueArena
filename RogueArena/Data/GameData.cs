@@ -40,29 +40,23 @@
 
         public static GameData New(ProgramData data)
         {
-            var gameData = new GameData();
+            var player = new Entity { X = 0, Y = 0, Character = '@', Color = Color.White, Name = "Player", Blocks = true, RenderOrder = RenderOrder.Actor };
+            player.Add(new InventoryComponent(26));
+            player.Add(new LevelComponent());
+            player.Add(new EquipmentComponent());
+            player.Add(new FighterComponent(100, 1, 2));
 
-            gameData.MessageLog = new MessageLog(Constants.MessageX, Constants.MessageWidth, Constants.MessageHeight);
-
-            var player = new Entity(
-                0,
-                0,
-                '@',
-                Color.White,
-                "Player",
-                true,
-                RenderOrder.Actor,
-                new FighterComponent(100, 1, 2),
-                inventoryComponent: new InventoryComponent(26),
-                levelComponent: new LevelComponent(),
-                equipmentComponent: new EquipmentComponent());
-
-            gameData.DungeonLevel = new DungeonLevel(1, Constants.MapWidth, Constants.MapHeight);
-            gameData.Player = player;
+            var gameData = new GameData
+            {
+                MessageLog = new MessageLog { X = Constants.MessageX, Width = Constants.MessageWidth, Height = Constants.MessageHeight },
+                DungeonLevel = new DungeonLevel { LevelNumber = 1, Map = new DungeonMap(1, Constants.MapWidth, Constants.MapHeight) },
+                Player = player,
+                GameState = GameState.PlayersTurn
+            };
 
             var dagger = Items.Get(Items.Dagger, 0, 0);
-            gameData.Player.InventoryComponent.AddItem(dagger, data);
-            gameData.Player.EquipmentComponent.ToggleEquip(dagger, data);
+            gameData.Player.Get<InventoryComponent>().AddItem(dagger, data);
+            gameData.Player.Get<EquipmentComponent>().ToggleEquip(dagger, data);
 
             gameData.DungeonLevel.Map.MakeMap(
                 Constants.MaxRooms,
@@ -74,8 +68,6 @@
                 gameData.DungeonLevel.Entities);
 
             gameData.Entities = gameData.DungeonLevel.Entities;
-
-            gameData.GameState = GameState.PlayersTurn;
 
             return gameData;
         }

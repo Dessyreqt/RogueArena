@@ -1,6 +1,7 @@
 ﻿namespace RogueArena.Events
 {
     using Microsoft.Xna.Framework;
+    using RogueArena.Components;
     using RogueArena.Data;
 
     public class XpEvent : Event
@@ -14,12 +15,12 @@
 
         protected override void Handle(ProgramData data)
         {
-            var leveledUp = data.GameData.Player.LevelComponent.AddXp(_xp);
+            var leveledUp = data.GameData.Player.Get<LevelComponent>().AddXp(_xp);
             data.GameData.MessageLog.AddMessage($"You gain {_xp} experience points.");
 
             if (leveledUp)
             {
-                data.GameData.MessageLog.AddMessage($"Your battle skills grow stronger! You reached level {data.GameData.Player.LevelComponent.CurrentLevel}!", Color.Yellow);
+                data.GameData.MessageLog.AddMessage($"Your battle skills grow stronger! You reached level {data.GameData.Player.Get<LevelComponent>().CurrentLevel}!", Color.Yellow);
                 data.PreviousGameState = data.GameData.GameState;
                 data.GameData.GameState = GameState.LevelUp;
                 data.MenuManager.ShowLevelUpMenu(data.DefaultConsole, "Level up! Choose a stat to raise:", data.GameData.Player, 40, Constants.ScreenWidth, Constants.ScreenHeight);

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework;
+    using RogueArena.Components;
     using RogueArena.Data;
     using RogueArena.Messages;
 
@@ -10,13 +11,6 @@
     {
         public DungeonLevel()
         {
-            // here for deserialization purposes
-        }
-
-        public DungeonLevel(int levelNumber, int width, int height)
-        {
-            LevelNumber = levelNumber;
-            Map = new DungeonMap(levelNumber, width, height);
             Entities = new List<Entity>();
         }
 
@@ -34,18 +28,21 @@
 
                 if (NextFloor == null)
                 {
-                    NextFloor = new DungeonLevel(LevelNumber + 1, Constants.MapWidth, Constants.MapHeight);
+                    NextFloor = new DungeonLevel
+                    {
+                        LevelNumber = LevelNumber + 1, Map = new DungeonMap(LevelNumber + 1, Constants.MapWidth, Constants.MapHeight)
+                    };
                     NextFloor.Map.Tiles = NextFloor.Map.InitializeTiles();
                     NextFloor.Map.MakeMap(Constants.MaxRooms, Constants.MinRoomSize, Constants.MaxRoomSize, Constants.MapWidth, Constants.MapHeight, player, NextFloor.Entities);
                     NextFloor.PreviousFloor = this;
 
-                    player.FighterComponent.Heal(player.FighterComponent.MaxHp / 2);
+                    player.Get<FighterComponent>().Heal(player.Get<FighterComponent>().MaxHp / 2);
 
                     messageLog.AddMessage("You take a moment to rest, and recover your strength.", Color.Violet);
                 }
                 else
                 {
-                    Entity stairsEntity = NextFloor.Entities.Single(entity => entity.StairsComponent != null && entity.StairsComponent?.ToFloor == LevelNumber);
+                    Entity stairsEntity = NextFloor.Entities.Single(entity => entity.Get<StairsComponent>() != null && entity.Get<StairsComponent>()?.ToFloor == LevelNumber);
 
                     player.X = stairsEntity.X;
                     player.Y = stairsEntity.Y;
@@ -64,7 +61,7 @@
                 }
 
                 Entities.Remove(player);
-                Entity stairsEntity = PreviousFloor.Entities.Single(entity => entity.StairsComponent != null && entity.StairsComponent?.ToFloor == LevelNumber);
+                Entity stairsEntity = PreviousFloor.Entities.Single(entity => entity.Get<StairsComponent>() != null && entity.Get<StairsComponent>()?.ToFloor == LevelNumber);
 
                 player.X = stairsEntity.X;
                 player.Y = stairsEntity.Y;

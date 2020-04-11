@@ -1,5 +1,6 @@
 ﻿namespace RogueArena.Commands.Game
 {
+    using RogueArena.Components;
     using RogueArena.Data;
 
     public class InventoryIndexCommand : Command
@@ -13,17 +14,19 @@
 
         protected override void Handle(ProgramData data)
         {
-            if (data.PreviousGameState != GameState.PlayerDead && _index < data.GameData.Player.InventoryComponent.Items.Count)
+            var inventory = data.GameData.Player.Get<InventoryComponent>();
+
+            if (data.PreviousGameState != GameState.PlayerDead && _index < inventory.Items.Count)
             {
-                var item = data.GameData.Player.InventoryComponent.Items[_index];
+                var item = inventory.Items[_index];
 
                 if (data.GameData.GameState == GameState.ShowInventory)
                 {
-                    data.GameData.Player.InventoryComponent.Use(item, data);
+                    inventory.Use(item, data);
                 }
                 else if (data.GameData.GameState == GameState.DropInventory)
                 {
-                    data.GameData.Player.InventoryComponent.Drop(item, data);
+                    inventory.Drop(item, data);
                 }
             }
         }

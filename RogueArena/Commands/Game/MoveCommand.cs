@@ -1,5 +1,6 @@
 ﻿namespace RogueArena.Commands.Game
 {
+    using RogueArena.Components;
     using RogueArena.Data;
 
     public class MoveCommand : Command
@@ -28,7 +29,7 @@
 
                     if (target != null)
                     {
-                        data.GameData.Player.FighterComponent.Attack(target, data.Events);
+                        data.GameData.Player.Get<FighterComponent>().Attack(target, data.Events);
                     }
                     else
                     {
