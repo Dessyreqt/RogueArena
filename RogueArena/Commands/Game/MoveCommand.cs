@@ -29,7 +29,7 @@
 
                     if (target != null)
                     {
-                        data.GameData.Player.Get<FighterComponent>().Attack(target, data.Events);
+                        data.GameData.Player.Get<FighterComponent>().Attack(target, data);
                     }
                     else
                     {

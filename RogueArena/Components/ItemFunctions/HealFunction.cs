@@ -19,7 +19,7 @@
 
         public int Amount { get; set; }
 
-        public override List<Event> Execute()
+        public override List<Event> Execute(ProgramData data)
         {
             var events = new List<Event>();
 
@@ -30,12 +30,13 @@
 
             if (Target.Get<FighterComponent>().Hp == Target.Get<FighterComponent>().MaxHp)
             {
-                events.Add(new MessageEvent("You are already at full health", Color.Yellow));
+                data.GameData.MessageLog.AddMessage("You are already at full health", Color.Yellow);
             }
             else
             {
                 Target.Get<FighterComponent>().Heal(Amount);
-                events.Add(new ItemConsumedEvent("Your wounds start to feel better!", Color.Green));
+                data.GameData.MessageLog.AddMessage("Your wounds start to feel better!", Color.Green);
+                events.Add(new ItemConsumedEvent());
             }
 
             return events;

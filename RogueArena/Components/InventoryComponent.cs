@@ -26,7 +26,7 @@
         {
             if (Items.Count >= Capacity)
             {
-                data.Events.Add(new MessageEvent("You cannot carry any more, your inventory is full.", Color.Yellow));
+                data.GameData.MessageLog.AddMessage("You cannot carry any more, your inventory is full.", Color.Yellow);
             }
             else
             {
@@ -57,7 +57,7 @@
                 }
                 else
                 {
-                    data.Events.Add(new MessageEvent($"The {itemEntity.Name} cannot be used", Color.Yellow));
+                    data.GameData.MessageLog.AddMessage($"The {itemEntity.Name} cannot be used", Color.Yellow);
                 }
             }
             else
@@ -74,7 +74,7 @@
                     item.ItemFunction.TargetX = targetX;
                     item.ItemFunction.TargetY = targetY;
 
-                    var events = item.ItemFunction.Execute();
+                    var events = item.ItemFunction.Execute(data);
 
                     foreach (var @event in events)
                     {

@@ -29,30 +29,30 @@
         public int Power => BasePower + (Owner.Get<EquipmentComponent>()?.PowerBonus ?? 0);
         public int Xp { get; set; }
 
-        public void TakeDamage(int amount, List<Event> events)
+        public void TakeDamage(int amount, ProgramData data)
         {
             Hp -= amount;
 
             if (Hp <= 0)
             {
                 Hp = 0;
-                events.Add(new DeadEvent(Owner));
-                events.Add(new XpEvent(Xp));
+                data.Events.Add(new DeadEvent(Owner));
+                data.Events.Add(new XpEvent(Xp));
             }
         }
 
-        public void Attack(Entity target, List<Event> events)
+        public void Attack(Entity target, ProgramData data)
         {
             var damage = Power - target.Get<FighterComponent>().Defense;
 
             if (damage > 0)
             {
-                target.Get<FighterComponent>().TakeDamage(damage, events);
-                events.Add(new MessageEvent($"{Owner.Name} attacks {target.Name} for {damage} hit points."));
+                target.Get<FighterComponent>().TakeDamage(damage, data);
+                data.GameData.MessageLog.AddMessage($"{Owner.Name} attacks {target.Name} for {damage} hit points.");
             }
             else
             {
-                events.Add(new MessageEvent($"{Owner.Name} attacks {target.Name} but does no damage."));
+                data.GameData.MessageLog.AddMessage($"{Owner.Name} attacks {target.Name} but does no damage.");
             }
         }
 

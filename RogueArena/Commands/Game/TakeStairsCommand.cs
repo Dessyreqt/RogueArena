@@ -32,7 +32,7 @@
             }
             else
             {
-                data.Events.Add(new MessageEvent("There are no stairs here.", Color.Yellow));
+                data.GameData.MessageLog.AddMessage("There are no stairs here.", Color.Yellow);
             }
         }
     }

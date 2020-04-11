@@ -23,7 +23,7 @@
                 }
                 else if (target.Get<FighterComponent>().Hp > 0)
                 {
-                    Owner.Get<FighterComponent>().Attack(target, data.Events);
+                    Owner.Get<FighterComponent>().Attack(target, data);
                 }
             }
         }

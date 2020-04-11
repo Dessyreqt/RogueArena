@@ -37,6 +37,7 @@
                     equippableComponent = new EquippableComponent { Slot = EquipmentSlot.MainHand, PowerBonus = 2 };
                     entity = new Entity { X = x, Y = y, Character = '-', Color = Color.SkyBlue, Name = "Dagger" };
                     entity.Add(equippableComponent);
+                    entity.Add(new ItemComponent());
                     return entity;
                 case FireballScroll:
                     itemFunction = new CastFireballFunction(25, 3);
@@ -58,14 +59,15 @@
                     entity.Add(itemComponent);
                     return entity;
                 case Shield:
-                    equippableComponent = new EquippableComponent { Slot = EquipmentSlot.OffHand, DefenseBonus = 1 };
                     entity = new Entity { X = x, Y = y, Character = '[', Color = Color.DarkOrange, Name = "Shield" };
-                    entity.Add(equippableComponent);
+                    entity.Add(new EquippableComponent { Slot = EquipmentSlot.OffHand, DefenseBonus = 1 });
+                    entity.Add(new ItemComponent());
                     return entity;
                 case Sword:
                     equippableComponent = new EquippableComponent { Slot = EquipmentSlot.MainHand, PowerBonus = 3 };
                     entity = new Entity { X = x, Y = y, Character = '/', Color = Color.SkyBlue, Name = "Sword" };
                     entity.Add(equippableComponent);
+                    entity.Add(new ItemComponent());
                     return entity;
                 default:
                     throw new ArgumentException($"{itemName} is not a valid monster type.", nameof(itemName));

@@ -9,13 +9,13 @@
 
     public class CastConfuseFunction : ItemFunction
     {
-        public override List<Event> Execute()
+        public override List<Event> Execute(ProgramData data)
         {
             var events = new List<Event>();
 
             if (TargetX == null || TargetY == null)
             {
-                events.Add(new MessageEvent("You must pick a target before using this item.", Color.Yellow));
+                data.GameData.MessageLog.AddMessage("You must pick a target before using this item.", Color.Yellow);
                 return events;
             }
 
@@ -24,7 +24,7 @@
 
             if (!DungeonMap.Tiles[x, y].InView)
             {
-                events.Add(new MessageEvent("You cannot target a tile outside your field of view.", Color.Yellow));
+                data.GameData.MessageLog.AddMessage("You cannot target a tile outside your field of view.", Color.Yellow);
                 return events;
             }
 
@@ -32,7 +32,7 @@
 
             if (targetedEntity == null)
             {
-                events.Add(new MessageEvent("There is no targetable enemy at that location.", Color.Yellow));
+                data.GameData.MessageLog.AddMessage("There is no targetable enemy at that location.", Color.Yellow);
             }
             else
             {
@@ -41,7 +41,8 @@
                 confusedAi.Owner = targetedEntity;
                 targetedEntity.Add(confusedAi);
 
-                events.Add(new ItemConsumedEvent($"The eyes of the {targetedEntity.Name} look vacant, as he starts to stumble around!", Color.LightGreen));
+                data.GameData.MessageLog.AddMessage($"The eyes of the {targetedEntity.Name} look vacant, as he starts to stumble around!", Color.LightGreen);
+                events.Add(new ItemConsumedEvent());
             }
 
             return events;

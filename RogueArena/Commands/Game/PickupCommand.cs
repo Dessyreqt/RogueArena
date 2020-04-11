@@ -29,7 +29,7 @@
                 }
                 else
                 {
-                    data.Events.Add(new MessageEvent("There is nothing here to pick up.", Color.Yellow));
+                    data.GameData.MessageLog.AddMessage("There is nothing here to pick up.", Color.Yellow);
                 }
             }
         }

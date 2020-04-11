@@ -33,7 +33,7 @@
             else
             {
                 Owner.Add(PreviousAi);
-                data.Events.Add(new MessageEvent($"The {Owner.Name} is no longer confused!", Color.Red));
+                data.GameData.MessageLog.AddMessage($"The {Owner.Name} is no longer confused!", Color.Red);
             }
         }
     }

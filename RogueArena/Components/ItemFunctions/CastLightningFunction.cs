@@ -4,7 +4,6 @@
     using Microsoft.Xna.Framework;
     using RogueArena.Data;
     using RogueArena.Events;
-    using RogueArena.Map;
 
     public class CastLightningFunction : ItemFunction
     {
@@ -19,7 +18,7 @@
         public int MaximumRange { get; set; }
 
 
-        public override List<Event> Execute()
+        public override List<Event> Execute(ProgramData data)
         {
             var events = new List<Event>();
 
@@ -43,12 +42,13 @@
 
             if (Target != null)
             {
-                events.Add(new ItemConsumedEvent($"A lighting bolt strikes the {Target.Name} with a loud thunder! The damage is {Damage}", Target));
-                Target.Get<FighterComponent>().TakeDamage(Damage, events);
+                data.GameData.MessageLog.AddMessage($"A lighting bolt strikes the {Target.Name} with a loud thunder! The damage is {Damage}");
+                events.Add(new ItemConsumedEvent());
+                Target.Get<FighterComponent>().TakeDamage(Damage, data);
             }
             else
             {
-                events.Add(new MessageEvent("No enemy is close enough to strike.", Color.Red));
+                data.GameData.MessageLog.AddMessage("No enemy is close enough to strike.", Color.Red);
             }
 
             return events;
