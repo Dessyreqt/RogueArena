@@ -7,12 +7,13 @@
     public static class Ecs
     {
         private static readonly Lazy<Dictionary<Type, List<Entity>>> lazy = new Lazy<Dictionary<Type, List<Entity>>>(() => new Dictionary<Type, List<Entity>>());
-        
+
         public static Dictionary<Type, List<Entity>> EntitiesWithComponent => lazy.Value;
 
         public static void Add<T>(this Entity entity, T component) where T : Component
         {
-            var componentType = component.GetType().GetBaseComponentType();;
+            var componentType = component.GetType().GetBaseComponentType();
+            ;
 
             if (entity.Get(componentType) is Component)
             {
@@ -40,7 +41,12 @@
             }
 
             var componentType = typeof(T).GetBaseComponentType();
-            EntitiesWithComponent[componentType].Remove(entity);
+
+            if (EntitiesWithComponent.ContainsKey(componentType))
+            {
+                EntitiesWithComponent[componentType].Remove(entity);
+            }
+
             entity.Components.Remove(componentType);
         }
 

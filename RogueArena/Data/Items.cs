@@ -39,7 +39,13 @@
                     return entity;
                 case FireballScroll:
                     entity = new Entity { X = x, Y = y, Character = '#', Color = Color.Red, Name = "Fireball Scroll", RenderOrder = RenderOrder.Item };
-                    entity.Add(new ItemComponent { ItemFunction = new CastFireballFunction { Damage = 25, Radius = 3 }, Targeting = true, TargetingMessage = new Message("Left-click a target tile for the fireball, or right-click to cancel.", Color.LightCyan) });
+                    entity.Add(
+                        new ItemComponent
+                        {
+                            ItemFunction = new CastFireballFunction { Damage = 25, Radius = 3 },
+                            Targeting = true,
+                            TargetingMessage = new Message("Left-click a target tile for the fireball, or right-click to cancel.", Color.LightCyan)
+                        });
                     return entity;
                 case HealingPotion:
                     entity = new Entity { X = x, Y = y, Character = '!', Color = Color.DarkViolet, Name = "Healing Potion", RenderOrder = RenderOrder.Item };

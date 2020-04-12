@@ -28,7 +28,7 @@
                 case Troll:
                     fighterComponent = new FighterComponent { BaseMaxHp = 30, Hp = 30, BaseDefense = 2, BasePower = 8, Xp = 100 };
                     aiComponent = new BasicMonster();
-                    entity = new Entity { X = x, Y = y, Character = 'T', Color = Color.DarkGreen, Name = "Troll", Blocks = true, RenderOrder = RenderOrder.Actor};
+                    entity = new Entity { X = x, Y = y, Character = 'T', Color = Color.DarkGreen, Name = "Troll", Blocks = true, RenderOrder = RenderOrder.Actor };
                     entity.Add(fighterComponent);
                     entity.Add(aiComponent);
                     return entity;

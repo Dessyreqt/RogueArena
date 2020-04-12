@@ -35,7 +35,7 @@
 
             if (Target != null)
             {
-                data.GameData.MessageLog.AddMessage($"A lighting bolt strikes the {Target.Name} with a loud thunder! The damage is {Damage}");
+                data.GameData.MessageLog.AddMessage($"A lighting bolt strikes the {Target.Name} with a loud thunder! The damage is {Damage}.", Color.Orange);
                 events.Add(new ItemConsumedEvent());
                 Target.Get<FighterComponent>().TakeDamage(Damage, data);
             }
