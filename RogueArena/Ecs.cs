@@ -13,7 +13,6 @@
         public static void Add<T>(this Entity entity, T component) where T : Component
         {
             var componentType = component.GetType().GetBaseComponentType();
-            ;
 
             if (entity.Get(componentType) is Component)
             {
