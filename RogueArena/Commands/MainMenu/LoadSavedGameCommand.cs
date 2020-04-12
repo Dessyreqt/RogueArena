@@ -14,6 +14,7 @@
             }
             else
             {
+                data.GameData.SetEntities(data.GameData.Entities);
                 data.PreviousGameState = data.GameData.GameState;
                 data.ShowMainMenu = false;
             }

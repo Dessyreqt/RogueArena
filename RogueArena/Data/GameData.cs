@@ -67,7 +67,7 @@
                 player,
                 gameData.DungeonLevel.Entities);
 
-            gameData.Entities = gameData.DungeonLevel.Entities;
+            gameData.SetEntities(gameData.DungeonLevel.Entities);
 
             return gameData;
         }

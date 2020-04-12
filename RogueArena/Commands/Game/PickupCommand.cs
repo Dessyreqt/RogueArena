@@ -13,9 +13,9 @@
             {
                 Entity itemEntity = null;
 
-                foreach (var entity in data.GameData.Entities)
+                foreach (var entity in Ecs.EntitiesWithComponent[typeof(ItemComponent)])
                 {
-                    if (entity.Get<ItemComponent>() != null && entity.X == data.GameData.Player.X && entity.Y == data.GameData.Player.Y)
+                    if (entity.X == data.GameData.Player.X && entity.Y == data.GameData.Player.Y)
                     {
                         data.GameData.Player.Get<InventoryComponent>().AddItem(entity, data);
                         itemEntity = entity;

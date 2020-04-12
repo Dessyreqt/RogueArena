@@ -16,7 +16,7 @@ namespace RogueArena.Events
 
         protected override void Handle(ProgramData data)
         {
-            data.GameData.Entities.Add(_item);
+            data.GameData.AddEntity(_item);
 
             if (_entity == data.GameData.Player)
             {

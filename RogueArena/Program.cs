@@ -155,17 +155,14 @@
                 _data.MenuManager.HideInventoryMenu(_data.DefaultConsole);
                 _data.DefaultConsole.Clear(0, 46, 80);
 
-                foreach (var entity in _data.GameData.Entities)
+                foreach (var entity in Ecs.EntitiesWithComponent[typeof(AiComponent)])
                 {
-                    if (entity.Get<AiComponent>() != null)
-                    {
-                        entity.Get<AiComponent>().TakeTurn(_data.GameData.Player, _data);
-                        ProcessEvents();
+                    entity.Get<AiComponent>().TakeTurn(_data.GameData.Player, _data);
+                    ProcessEvents();
 
-                        if (_data.GameData.GameState == GameState.PlayerDead)
-                        {
-                            break;
-                        }
+                    if (_data.GameData.GameState == GameState.PlayerDead)
+                    {
+                        break;
                     }
                 }
 

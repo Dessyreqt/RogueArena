@@ -16,7 +16,7 @@
 
         protected override void Handle(ProgramData data)
         {
-            data.GameData.Entities.Remove(_item);
+            data.GameData.RemoveEntity(_item);
 
             if (_entity == data.GameData.Player)
             {
