@@ -13,6 +13,7 @@
     using SadConsole.Input;
     using Console = SadConsole.Console;
     using Game = SadConsole.Game;
+    using Point = Microsoft.Xna.Framework.Point;
 
     class Program
     {
