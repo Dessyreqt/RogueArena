@@ -7,13 +7,13 @@ properties {
     $project_dir = "$solution_dir\$solution_name"
 
     $backend_test_dir = "$solution_dir\$solution_name.Tests"
-    $test_exe_dir = "$backend_test_dir\bin\Debug\net461"
+    $test_exe_dir = "$backend_test_dir\bin\Debug\netcoreapp3.1"
     $test_exe_path = "$test_exe_dir\$solution_name.Tests.exe"
     $dotcover_dir = "$base_dir\tools\dotCover"
     $dotcover_exe_path = "$dotcover_dir\dotCover.exe"
     $coverage_report_html_path = "$base_dir\CoverageReports\CoverageReport.html"
     $coverage_report_xml_path = "$base_dir\CoverageReports\CoverageReport.xml"
-    $coverage_percent_minimum = 100
+    $coverage_percent_minimum = 0
 }
 
 task default -depends Clean, Compile
@@ -36,14 +36,14 @@ task RunBackEndTests {
 
 task CoverageReport {
     Push-Location -Path $backend_test_dir
-    exec { & $dotcover_exe_path cover /TargetExecutable=$test_exe_path /Output="$coverage_report_html_path" /ReportType="HTML" /Filters="-:module=Dustdevils.Tests" } 
+    exec { & $dotcover_exe_path cover /TargetExecutable=$test_exe_path /Output="$coverage_report_html_path" /ReportType="HTML" /Filters="+:type=$solution_name.*;-:module=$solution_name.Tests" } 
     exec { & $coverage_report_html_path }
     Pop-Location
 }
 
 task CICoverageReport {
     Push-Location -Path $test_exe_dir
-    exec { & $dotcover_exe_path cover /TargetExecutable=$test_exe_path /Output="$coverage_report_xml_path" /ReportType="XML" /Filters="-:module=Dustdevils.Tests" } 
+    exec { & $dotcover_exe_path cover /TargetExecutable=$test_exe_path /Output="$coverage_report_xml_path" /ReportType="XML" /Filters="+:type=$solution_name.*;-:module=$solution_name.Tests" } 
     $xml = [xml](Get-Content $coverage_report_xml_path)
     $coveragePercent = [int](($xml.Root | Select-Object CoveragePercent).CoveragePercent)
     if ($coveragePercent -lt $coverage_percent_minimum) {

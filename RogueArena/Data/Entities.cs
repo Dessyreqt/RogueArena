@@ -7,19 +7,18 @@
     public static class Entities
     {
         private static readonly Lazy<Dictionary<Type, List<Entity>>> lazy = new Lazy<Dictionary<Type, List<Entity>>>(() => new Dictionary<Type, List<Entity>>());
-
-        private static Dictionary<Type, List<Entity>> WithComponent => lazy.Value;
+        private static Dictionary<Type, List<Entity>> EntitiesWithComponent => lazy.Value;
 
         public static List<Entity> With<T>()
         {
             var type = typeof(T);
 
-            if (!WithComponent.ContainsKey(type))
+            if (!EntitiesWithComponent.ContainsKey(type))
             {
                 return new List<Entity>();
             }
 
-            return WithComponent[typeof(T)];
+            return EntitiesWithComponent[typeof(T)];
         }
 
         public static void Add<T>(this Entity entity, T component) where T : Component
@@ -34,12 +33,12 @@
             component.Owner = entity;
             entity.Components[componentType] = component;
 
-            if (!WithComponent.ContainsKey(componentType))
+            if (!EntitiesWithComponent.ContainsKey(componentType))
             {
-                WithComponent[componentType] = new List<Entity>();
+                EntitiesWithComponent[componentType] = new List<Entity>();
             }
 
-            WithComponent[componentType].Add(entity);
+            EntitiesWithComponent[componentType].Add(entity);
         }
 
         public static void Remove<T>(this Entity entity) where T : Component
@@ -53,9 +52,9 @@
 
             var componentType = typeof(T).GetBaseComponentType();
 
-            if (WithComponent.ContainsKey(componentType))
+            if (EntitiesWithComponent.ContainsKey(componentType))
             {
-                WithComponent[componentType].Remove(entity);
+                EntitiesWithComponent[componentType].Remove(entity);
             }
 
             entity.Components.Remove(componentType);
@@ -80,8 +79,14 @@
 
         public static void SetEntities(this GameData data, List<Entity> entities)
         {
+            EntitiesWithComponent.Clear();
+
+            if (data == null)
+            {
+                return;
+            }
+
             data.Entities = entities;
-            WithComponent.Clear();
 
             foreach (var entity in data.Entities)
             {
@@ -105,12 +110,12 @@
         {
             foreach (var componentType in entity.Components.Keys)
             {
-                if (!WithComponent.ContainsKey(componentType))
+                if (!EntitiesWithComponent.ContainsKey(componentType))
                 {
-                    WithComponent[componentType] = new List<Entity>();
+                    EntitiesWithComponent[componentType] = new List<Entity>();
                 }
 
-                WithComponent[componentType].Remove(entity);
+                EntitiesWithComponent[componentType].Remove(entity);
             }
         }
 
@@ -118,12 +123,12 @@
         {
             foreach (var componentType in entity.Components.Keys)
             {
-                if (!WithComponent.ContainsKey(componentType))
+                if (!EntitiesWithComponent.ContainsKey(componentType))
                 {
-                    WithComponent[componentType] = new List<Entity>();
+                    EntitiesWithComponent[componentType] = new List<Entity>();
                 }
 
-                WithComponent[componentType].Add(entity);
+                EntitiesWithComponent[componentType].Add(entity);
             }
         }
     }
