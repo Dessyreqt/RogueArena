@@ -17,7 +17,7 @@ properties {
     $coverage_filters = "+:type=$solution_name.Commands.*;+:type=$solution_name.Data.*;+:type=$solution_name.Events.*;+:type=$solution_name.Map.*;+:type=$solution_name.Messages.*;-:module=$solution_name.Data.Lookup"
 }
 
-task default -depends Clean, Compile
+task default -depends Clean, Compile, CICoverageReport
 task test -depends RunBackEndTests
 task coverage -depends CoverageReport
 
