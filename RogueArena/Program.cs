@@ -156,7 +156,7 @@
                 _data.MenuManager.HideInventoryMenu(_data.DefaultConsole);
                 _data.DefaultConsole.Clear(0, 46, 80);
 
-                foreach (var entity in Entities.WithComponent[typeof(AiComponent)])
+                foreach (var entity in Entities.With<AiComponent>())
                 {
                     entity.Get<AiComponent>().TakeTurn(_data.GameData.Player, _data);
                     ProcessEvents();

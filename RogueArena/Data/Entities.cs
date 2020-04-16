@@ -8,7 +8,19 @@
     {
         private static readonly Lazy<Dictionary<Type, List<Entity>>> lazy = new Lazy<Dictionary<Type, List<Entity>>>(() => new Dictionary<Type, List<Entity>>());
 
-        public static Dictionary<Type, List<Entity>> WithComponent => lazy.Value;
+        private static Dictionary<Type, List<Entity>> WithComponent => lazy.Value;
+
+        public static List<Entity> With<T>()
+        {
+            var type = typeof(T);
+
+            if (!WithComponent.ContainsKey(type))
+            {
+                return new List<Entity>();
+            }
+
+            return WithComponent[typeof(T)];
+        }
 
         public static void Add<T>(this Entity entity, T component) where T : Component
         {

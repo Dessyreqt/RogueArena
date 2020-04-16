@@ -11,7 +11,7 @@
             Entity stairsEntity = null;
             StairsComponent stairsComponent = null;
 
-            foreach (var entity in Entities.WithComponent[typeof(StairsComponent)])
+            foreach (var entity in Entities.With<StairsComponent>())
             {
                 stairsComponent = entity.Get<StairsComponent>();
 

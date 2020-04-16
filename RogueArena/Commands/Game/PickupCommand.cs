@@ -12,7 +12,7 @@
             {
                 Entity itemEntity = null;
 
-                foreach (var entity in Entities.WithComponent[typeof(ItemComponent)])
+                foreach (var entity in Entities.With<ItemComponent>())
                 {
                     if (entity.X == data.GameData.Player.X && entity.Y == data.GameData.Player.Y)
                     {
