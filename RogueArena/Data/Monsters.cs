@@ -2,8 +2,8 @@
 {
     using System;
     using Microsoft.Xna.Framework;
-    using RogueArena.Components;
-    using RogueArena.Components.AI;
+    using RogueArena.Data.Components;
+    using RogueArena.Data.Components.AI;
 
     public static class Monsters
     {

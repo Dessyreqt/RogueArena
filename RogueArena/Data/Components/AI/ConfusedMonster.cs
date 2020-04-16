@@ -1,8 +1,6 @@
-﻿namespace RogueArena.Components.AI
+﻿namespace RogueArena.Data.Components.AI
 {
     using Microsoft.Xna.Framework;
-    using RogueArena.Data;
-    using RogueArena.Events;
     using RogueArena.Rng;
 
     public class ConfusedMonster : AiComponent

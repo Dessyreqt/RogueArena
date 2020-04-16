@@ -1,10 +1,11 @@
 ﻿namespace RogueArena
 {
     using System.Collections.ObjectModel;
-    using Commands;
     using Microsoft.Xna.Framework.Input;
+    using RogueArena.Commands;
     using RogueArena.Commands.Game;
     using RogueArena.Commands.MainMenu;
+    using RogueArena.Data;
     using SadConsole;
     using SadConsole.Input;
 
@@ -32,25 +33,6 @@
             }
         }
 
-        private static Command HandleCharacterScreenKeys(ReadOnlyCollection<AsciiKey> keys)
-        {
-            if (keys.Count > 0)
-            {
-                var key = keys[0].Key;
-             
-                switch (key)
-                {
-                    case Keys.F5:
-                        Settings.ToggleFullScreen();
-                        return null;
-                    case Keys.Escape:
-                        return new ExitCommand();
-                }
-            }
-
-            return null;
-        }
-
         public static Command HandleMainMenuKeys(ReadOnlyCollection<AsciiKey> keys)
         {
             if (keys.Count > 0)
@@ -71,12 +53,31 @@
             return null;
         }
 
+        private static Command HandleCharacterScreenKeys(ReadOnlyCollection<AsciiKey> keys)
+        {
+            if (keys.Count > 0)
+            {
+                var key = keys[0].Key;
+
+                switch (key)
+                {
+                    case Keys.F5:
+                        Settings.ToggleFullScreen();
+                        return null;
+                    case Keys.Escape:
+                        return new ExitCommand();
+                }
+            }
+
+            return null;
+        }
+
         private static Command HandleTargetingKeys(ReadOnlyCollection<AsciiKey> keys)
         {
             if (keys.Count > 0)
             {
                 var key = keys[0].Key;
-             
+
                 switch (key)
                 {
                     case Keys.F5:

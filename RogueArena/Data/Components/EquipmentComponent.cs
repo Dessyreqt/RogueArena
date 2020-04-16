@@ -1,6 +1,5 @@
-﻿namespace RogueArena.Components
+﻿namespace RogueArena.Data.Components
 {
-    using RogueArena.Data;
     using RogueArena.Events;
 
     public class EquipmentComponent : Component

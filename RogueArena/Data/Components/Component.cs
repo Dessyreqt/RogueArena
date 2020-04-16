@@ -1,4 +1,4 @@
-﻿namespace RogueArena.Components
+﻿namespace RogueArena.Data.Components
 {
     public abstract class Component
     {

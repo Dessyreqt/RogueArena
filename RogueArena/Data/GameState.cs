@@ -1,4 +1,4 @@
-﻿namespace RogueArena
+﻿namespace RogueArena.Data
 {
     public enum GameState
     {

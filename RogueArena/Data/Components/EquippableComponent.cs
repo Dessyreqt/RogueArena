@@ -1,7 +1,5 @@
-﻿namespace RogueArena.Components
+﻿namespace RogueArena.Data.Components
 {
-    using RogueArena.Data;
-
     public class EquippableComponent : Component
     {
         public EquipmentSlot Slot { get; set; }

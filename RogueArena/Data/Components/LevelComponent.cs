@@ -1,4 +1,4 @@
-﻿namespace RogueArena.Components
+﻿namespace RogueArena.Data.Components
 {
     public class LevelComponent : Component
     {
@@ -8,14 +8,14 @@
             CurrentXp = 0;
             LevelUpBase = 200;
             LevelUpFactor = 150;
-        } 
-        
+        }
+
+        public int ExperienceToNextLevel => LevelUpBase + CurrentLevel * LevelUpFactor;
+
         public int CurrentLevel { get; set; }
         public int CurrentXp { get; set; }
         public int LevelUpBase { get; set; }
         public int LevelUpFactor { get; set; }
-
-        public int ExperienceToNextLevel => LevelUpBase + CurrentLevel * LevelUpFactor;
 
         public bool AddXp(int xp)
         {
@@ -28,11 +28,8 @@
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
     }
 }
-

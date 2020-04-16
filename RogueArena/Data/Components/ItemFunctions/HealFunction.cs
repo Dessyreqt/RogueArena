@@ -1,9 +1,8 @@
-﻿namespace RogueArena.Components.ItemFunctions
+﻿namespace RogueArena.Data.Components.ItemFunctions
 {
     using System.Collections.Generic;
-    using Events;
     using Microsoft.Xna.Framework;
-    using RogueArena.Data;
+    using RogueArena.Events;
 
     public class HealFunction : ItemFunction
     {

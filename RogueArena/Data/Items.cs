@@ -2,8 +2,8 @@
 {
     using System;
     using Microsoft.Xna.Framework;
-    using RogueArena.Components;
-    using RogueArena.Components.ItemFunctions;
+    using RogueArena.Data.Components;
+    using RogueArena.Data.Components.ItemFunctions;
     using RogueArena.Messages;
 
     public class Items

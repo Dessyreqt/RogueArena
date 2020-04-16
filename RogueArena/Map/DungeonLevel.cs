@@ -3,8 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework;
-    using RogueArena.Components;
     using RogueArena.Data;
+    using RogueArena.Data.Components;
     using RogueArena.Messages;
 
     public class DungeonLevel
@@ -28,10 +28,7 @@
 
                 if (NextFloor == null)
                 {
-                    NextFloor = new DungeonLevel
-                    {
-                        LevelNumber = LevelNumber + 1, Map = new DungeonMap(LevelNumber + 1, Constants.MapWidth, Constants.MapHeight)
-                    };
+                    NextFloor = new DungeonLevel { LevelNumber = LevelNumber + 1, Map = new DungeonMap(LevelNumber + 1, Constants.MapWidth, Constants.MapHeight) };
                     NextFloor.Map.Tiles = NextFloor.Map.InitializeTiles();
                     NextFloor.Map.MakeMap(Constants.MaxRooms, Constants.MinRoomSize, Constants.MaxRoomSize, Constants.MapWidth, Constants.MapHeight, player, NextFloor.Entities);
                     NextFloor.PreviousFloor = this;

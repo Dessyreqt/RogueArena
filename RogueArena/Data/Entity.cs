@@ -1,10 +1,10 @@
-﻿namespace RogueArena
+﻿namespace RogueArena.Data
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework;
-    using RogueArena.Components;
+    using RogueArena.Data.Components;
     using RogueArena.Map;
     using RogueArena.Util;
 

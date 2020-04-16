@@ -1,7 +1,7 @@
 ﻿namespace RogueArena.Events
 {
-    using RogueArena.Components;
     using RogueArena.Data;
+    using RogueArena.Data.Components;
 
     public class TargetingStartEvent : Event
     {
@@ -11,6 +11,7 @@
         }
 
         public Entity ItemEntity { get; set; }
+
         protected override void Handle(ProgramData data)
         {
             data.PreviousGameState = GameState.PlayersTurn;

@@ -5,8 +5,8 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using RogueArena.Commands;
-    using RogueArena.Components;
     using RogueArena.Data;
+    using RogueArena.Data.Components;
     using RogueArena.Events;
     using RogueArena.Graphics;
     using SadConsole;
@@ -156,7 +156,7 @@
                 _data.MenuManager.HideInventoryMenu(_data.DefaultConsole);
                 _data.DefaultConsole.Clear(0, 46, 80);
 
-                foreach (var entity in Ecs.EntitiesWithComponent[typeof(AiComponent)])
+                foreach (var entity in Entities.WithComponent[typeof(AiComponent)])
                 {
                     entity.Get<AiComponent>().TakeTurn(_data.GameData.Player, _data);
                     ProcessEvents();

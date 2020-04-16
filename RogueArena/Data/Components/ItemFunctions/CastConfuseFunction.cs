@@ -1,10 +1,9 @@
-﻿namespace RogueArena.Components.ItemFunctions
+﻿namespace RogueArena.Data.Components.ItemFunctions
 {
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework;
-    using RogueArena.Components.AI;
-    using RogueArena.Data;
+    using RogueArena.Data.Components.AI;
     using RogueArena.Events;
 
     public class CastConfuseFunction : ItemFunction

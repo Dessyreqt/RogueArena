@@ -1,8 +1,7 @@
-﻿namespace RogueArena.Components.ItemFunctions
+﻿namespace RogueArena.Data.Components.ItemFunctions
 {
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
-    using RogueArena.Data;
     using RogueArena.Events;
 
     public class CastLightningFunction : ItemFunction

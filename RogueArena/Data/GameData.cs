@@ -4,7 +4,7 @@
     using System.IO;
     using Microsoft.Xna.Framework;
     using Newtonsoft.Json;
-    using RogueArena.Components;
+    using RogueArena.Data.Components;
     using RogueArena.Map;
     using RogueArena.Messages;
 

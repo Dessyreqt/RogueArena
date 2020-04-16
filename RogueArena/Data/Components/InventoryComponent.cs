@@ -1,10 +1,8 @@
-﻿namespace RogueArena.Components
+﻿namespace RogueArena.Data.Components
 {
     using System.Collections.Generic;
-    using Events;
     using Microsoft.Xna.Framework;
-    using RogueArena.Data;
-    using RogueArena.Map;
+    using RogueArena.Events;
 
     public class InventoryComponent : Component
     {

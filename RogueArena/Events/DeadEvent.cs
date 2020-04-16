@@ -1,8 +1,8 @@
 ﻿namespace RogueArena.Events
 {
     using Microsoft.Xna.Framework;
-    using RogueArena.Components;
     using RogueArena.Data;
+    using RogueArena.Data.Components;
 
     public class DeadEvent : Event
     {

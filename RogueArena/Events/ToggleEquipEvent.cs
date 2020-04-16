@@ -1,7 +1,7 @@
 ﻿namespace RogueArena.Events
 {
-    using RogueArena.Components;
     using RogueArena.Data;
+    using RogueArena.Data.Components;
 
     public class ToggleEquipEvent : Event
     {

@@ -1,18 +1,16 @@
-﻿namespace RogueArena.Components
+﻿namespace RogueArena.Data.Components
 {
-    using System.Collections.Generic;
-    using Events;
-    using RogueArena.Data;
+    using RogueArena.Events;
 
     public class FighterComponent : Component
     {
+        public int MaxHp => BaseMaxHp + (Owner.Get<EquipmentComponent>()?.MaxHpBonus ?? 0);
+        public int Defense => BaseDefense + (Owner.Get<EquipmentComponent>()?.DefenseBonus ?? 0);
+        public int Power => BasePower + (Owner.Get<EquipmentComponent>()?.PowerBonus ?? 0);
         public int BaseMaxHp { get; set; }
         public int BaseDefense { get; set; }
         public int BasePower { get; set; }
-        public int MaxHp => BaseMaxHp + (Owner.Get<EquipmentComponent>()?.MaxHpBonus ?? 0);
         public int Hp { get; set; }
-        public int Defense => BaseDefense + (Owner.Get<EquipmentComponent>()?.DefenseBonus ?? 0);
-        public int Power => BasePower + (Owner.Get<EquipmentComponent>()?.PowerBonus ?? 0);
         public int Xp { get; set; }
 
         public void TakeDamage(int amount, ProgramData data)

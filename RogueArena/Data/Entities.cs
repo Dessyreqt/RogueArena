@@ -1,15 +1,14 @@
-﻿namespace RogueArena
+﻿namespace RogueArena.Data
 {
     using System;
     using System.Collections.Generic;
-    using RogueArena.Components;
-    using RogueArena.Data;
+    using RogueArena.Data.Components;
 
-    public static class Ecs
+    public static class Entities
     {
         private static readonly Lazy<Dictionary<Type, List<Entity>>> lazy = new Lazy<Dictionary<Type, List<Entity>>>(() => new Dictionary<Type, List<Entity>>());
 
-        public static Dictionary<Type, List<Entity>> EntitiesWithComponent => lazy.Value;
+        public static Dictionary<Type, List<Entity>> WithComponent => lazy.Value;
 
         public static void Add<T>(this Entity entity, T component) where T : Component
         {
@@ -23,12 +22,12 @@
             component.Owner = entity;
             entity.Components[componentType] = component;
 
-            if (!EntitiesWithComponent.ContainsKey(componentType))
+            if (!WithComponent.ContainsKey(componentType))
             {
-                EntitiesWithComponent[componentType] = new List<Entity>();
+                WithComponent[componentType] = new List<Entity>();
             }
 
-            EntitiesWithComponent[componentType].Add(entity);
+            WithComponent[componentType].Add(entity);
         }
 
         public static void Remove<T>(this Entity entity) where T : Component
@@ -42,9 +41,9 @@
 
             var componentType = typeof(T).GetBaseComponentType();
 
-            if (EntitiesWithComponent.ContainsKey(componentType))
+            if (WithComponent.ContainsKey(componentType))
             {
-                EntitiesWithComponent[componentType].Remove(entity);
+                WithComponent[componentType].Remove(entity);
             }
 
             entity.Components.Remove(componentType);
@@ -70,7 +69,7 @@
         public static void SetEntities(this GameData data, List<Entity> entities)
         {
             data.Entities = entities;
-            EntitiesWithComponent.Clear();
+            WithComponent.Clear();
 
             foreach (var entity in data.Entities)
             {
@@ -94,12 +93,12 @@
         {
             foreach (var componentType in entity.Components.Keys)
             {
-                if (!EntitiesWithComponent.ContainsKey(componentType))
+                if (!WithComponent.ContainsKey(componentType))
                 {
-                    EntitiesWithComponent[componentType] = new List<Entity>();
+                    WithComponent[componentType] = new List<Entity>();
                 }
 
-                EntitiesWithComponent[componentType].Remove(entity);
+                WithComponent[componentType].Remove(entity);
             }
         }
 
@@ -107,12 +106,12 @@
         {
             foreach (var componentType in entity.Components.Keys)
             {
-                if (!EntitiesWithComponent.ContainsKey(componentType))
+                if (!WithComponent.ContainsKey(componentType))
                 {
-                    EntitiesWithComponent[componentType] = new List<Entity>();
+                    WithComponent[componentType] = new List<Entity>();
                 }
 
-                EntitiesWithComponent[componentType].Add(entity);
+                WithComponent[componentType].Add(entity);
             }
         }
     }

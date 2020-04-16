@@ -1,9 +1,8 @@
 ﻿namespace RogueArena.Commands.Game
 {
     using Microsoft.Xna.Framework;
-    using RogueArena.Components;
     using RogueArena.Data;
-    using RogueArena.Events;
+    using RogueArena.Data.Components;
 
     public class PickupCommand : Command
     {
@@ -13,7 +12,7 @@
             {
                 Entity itemEntity = null;
 
-                foreach (var entity in Ecs.EntitiesWithComponent[typeof(ItemComponent)])
+                foreach (var entity in Entities.WithComponent[typeof(ItemComponent)])
                 {
                     if (entity.X == data.GameData.Player.X && entity.Y == data.GameData.Player.Y)
                     {

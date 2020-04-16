@@ -3,8 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework;
-    using RogueArena.Components;
     using RogueArena.Data;
+    using RogueArena.Data.Components;
     using RogueArena.Map;
     using RogueArena.Messages;
     using SadConsole;

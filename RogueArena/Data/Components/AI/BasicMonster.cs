@@ -1,7 +1,5 @@
-﻿namespace RogueArena.Components.AI
+﻿namespace RogueArena.Data.Components.AI
 {
-    using RogueArena.Data;
-
     public class BasicMonster : AiComponent
     {
         public BasicMonster()

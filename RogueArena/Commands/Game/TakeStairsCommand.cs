@@ -1,8 +1,8 @@
 ﻿namespace RogueArena.Commands.Game
 {
     using Microsoft.Xna.Framework;
-    using RogueArena.Components;
     using RogueArena.Data;
+    using RogueArena.Data.Components;
 
     public class TakeStairsCommand : Command
     {
@@ -11,7 +11,7 @@
             Entity stairsEntity = null;
             StairsComponent stairsComponent = null;
 
-            foreach (var entity in Ecs.EntitiesWithComponent[typeof(StairsComponent)])
+            foreach (var entity in Entities.WithComponent[typeof(StairsComponent)])
             {
                 stairsComponent = entity.Get<StairsComponent>();
 

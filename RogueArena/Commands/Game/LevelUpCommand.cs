@@ -1,7 +1,7 @@
 ﻿namespace RogueArena.Commands.Game
 {
-    using RogueArena.Components;
     using RogueArena.Data;
+    using RogueArena.Data.Components;
 
     public enum LevelUpType
     {

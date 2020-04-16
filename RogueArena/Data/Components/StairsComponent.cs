@@ -1,4 +1,4 @@
-﻿namespace RogueArena.Components
+﻿namespace RogueArena.Data.Components
 {
     public class StairsComponent : Component
     {

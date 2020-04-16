@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework;
-    using RogueArena.Components;
     using RogueArena.Data;
+    using RogueArena.Data.Components;
     using RogueArena.Rng;
 
     [Serializable]
@@ -80,8 +80,9 @@
 
                     if (DungeonLevel > 1)
                     {
-                        var upStairsComponent = new StairsComponent { ToFloor =  DungeonLevel - 1 };
-                        var upStairs = new Entity {
+                        var upStairsComponent = new StairsComponent { ToFloor = DungeonLevel - 1 };
+                        var upStairs = new Entity
+                        {
                             X = lastCenter.X,
                             Y = lastCenter.Y,
                             Character = '<',
@@ -113,7 +114,7 @@
                 rooms.Add(newRoom);
             }
 
-            var downStairsComponent = new StairsComponent { ToFloor =  DungeonLevel + 1 };
+            var downStairsComponent = new StairsComponent { ToFloor = DungeonLevel + 1 };
             var downStairs = new Entity
             {
                 X = lastCenter.X,

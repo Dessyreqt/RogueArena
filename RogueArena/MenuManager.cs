@@ -5,7 +5,8 @@
     using System.Linq;
     using System.Text;
     using Microsoft.Xna.Framework;
-    using RogueArena.Components;
+    using RogueArena.Data;
+    using RogueArena.Data.Components;
     using Console = SadConsole.Console;
 
     public class MenuManager
@@ -14,7 +15,7 @@
         private Console _inventoryMenu;
         private Console _messageBox;
         private Console _levelUpMenu;
-        private Console _characterScreen = null;
+        private Console _characterScreen;
 
         public void ShowMessageBox(Console console, string header, int width, int screenWidth, int screenHeight)
         {
@@ -45,20 +46,21 @@
                 }
                 else
                 {
-                    options = player.Get<InventoryComponent>().Items.Select(x =>
-                    {
-                        if (player.Get<EquipmentComponent>().MainHand == x)
+                    options = player.Get<InventoryComponent>().Items.Select(
+                        x =>
                         {
-                            return $"{x.Name} (in main hand)";
-                        }
+                            if (player.Get<EquipmentComponent>().MainHand == x)
+                            {
+                                return $"{x.Name} (in main hand)";
+                            }
 
-                        if (player.Get<EquipmentComponent>().OffHand == x)
-                        {
-                            return $"{x.Name} (in off hand)";
-                        }
+                            if (player.Get<EquipmentComponent>().OffHand == x)
+                            {
+                                return $"{x.Name} (in off hand)";
+                            }
 
-                        return x.Name;
-                    }).ToList();
+                            return x.Name;
+                        }).ToList();
                 }
 
                 _inventoryMenu = ShowMenu(console, header, options, inventoryWidth, screenWidth, screenHeight);
