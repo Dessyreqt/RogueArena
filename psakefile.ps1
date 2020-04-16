@@ -14,6 +14,7 @@ properties {
     $coverage_report_html_path = "$base_dir\CoverageReports\CoverageReport.html"
     $coverage_report_xml_path = "$base_dir\CoverageReports\CoverageReport.xml"
     $coverage_percent_minimum = 0
+    $coverage_filters = "+:type=$solution_name.Commands.*;+:type=$solution_name.Data.*;+:type=$solution_name.Events.*;+:type=$solution_name.Map.*;+:type=$solution_name.Messages.*;-:module=$solution_name.Data.Lookup"
 }
 
 task default -depends Clean, Compile
@@ -36,14 +37,14 @@ task RunBackEndTests {
 
 task CoverageReport {
     Push-Location -Path $backend_test_dir
-    exec { & $dotcover_exe_path cover /TargetExecutable=$test_exe_path /Output="$coverage_report_html_path" /ReportType="HTML" /Filters="+:type=$solution_name.*;-:module=$solution_name.Tests" } 
+    exec { & $dotcover_exe_path cover /TargetExecutable=$test_exe_path /Output="$coverage_report_html_path" /ReportType="HTML" /Filters="$coverage_filters" } 
     exec { & $coverage_report_html_path }
     Pop-Location
 }
 
 task CICoverageReport {
     Push-Location -Path $test_exe_dir
-    exec { & $dotcover_exe_path cover /TargetExecutable=$test_exe_path /Output="$coverage_report_xml_path" /ReportType="XML" /Filters="+:type=$solution_name.*;-:module=$solution_name.Tests" } 
+    exec { & $dotcover_exe_path cover /TargetExecutable=$test_exe_path /Output="$coverage_report_xml_path" /ReportType="XML" /Filters="$coverage_filters" } 
     $xml = [xml](Get-Content $coverage_report_xml_path)
     $coveragePercent = [int](($xml.Root | Select-Object CoveragePercent).CoveragePercent)
     if ($coveragePercent -lt $coverage_percent_minimum) {
