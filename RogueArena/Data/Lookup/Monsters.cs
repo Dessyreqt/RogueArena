@@ -1,9 +1,10 @@
-﻿namespace RogueArena.Data
+﻿namespace RogueArena.Data.Lookup
 {
     using System;
     using Microsoft.Xna.Framework;
     using RogueArena.Data.Components;
     using RogueArena.Data.Components.AI;
+    using RogueArena.Graphics;
 
     public static class Monsters
     {

@@ -1,4 +1,4 @@
-﻿namespace RogueArena.Data
+﻿namespace RogueArena.Data.Lookup
 {
     using RogueArena.Map;
 

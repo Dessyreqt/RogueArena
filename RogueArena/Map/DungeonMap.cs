@@ -6,6 +6,8 @@
     using Microsoft.Xna.Framework;
     using RogueArena.Data;
     using RogueArena.Data.Components;
+    using RogueArena.Data.Lookup;
+    using RogueArena.Graphics;
     using RogueArena.Rng;
 
     [Serializable]

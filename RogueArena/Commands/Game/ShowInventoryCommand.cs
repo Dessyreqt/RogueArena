@@ -1,6 +1,7 @@
 ﻿namespace RogueArena.Commands.Game
 {
     using RogueArena.Data;
+    using RogueArena.Data.Lookup;
 
     public class ShowInventoryCommand : Command
     {

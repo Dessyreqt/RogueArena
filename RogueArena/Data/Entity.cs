@@ -5,6 +5,7 @@
     using System.Linq;
     using Microsoft.Xna.Framework;
     using RogueArena.Data.Components;
+    using RogueArena.Graphics;
     using RogueArena.Map;
     using RogueArena.Util;
 

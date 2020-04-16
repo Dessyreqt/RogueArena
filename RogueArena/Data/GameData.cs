@@ -5,6 +5,8 @@
     using Microsoft.Xna.Framework;
     using Newtonsoft.Json;
     using RogueArena.Data.Components;
+    using RogueArena.Data.Lookup;
+    using RogueArena.Graphics;
     using RogueArena.Map;
     using RogueArena.Messages;
 

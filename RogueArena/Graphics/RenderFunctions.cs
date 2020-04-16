@@ -1,10 +1,11 @@
-﻿namespace RogueArena
+﻿namespace RogueArena.Graphics
 {
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework;
     using RogueArena.Data;
     using RogueArena.Data.Components;
+    using RogueArena.Data.Lookup;
     using RogueArena.Map;
     using RogueArena.Messages;
     using SadConsole;

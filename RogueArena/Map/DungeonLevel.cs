@@ -5,6 +5,7 @@
     using Microsoft.Xna.Framework;
     using RogueArena.Data;
     using RogueArena.Data.Components;
+    using RogueArena.Data.Lookup;
     using RogueArena.Messages;
 
     public class DungeonLevel

@@ -7,6 +7,7 @@
     using RogueArena.Commands;
     using RogueArena.Data;
     using RogueArena.Data.Components;
+    using RogueArena.Data.Lookup;
     using RogueArena.Events;
     using RogueArena.Graphics;
     using SadConsole;
